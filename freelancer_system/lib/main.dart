@@ -1,10 +1,13 @@
+import 'dart:js_util';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:freelancer_system/services/UserService.dart';
 
 import 'firebase_options.dart';
+import 'home/components/global.dart';
 import 'home/components/login.dart';
 import 'home/home_screen.dart';
 
@@ -20,9 +23,10 @@ void main() async {
 final navKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
+  late UserService userService;
   @override
   Widget build(BuildContext context) {
-    userService.getUsers();
+    getUser();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Material App',
