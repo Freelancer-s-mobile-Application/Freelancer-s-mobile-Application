@@ -10,13 +10,15 @@ class UserService {
 
   Future<List<User>> getUsers() async {
     List<User> users = newObject();
-    final docRef = _users.doc();
+    final docRef = _users;
     docRef.get().then(
-      (DocumentSnapshot doc) {
-        final data = doc.data() as Map<String, dynamic>;
-        User user = newObject();
-        user.fromMap(data);
-        users.add(user);
+      (value) {
+        for (var e in value.docs) {
+          final data = e.data() as Map<String, dynamic>;
+          User user = newObject();
+          user.fromMap(data);
+          users.add(user);
+        }
       },
       onError: (e) => print("Error getting document: $e"),
     );

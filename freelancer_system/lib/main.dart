@@ -1,27 +1,33 @@
+import 'dart:js_util';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:freelancer_system/services/UserService.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  Firebase.initializeApp();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
+  UserService userService = newObject();
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    userService.getUsers();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       home: FutureBuilder(
-          future: _fbApp,
+          future: userService.getUsers(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               print("You have an error ${snapshot.error.toString()}");
