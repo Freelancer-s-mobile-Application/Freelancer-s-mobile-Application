@@ -69,6 +69,7 @@ class PostTile extends StatelessWidget {
                     onPressed: null,
                     child: Text('Apply'),
                   ),
+                  Text('3 days ago'),
                 ],
               )
             ],

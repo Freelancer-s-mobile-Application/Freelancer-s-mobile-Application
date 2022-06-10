@@ -1,70 +1,70 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'components/post_tile.dart';
-import 'components/search_bar.dart';
+import '../../components/general_provider.dart';
+import '../profile/profile.dart';
+import 'components/user_icon.dart';
+import 'freelance.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const HomeBody();
-  }
-}
-
-class HomeBody extends StatelessWidget {
-  const HomeBody({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    List list = [1, 2, 3, 4, 5];
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const SearchBar(),
-          const Divider(thickness: 1, indent: 20, endIndent: 20),
-          SizedBox(
-            width: size.width * 0.9,
-            height: size.height * 0.055,
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text('Filter'),
-            ),
-          ),
-          const Divider(thickness: 1, indent: 20, endIndent: 20),
-          LIstViewBuild(list),
-        ],
+    return DefaultTabController(
+      length: screenList.length,
+      child: Scaffold(
+        appBar: const HomeAppBar(),
+        body: TabBarView(children: [...screenList.toList()]),
       ),
     );
   }
 }
 
-class LIstViewBuild extends StatefulWidget {
-  const LIstViewBuild(this.list);
+List<Widget> screenList = [
+  const FreelanceScreen(),
+  const ProfileScreen(),
+  //const SettingScreen(),
+];
 
-  final List list;
+class HomeAppBar extends ConsumerWidget with PreferredSizeWidget {
+  const HomeAppBar();
 
   @override
-  State<LIstViewBuild> createState() => _LIstViewBuildState();
-}
-
-class _LIstViewBuildState extends State<LIstViewBuild> {
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: widget.list.length,
-      itemBuilder: (BuildContext context, int index) {
-        return AnimationConfiguration.staggeredList(
-          position: widget.list[index],
-          child: const PostTile(),
-        );
-      },
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
+    return AppBar(
+      leading: IconButton(
+        onPressed: () {
+          FirebaseAuth.instance.signOut();
+          ref.read(googleSignInProvider.notifier).state.signOut();
+          ref.refresh(userProvider);
+        },
+        icon: const Icon(Icons.logout),
+      ),
+      title: const Text('Home Screen'),
+      centerTitle: true,
+      actions: [
+        if (user)
+          CircleAvatar(
+            backgroundColor: Colors.white,
+            child: Image.network(
+                FirebaseAuth.instance.currentUser!.photoURL.toString()),
+          ),
+        if (!user) const UserLoggedInIcon(),
+      ],
+      bottom: const TabBar(tabs: [
+        Tab(
+          text: 'Freelancers',
+        ),
+        Tab(
+          text: 'Projects',
+        ),
+      ]),
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(100);
 }
