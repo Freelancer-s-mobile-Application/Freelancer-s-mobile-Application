@@ -1,32 +1,31 @@
-import 'dart:js_util';
+// ignore_for_file: use_key_in_widget_constructors, empty_catches
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:freelancer_system/services/UserService.dart';
+import 'package:freelancer_system/screens/home/home_screen.dart';
+import 'package:freelancer_system/screens/profile/profile.dart';
 
+import 'components/general_provider.dart';
 import 'firebase_options.dart';
-import 'home/components/global.dart';
-import 'home/components/login.dart';
-import 'home/home_screen.dart';
+import 'screens/home/components/user_icon.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e) {}
   runApp(ProviderScope(child: MyApp()));
 }
 
 final navKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
-  late UserService userService;
   @override
   Widget build(BuildContext context) {
-    getUser();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Material App',
@@ -37,21 +36,55 @@ class MyApp extends StatelessWidget {
 }
 
 class MainScreen extends StatelessWidget {
-  const MainScreen();
+  const MainScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snap) {
-        if (snap.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snap.hasData) {
-          return const HomeScreen();
-        } else {
-          return const LoginScreen();
-        }
-      },
+    return DefaultTabController(
+      length: screenList.length,
+      child: Scaffold(
+        appBar: const HomeAppBar(),
+        body: TabBarView(children: [...screenList.toList()]),
+      ),
     );
   }
+}
+
+List<Widget> screenList = [
+  const HomeScreen(),
+  const ProfileScreen(),
+  //const SettingScreen(),
+];
+
+class HomeAppBar extends ConsumerWidget with PreferredSizeWidget {
+  const HomeAppBar();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
+    return AppBar(
+      title: const Text('Home Screen'),
+      centerTitle: true,
+      actions: [
+        if (user)
+          CircleAvatar(
+            backgroundColor: Colors.white,
+            child: Image.network(
+                FirebaseAuth.instance.currentUser!.photoURL.toString()),
+          ),
+        if (!user) const UserLoggedInIcon(),
+      ],
+      bottom: const TabBar(tabs: [
+        Tab(
+          text: 'Freelancers',
+        ),
+        Tab(
+          text: 'Projects',
+        ),
+      ]),
+    );
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(100);
 }
