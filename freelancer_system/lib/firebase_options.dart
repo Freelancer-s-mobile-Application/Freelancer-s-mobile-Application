@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -49,11 +43,23 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDrPs7hgI7xOTOvSh1mMtE_EgC3vyiaEAA',
+    appId: '1:296464714256:web:84cc5ac1b38f744b265895',
+    messagingSenderId: '296464714256',
+    projectId: 'freelancersystem-7d478',
+    authDomain: 'freelancersystem-7d478.firebaseapp.com',
+    databaseURL: 'https://freelancersystem-7d478-default-rtdb.firebaseio.com',
+    storageBucket: 'freelancersystem-7d478.appspot.com',
+    measurementId: 'G-3G7ELS4YCF',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBZt02dcA0cq9rCvPHkFVNauSgBbCg2BoY',
     appId: '1:296464714256:android:af938d135e3d80c4265895',
     messagingSenderId: '296464714256',
     projectId: 'freelancersystem-7d478',
+    databaseURL: 'https://freelancersystem-7d478-default-rtdb.firebaseio.com',
     storageBucket: 'freelancersystem-7d478.appspot.com',
   );
 
@@ -62,7 +68,21 @@ class DefaultFirebaseOptions {
     appId: '1:296464714256:ios:7b592dde5d85b9f4265895',
     messagingSenderId: '296464714256',
     projectId: 'freelancersystem-7d478',
+    databaseURL: 'https://freelancersystem-7d478-default-rtdb.firebaseio.com',
     storageBucket: 'freelancersystem-7d478.appspot.com',
+    androidClientId: '296464714256-m6f2lggp0jo2l5eg06fu3ihj36ejcuk2.apps.googleusercontent.com',
+    iosClientId: '296464714256-g3karuet4ou9b3ue7r9js58n95neb71a.apps.googleusercontent.com',
+    iosBundleId: 'com.example.freelancerSystem',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyCA0mqKo5G84UifuxraFeN_ku5osbdN2yE',
+    appId: '1:296464714256:ios:7b592dde5d85b9f4265895',
+    messagingSenderId: '296464714256',
+    projectId: 'freelancersystem-7d478',
+    databaseURL: 'https://freelancersystem-7d478-default-rtdb.firebaseio.com',
+    storageBucket: 'freelancersystem-7d478.appspot.com',
+    androidClientId: '296464714256-m6f2lggp0jo2l5eg06fu3ihj36ejcuk2.apps.googleusercontent.com',
     iosClientId: '296464714256-g3karuet4ou9b3ue7r9js58n95neb71a.apps.googleusercontent.com',
     iosBundleId: 'com.example.freelancerSystem',
   );
