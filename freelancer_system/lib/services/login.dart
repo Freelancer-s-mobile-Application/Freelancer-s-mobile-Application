@@ -1,11 +1,13 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../components/general_provider.dart';
-import '../../main.dart';
+import '../components/general_provider.dart';
+import '../main.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -34,7 +36,7 @@ class LoginScreen extends ConsumerWidget {
               width: MediaQuery.of(context).size.width * 0.7,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  signInWithGoogle(context, ggLogin);
+                  signInWithGoogle(context, ggLogin, ref);
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white,
@@ -54,7 +56,8 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
-  Future signInWithGoogle(BuildContext context, GoogleSignIn gg) async {
+  Future signInWithGoogle(
+      BuildContext context, GoogleSignIn gg, WidgetRef ref) async {
     try {
       final ggSignIn = gg;
       showDialog(
@@ -81,9 +84,10 @@ class LoginScreen extends ConsumerWidget {
         ),
       );
       await FirebaseAuth.instance.signInWithCredential(credential);
+      ref.read(userProvider.notifier).state = true;
       navKey.currentState!.popUntil((route) => route.isFirst);
     } on FirebaseAuthException catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 }

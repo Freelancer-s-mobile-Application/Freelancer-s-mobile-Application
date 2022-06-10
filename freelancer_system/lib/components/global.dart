@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
+// ignore_for_file: avoid_print
 
-import '../../models/User.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../models/User.dart';
 
 Future getUser() async {
   List<User> users = [];
@@ -13,14 +13,13 @@ Future getUser() async {
         // e.id; get id
         final data = e.data();
         User user = User.fromMap(data);
-        print(user.toString());
         users.add(user);
       }
     },
     onError: (e) => print("Error getting document: $e"),
   );
 
-  users.forEach((element) {
+  for (var element in users) {
     print(element.email);
-  });
+  }
 }
