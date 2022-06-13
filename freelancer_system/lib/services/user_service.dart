@@ -54,9 +54,9 @@ class UserService {
         .catchError((error) => print("Failed to add user: $error"));
   }
 
-  // Future<void> updateUser(User user) {
+  // Future<void> updateUser(DocumentSnapshot documentSnapshot) {
   //   return _users
-  //       .doc(user.id)
+  //       .doc(documentSnapshot!.id)
   //       .update({
   //         'username': user.username,
   //         'email': user.email,
