@@ -30,34 +30,25 @@ class UserService {
   //   return users;
   // }
 
-  // Future<void> realtimeGetUsers() async {
-  //   final docRef = _users.doc();
-  //   docRef.snapshots().listen(
-  //         (event) => print("current data: ${event.data()}"),
-  //         onError: (error) => print("Listen failed: $error"),
-  //       );
-  // }
+  String getFirstUser() {
+    String user = '';
+
+    _users.limit(1).get().then((value) => {user = value.toString()});
+
+    return user;
+  }
 
   Future<void> addUser(User user) {
     return _users
-        .add({
-          // 'id': user.id,
-          'username': user.username,
-          'email': user.email,
-          'address': user.address,
-          'displayname': user.displayname,
-          'phonenumber': user.phonenumber,
-          'description': user.description,
-          'majorId': user.majorId
-        })
+        .add(user.toMap())
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
   }
 
-  // Future<void> updateUser(DocumentSnapshot documentSnapshot) {
+  // Future<void> updateUser(User user) {
   //   return _users
-  //       .doc(documentSnapshot!.id)
-  //       .update({
+  //       .get().
+  //       .set({
   //         'username': user.username,
   //         'email': user.email,
   //         'address': user.address,
