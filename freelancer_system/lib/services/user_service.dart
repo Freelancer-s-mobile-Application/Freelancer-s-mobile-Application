@@ -6,7 +6,7 @@ import '../models/User.dart';
 
 class UserService {
   final CollectionReference _users =
-      FirebaseFirestore.instance.collection('users');
+      FirebaseFirestore.instance.collection('Users');
 
   // Future<List<User>> getUsers() async {
   //   List<User> users = newObject();
@@ -30,12 +30,15 @@ class UserService {
   //   return users;
   // }
 
-  String getFirstUser() {
-    String user = '';
+  Future<String> getFirstUser() async {
+    User user = User();
 
-    _users.limit(1).get().then((value) => {user = value.toString()});
-
-    return user;
+    // var test;
+    await _users.get().then((value) => {
+          if (value.docs[0].exists)
+            user = User.fromMap(value.docs[0].data() as Map<String, dynamic>)
+        });
+    return user.toString();
   }
 
   Future<void> addUser(User user) {

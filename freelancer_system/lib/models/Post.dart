@@ -2,72 +2,82 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
-class Form {
+class Post {
   String? userId;
-  String? postId;
+  String? title;
+  String? content;
+  num? minNumber;
+  num? maxNumber;
   String? status;
-  List<String>? files;
 
   bool? deleted;
+  Timestamp? lastModifiedDate;
   Timestamp? createdDate;
   String? updatedBy;
-  Timestamp? lastModifiedDate;
-  Form({
+
+  Post({
     this.userId,
-    this.postId,
+    this.title,
+    this.content,
+    this.minNumber,
+    this.maxNumber,
     this.status,
-    this.files,
     this.deleted,
+    this.lastModifiedDate,
     this.createdDate,
     this.updatedBy,
-    this.lastModifiedDate,
   });
 
-  Form copyWith({
+  Post copyWith({
     String? userId,
-    String? postId,
+    String? title,
+    String? content,
+    num? minNumber,
+    num? maxNumber,
     String? status,
-    List<String>? files,
     bool? deleted,
+    Timestamp? lastModifiedDate,
     Timestamp? createdDate,
     String? updatedBy,
-    Timestamp? lastModifiedDate,
   }) {
-    return Form(
+    return Post(
       userId: userId ?? this.userId,
-      postId: postId ?? this.postId,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      minNumber: minNumber ?? this.minNumber,
+      maxNumber: maxNumber ?? this.maxNumber,
       status: status ?? this.status,
-      files: files ?? this.files,
       deleted: deleted ?? this.deleted,
+      lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
       createdDate: createdDate ?? this.createdDate,
       updatedBy: updatedBy ?? this.updatedBy,
-      lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'userId': userId,
-      'postId': postId,
+      'title': title,
+      'content': content,
+      'minNumber': minNumber,
+      'maxNumber': maxNumber,
       'status': status,
-      'files': files,
       'deleted': deleted,
+      'lastModifiedDate': lastModifiedDate,
       'createdDate': createdDate,
       'updatedBy': updatedBy,
-      'lastModifiedDate': lastModifiedDate,
     };
   }
 
-  factory Form.fromMap(Map<String, dynamic> map) {
-    return Form(
+  factory Post.fromMap(Map<String, dynamic> map) {
+    return Post(
       userId: map['userId'] != null ? map['userId'] as String : null,
-      postId: map['postId'] != null ? map['postId'] as String : null,
+      title: map['title'] != null ? map['title'] as String : null,
+      content: map['content'] != null ? map['content'] as String : null,
+      minNumber: map['minNumber'] != null ? map['minNumber'] as num : null,
+      maxNumber: map['maxNumber'] != null ? map['maxNumber'] as num : null,
       status: map['status'] != null ? map['status'] as String : null,
-      files: map['files'] != null
-          ? List<String>.from((map['files'] as List<String>))
-          : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
       createdDate:
           map['createddate'] != null ? map['createddate'] as Timestamp : null,
@@ -80,38 +90,42 @@ class Form {
 
   String toJson() => json.encode(toMap());
 
-  factory Form.fromJson(String source) =>
-      Form.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Post.fromJson(String source) =>
+      Post.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'Form(userId: $userId, postId: $postId, status: $status, files: $files, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
+    return 'Post(userId: $userId, title: $title, content: $content, minNumber: $minNumber, maxNumber: $maxNumber, status: $status, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Form &&
+    return other is Post &&
         other.userId == userId &&
-        other.postId == postId &&
+        other.title == title &&
+        other.content == content &&
+        other.minNumber == minNumber &&
+        other.maxNumber == maxNumber &&
         other.status == status &&
-        listEquals(other.files, files) &&
         other.deleted == deleted &&
+        other.lastModifiedDate == lastModifiedDate &&
         other.createdDate == createdDate &&
-        other.updatedBy == updatedBy &&
-        other.lastModifiedDate == lastModifiedDate;
+        other.updatedBy == updatedBy;
   }
 
   @override
   int get hashCode {
     return userId.hashCode ^
-        postId.hashCode ^
+        title.hashCode ^
+        content.hashCode ^
+        minNumber.hashCode ^
+        maxNumber.hashCode ^
         status.hashCode ^
-        files.hashCode ^
         deleted.hashCode ^
+        lastModifiedDate.hashCode ^
         createdDate.hashCode ^
-        updatedBy.hashCode ^
-        lastModifiedDate.hashCode;
+        updatedBy.hashCode;
   }
 }

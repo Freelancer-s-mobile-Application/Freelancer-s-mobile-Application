@@ -2,44 +2,43 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
-class Form {
-  String? userId;
+class Comment {
+  String? commentId;
+  String? content;
   String? postId;
-  String? status;
-  List<String>? files;
+  String? userId;
 
   bool? deleted;
   Timestamp? createdDate;
   String? updatedBy;
   Timestamp? lastModifiedDate;
-  Form({
-    this.userId,
+  Comment({
+    this.commentId,
+    this.content,
     this.postId,
-    this.status,
-    this.files,
+    this.userId,
     this.deleted,
     this.createdDate,
     this.updatedBy,
     this.lastModifiedDate,
   });
 
-  Form copyWith({
-    String? userId,
+  Comment copyWith({
+    String? commentId,
+    String? content,
     String? postId,
-    String? status,
-    List<String>? files,
+    String? userId,
     bool? deleted,
     Timestamp? createdDate,
     String? updatedBy,
     Timestamp? lastModifiedDate,
   }) {
-    return Form(
-      userId: userId ?? this.userId,
+    return Comment(
+      commentId: commentId ?? this.commentId,
+      content: content ?? this.content,
       postId: postId ?? this.postId,
-      status: status ?? this.status,
-      files: files ?? this.files,
+      userId: userId ?? this.userId,
       deleted: deleted ?? this.deleted,
       createdDate: createdDate ?? this.createdDate,
       updatedBy: updatedBy ?? this.updatedBy,
@@ -49,10 +48,10 @@ class Form {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'userId': userId,
+      'commentId': commentId,
+      'content': content,
       'postId': postId,
-      'status': status,
-      'files': files,
+      'userId': userId,
       'deleted': deleted,
       'createdDate': createdDate,
       'updatedBy': updatedBy,
@@ -60,14 +59,12 @@ class Form {
     };
   }
 
-  factory Form.fromMap(Map<String, dynamic> map) {
-    return Form(
-      userId: map['userId'] != null ? map['userId'] as String : null,
+  factory Comment.fromMap(Map<String, dynamic> map) {
+    return Comment(
+      commentId: map['commentId'] != null ? map['commentId'] as String : null,
+      content: map['content'] != null ? map['content'] as String : null,
       postId: map['postId'] != null ? map['postId'] as String : null,
-      status: map['status'] != null ? map['status'] as String : null,
-      files: map['files'] != null
-          ? List<String>.from((map['files'] as List<String>))
-          : null,
+      userId: map['userId'] != null ? map['userId'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
       createdDate:
           map['createddate'] != null ? map['createddate'] as Timestamp : null,
@@ -80,23 +77,23 @@ class Form {
 
   String toJson() => json.encode(toMap());
 
-  factory Form.fromJson(String source) =>
-      Form.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Comment.fromJson(String source) =>
+      Comment.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'Form(userId: $userId, postId: $postId, status: $status, files: $files, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
+    return 'Comment(commentId: $commentId, content: $content, postId: $postId, userId: $userId, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Form &&
-        other.userId == userId &&
+    return other is Comment &&
+        other.commentId == commentId &&
+        other.content == content &&
         other.postId == postId &&
-        other.status == status &&
-        listEquals(other.files, files) &&
+        other.userId == userId &&
         other.deleted == deleted &&
         other.createdDate == createdDate &&
         other.updatedBy == updatedBy &&
@@ -105,10 +102,10 @@ class Form {
 
   @override
   int get hashCode {
-    return userId.hashCode ^
+    return commentId.hashCode ^
+        content.hashCode ^
         postId.hashCode ^
-        status.hashCode ^
-        files.hashCode ^
+        userId.hashCode ^
         deleted.hashCode ^
         createdDate.hashCode ^
         updatedBy.hashCode ^

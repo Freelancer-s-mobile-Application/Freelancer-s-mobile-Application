@@ -5,9 +5,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'package:freelancer_system/models/Abstract.dart';
-
-class User extends Abstract {
+class User {
   String? username;
   String? email;
   String? address;
@@ -16,10 +14,10 @@ class User extends Abstract {
   String? description;
   String? majorId;
 
-  // bool? deleted;
-  // Timestamp? createddate;
-  // String? updatedBy;
-  // Timestamp? lastModifiedDate;
+  bool? deleted;
+  Timestamp? createdDate;
+  String? updatedBy;
+  Timestamp? lastModifiedDate;
   User({
     this.username,
     this.email,
@@ -28,11 +26,11 @@ class User extends Abstract {
     this.phonenumber,
     this.description,
     this.majorId,
-    // this.deleted,
-    // this.createddate,
-    // this.updatedBy,
-    // this.lastModifiedDate,
-  }) : super();
+    this.deleted,
+    this.createdDate,
+    this.updatedBy,
+    this.lastModifiedDate,
+  });
 
   User copyWith({
     String? username,
@@ -43,7 +41,7 @@ class User extends Abstract {
     String? description,
     String? majorId,
     bool? deleted,
-    Timestamp? createddate,
+    Timestamp? createdDate,
     String? updatedBy,
     Timestamp? lastModifiedDate,
   }) {
@@ -55,10 +53,10 @@ class User extends Abstract {
       phonenumber: phonenumber ?? this.phonenumber,
       description: description ?? this.description,
       majorId: majorId ?? this.majorId,
-      // deleted: deleted ?? this.deleted,
-      // createddate: createddate ?? this.createddate,
-      // updatedBy: updatedBy ?? this.updatedBy,
-      // lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
+      deleted: deleted ?? this.deleted,
+      createdDate: createdDate ?? this.createdDate,
+      updatedBy: updatedBy ?? this.updatedBy,
+      lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
     );
   }
 
@@ -72,7 +70,7 @@ class User extends Abstract {
       'description': description,
       'majorId': majorId,
       'deleted': deleted,
-      'createddate': createddate,
+      'createdDate': createdDate,
       'updatedBy': updatedBy,
       'lastModifiedDate': lastModifiedDate,
     };
@@ -90,13 +88,13 @@ class User extends Abstract {
       description:
           map['description'] != null ? map['description'] as String : null,
       majorId: map['majorId'] != null ? map['majorId'] as String : null,
-      // deleted: map['deleted'] != null ? map['deleted'] as bool : null,
-      // createddate:
-      //     map['createddate'] != null ? map['createddate'] as Timestamp : null,
-      // updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
-      // lastModifiedDate: map['lastModifiedDate'] != null
-      //     ? map['lastModifiedDate'] as Timestamp
-      //     : null,
+      deleted: map['deleted'] != null ? map['deleted'] as bool : null,
+      createdDate:
+          map['createddate'] != null ? map['createddate'] as Timestamp : null,
+      updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
+      lastModifiedDate: map['lastModifiedDate'] != null
+          ? map['lastModifiedDate'] as Timestamp
+          : null,
     );
   }
 
@@ -107,7 +105,7 @@ class User extends Abstract {
 
   @override
   String toString() {
-    return 'User(username: $username, email: $email, address: $address, displayname: $displayname, phonenumber: $phonenumber, description: $description, majorId: $majorId, deleted: $deleted, createddate: $createddate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
+    return 'User(username: $username, email: $email, address: $address, displayname: $displayname, phonenumber: $phonenumber, description: $description, majorId: $majorId, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
   }
 
   @override
@@ -123,7 +121,7 @@ class User extends Abstract {
         other.description == description &&
         other.majorId == majorId &&
         other.deleted == deleted &&
-        other.createddate == createddate &&
+        other.createdDate == createdDate &&
         other.updatedBy == updatedBy &&
         other.lastModifiedDate == lastModifiedDate;
   }
@@ -138,7 +136,7 @@ class User extends Abstract {
         description.hashCode ^
         majorId.hashCode ^
         deleted.hashCode ^
-        createddate.hashCode ^
+        createdDate.hashCode ^
         updatedBy.hashCode ^
         lastModifiedDate.hashCode;
   }
