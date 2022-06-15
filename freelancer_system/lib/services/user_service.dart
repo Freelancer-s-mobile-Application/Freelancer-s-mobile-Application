@@ -8,37 +8,20 @@ class UserService {
   final CollectionReference _users =
       FirebaseFirestore.instance.collection('Users');
 
-  // Future<List<User>> getUsers() async {
-  //   List<User> users = newObject();
-  //   final docRef = _users;
-  //   docRef.get().then(
-  //     (value) {
-  //       for (var e in value.docs) {
-  //         final data = e.data() as Map<String, dynamic>;
-  //         User user = newObject();
-  //         user.fromMap(data);
-  //         users.add(user);
-  //       }
-  //     },
-  //     onError: (e) => print("Error getting document: $e"),
-  //   );
-
-  //   users.forEach((element) {
-  //     print(element.email);
-  //   });
-
-  //   return users;
-  // }
-
   Future<String> getFirstUser() async {
     User user = User();
-
-    // var test;
     await _users.get().then((value) => {
           if (value.docs[0].exists)
             user = User.fromMap(value.docs[0].data() as Map<String, dynamic>)
         });
     return user.toString();
+  }
+
+  Future<User> find(String id) async {
+    User user = User();
+    await _users.doc(id).get().then(
+        (value) => user = User.fromMap(value.data() as Map<String, dynamic>));
+    return user;
   }
 
   Future<void> addUser(User user) {
@@ -48,27 +31,19 @@ class UserService {
         .catchError((error) => print("Failed to add user: $error"));
   }
 
-  // Future<void> updateUser(User user) {
-  //   return _users
-  //       .get().
-  //       .set({
-  //         'username': user.username,
-  //         'email': user.email,
-  //         'address': user.address,
-  //         'displayname': user.displayname,
-  //         'phonenumber': user.phonenumber,
-  //         'description': user.description,
-  //         'majorId': user.majorId
-  //       })
-  //       .then((value) => print("User Updated"))
-  //       .catchError((error) => print("Failed to update user: $error"));
-  // }
+  Future<void> delete(String id) async {
+    await _users
+        .doc(id)
+        .delete()
+        .then((value) => print("User deleted"))
+        .catchError((error) => print("Failed to delete user: $error"));
+  }
 
-  // Future<void> deleteUser(String userId) {
-  //   return _users
-  //       .doc(userId)
-  //       .delete()
-  //       .then((value) => print("User Deleted"))
-  //       .catchError((error) => print("Failed to delete user: $error"));
-  // }
+  Future<void> update(String id, User user) async {
+    await _users
+        .doc(id)
+        .update(user.toMap())
+        .then((value) => print("User updated"))
+        .catchError((error) => print("Failed to update user: $error"));
+  }
 }
