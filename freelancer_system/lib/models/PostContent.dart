@@ -9,10 +9,9 @@ class PostContent {
   String? type;
 
   bool? deleted;
-  Timestamp? lastModifiedDate;
-  Timestamp? createdDate;
+  DateTime? lastModifiedDate;
+  DateTime? createdDate;
   String? updatedBy;
-
   PostContent({
     this.postId,
     this.url,
@@ -28,8 +27,8 @@ class PostContent {
     String? url,
     String? type,
     bool? deleted,
-    Timestamp? lastModifiedDate,
-    Timestamp? createdDate,
+    DateTime? lastModifiedDate,
+    DateTime? createdDate,
     String? updatedBy,
   }) {
     return PostContent(
@@ -49,8 +48,8 @@ class PostContent {
       'url': url,
       'type': type,
       'deleted': deleted,
-      'lastModifiedDate': lastModifiedDate,
-      'createdDate': createdDate,
+      'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
+      'createdDate': createdDate?.millisecondsSinceEpoch,
       'updatedBy': updatedBy,
     };
   }
@@ -61,12 +60,13 @@ class PostContent {
       url: map['url'] != null ? map['url'] as String : null,
       type: map['type'] != null ? map['type'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
-      createdDate:
-          map['createddate'] != null ? map['createddate'] as Timestamp : null,
-      updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'] as Timestamp
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
           : null,
+      createdDate: map['createdDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
+          : null,
+      updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
     );
   }
 

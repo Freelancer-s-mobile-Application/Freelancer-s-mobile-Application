@@ -4,17 +4,17 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
-class Form {
+class ApplicationForm {
   String? userId;
   String? postId;
   String? status;
   List<String>? files;
 
   bool? deleted;
-  Timestamp? createdDate;
+  DateTime? createdDate;
   String? updatedBy;
-  Timestamp? lastModifiedDate;
-  Form({
+  DateTime? lastModifiedDate;
+  ApplicationForm({
     this.userId,
     this.postId,
     this.status,
@@ -25,17 +25,17 @@ class Form {
     this.lastModifiedDate,
   });
 
-  Form copyWith({
+  ApplicationForm copyWith({
     String? userId,
     String? postId,
     String? status,
     List<String>? files,
     bool? deleted,
-    Timestamp? createdDate,
+    DateTime? createdDate,
     String? updatedBy,
-    Timestamp? lastModifiedDate,
+    DateTime? lastModifiedDate,
   }) {
-    return Form(
+    return ApplicationForm(
       userId: userId ?? this.userId,
       postId: postId ?? this.postId,
       status: status ?? this.status,
@@ -54,14 +54,14 @@ class Form {
       'status': status,
       'files': files,
       'deleted': deleted,
-      'createdDate': createdDate,
+      'createdDate': createdDate?.millisecondsSinceEpoch,
       'updatedBy': updatedBy,
-      'lastModifiedDate': lastModifiedDate,
+      'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
     };
   }
 
-  factory Form.fromMap(Map<String, dynamic> map) {
-    return Form(
+  factory ApplicationForm.fromMap(Map<String, dynamic> map) {
+    return ApplicationForm(
       userId: map['userId'] != null ? map['userId'] as String : null,
       postId: map['postId'] != null ? map['postId'] as String : null,
       status: map['status'] != null ? map['status'] as String : null,
@@ -69,30 +69,31 @@ class Form {
           ? List<String>.from((map['files'] as List<String>))
           : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
-      createdDate:
-          map['createddate'] != null ? map['createddate'] as Timestamp : null,
+      createdDate: map['createdDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
+          : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'] as Timestamp
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
           : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Form.fromJson(String source) =>
-      Form.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ApplicationForm.fromJson(String source) =>
+      ApplicationForm.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'Form(userId: $userId, postId: $postId, status: $status, files: $files, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
+    return 'ApplicationForm(userId: $userId, postId: $postId, status: $status, files: $files, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Form &&
+    return other is ApplicationForm &&
         other.userId == userId &&
         other.postId == postId &&
         other.status == status &&

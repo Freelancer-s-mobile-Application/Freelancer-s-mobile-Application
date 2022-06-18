@@ -9,8 +9,8 @@ class Report {
   String? reporterId;
 
   bool? deleted;
-  Timestamp? lastModifiedDate;
-  Timestamp? createdDate;
+  DateTime? lastModifiedDate;
+  DateTime? createdDate;
   String? updatedBy;
   Report({
     this.comment,
@@ -27,8 +27,8 @@ class Report {
     String? receiverId,
     String? reporterId,
     bool? deleted,
-    Timestamp? lastModifiedDate,
-    Timestamp? createdDate,
+    DateTime? lastModifiedDate,
+    DateTime? createdDate,
     String? updatedBy,
   }) {
     return Report(
@@ -48,8 +48,8 @@ class Report {
       'receiverId': receiverId,
       'reporterId': reporterId,
       'deleted': deleted,
-      'lastModifiedDate': lastModifiedDate,
-      'createdDate': createdDate,
+      'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
+      'createdDate': createdDate?.millisecondsSinceEpoch,
       'updatedBy': updatedBy,
     };
   }
@@ -62,12 +62,13 @@ class Report {
       reporterId:
           map['reporterId'] != null ? map['reporterId'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
-      createdDate:
-          map['createddate'] != null ? map['createddate'] as Timestamp : null,
-      updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'] as Timestamp
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
           : null,
+      createdDate: map['createdDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
+          : null,
+      updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
     );
   }
 

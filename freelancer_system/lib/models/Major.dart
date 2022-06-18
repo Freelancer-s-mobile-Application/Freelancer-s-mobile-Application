@@ -7,8 +7,8 @@ class Major {
   String? name;
 
   bool? deleted;
-  Timestamp? lastModifiedDate;
-  Timestamp? createdDate;
+  DateTime? lastModifiedDate;
+  DateTime? createdDate;
   String? updatedBy;
   Major({
     this.name,
@@ -21,8 +21,8 @@ class Major {
   Major copyWith({
     String? name,
     bool? deleted,
-    Timestamp? lastModifiedDate,
-    Timestamp? createdDate,
+    DateTime? lastModifiedDate,
+    DateTime? createdDate,
     String? updatedBy,
   }) {
     return Major(
@@ -38,8 +38,8 @@ class Major {
     return <String, dynamic>{
       'name': name,
       'deleted': deleted,
-      'lastModifiedDate': lastModifiedDate,
-      'createdDate': createdDate,
+      'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
+      'createdDate': createdDate?.millisecondsSinceEpoch,
       'updatedBy': updatedBy,
     };
   }
@@ -48,12 +48,13 @@ class Major {
     return Major(
       name: map['name'] != null ? map['name'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
-      createdDate:
-          map['createddate'] != null ? map['createddate'] as Timestamp : null,
-      updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'] as Timestamp
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
           : null,
+      createdDate: map['createdDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
+          : null,
+      updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
     );
   }
 

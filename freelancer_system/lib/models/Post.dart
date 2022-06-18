@@ -12,10 +12,9 @@ class Post {
   String? status;
 
   bool? deleted;
-  Timestamp? lastModifiedDate;
-  Timestamp? createdDate;
+  DateTime? lastModifiedDate;
+  DateTime? createdDate;
   String? updatedBy;
-
   Post({
     this.userId,
     this.title,
@@ -37,8 +36,8 @@ class Post {
     num? maxNumber,
     String? status,
     bool? deleted,
-    Timestamp? lastModifiedDate,
-    Timestamp? createdDate,
+    DateTime? lastModifiedDate,
+    DateTime? createdDate,
     String? updatedBy,
   }) {
     return Post(
@@ -64,8 +63,8 @@ class Post {
       'maxNumber': maxNumber,
       'status': status,
       'deleted': deleted,
-      'lastModifiedDate': lastModifiedDate,
-      'createdDate': createdDate,
+      'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
+      'createdDate': createdDate?.millisecondsSinceEpoch,
       'updatedBy': updatedBy,
     };
   }
@@ -79,12 +78,13 @@ class Post {
       maxNumber: map['maxNumber'] != null ? map['maxNumber'] as num : null,
       status: map['status'] != null ? map['status'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
-      createdDate:
-          map['createddate'] != null ? map['createddate'] as Timestamp : null,
-      updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'] as Timestamp
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
           : null,
+      createdDate: map['createdDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
+          : null,
+      updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
     );
   }
 

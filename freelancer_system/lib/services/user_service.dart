@@ -24,8 +24,8 @@ class UserService {
     return user;
   }
 
-  Future<void> addUser(User user) {
-    return _users
+  Future<void> add(User user) async {
+    return await _users
         .add(user.toMap())
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));

@@ -11,8 +11,8 @@ class Notification {
   bool? isSeen;
 
   bool? deleted;
-  Timestamp? lastModifiedDate;
-  Timestamp? createdDate;
+  DateTime? lastModifiedDate;
+  DateTime? createdDate;
   String? updatedBy;
   Notification({
     this.senderId,
@@ -33,8 +33,8 @@ class Notification {
     String? content,
     bool? isSeen,
     bool? deleted,
-    Timestamp? lastModifiedDate,
-    Timestamp? createdDate,
+    DateTime? lastModifiedDate,
+    DateTime? createdDate,
     String? updatedBy,
   }) {
     return Notification(
@@ -58,8 +58,8 @@ class Notification {
       'content': content,
       'isSeen': isSeen,
       'deleted': deleted,
-      'lastModifiedDate': lastModifiedDate,
-      'createdDate': createdDate,
+      'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
+      'createdDate': createdDate?.millisecondsSinceEpoch,
       'updatedBy': updatedBy,
     };
   }
@@ -73,12 +73,13 @@ class Notification {
       content: map['content'] != null ? map['content'] as String : null,
       isSeen: map['isSeen'] != null ? map['isSeen'] as bool : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
-      createdDate:
-          map['createddate'] != null ? map['createddate'] as Timestamp : null,
-      updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'] as Timestamp
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
           : null,
+      createdDate: map['createdDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
+          : null,
+      updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
     );
   }
 

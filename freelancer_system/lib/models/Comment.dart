@@ -10,9 +10,9 @@ class Comment {
   String? userId;
 
   bool? deleted;
-  Timestamp? createdDate;
+  DateTime? createdDate;
   String? updatedBy;
-  Timestamp? lastModifiedDate;
+  DateTime? lastModifiedDate;
   Comment({
     this.commentId,
     this.content,
@@ -30,9 +30,9 @@ class Comment {
     String? postId,
     String? userId,
     bool? deleted,
-    Timestamp? createdDate,
+    DateTime? createdDate,
     String? updatedBy,
-    Timestamp? lastModifiedDate,
+    DateTime? lastModifiedDate,
   }) {
     return Comment(
       commentId: commentId ?? this.commentId,
@@ -53,9 +53,9 @@ class Comment {
       'postId': postId,
       'userId': userId,
       'deleted': deleted,
-      'createdDate': createdDate,
+      'createdDate': createdDate?.millisecondsSinceEpoch,
       'updatedBy': updatedBy,
-      'lastModifiedDate': lastModifiedDate,
+      'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
     };
   }
 
@@ -66,11 +66,12 @@ class Comment {
       postId: map['postId'] != null ? map['postId'] as String : null,
       userId: map['userId'] != null ? map['userId'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
-      createdDate:
-          map['createddate'] != null ? map['createddate'] as Timestamp : null,
+      createdDate: map['createdDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
+          : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'] as Timestamp
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
           : null,
     );
   }

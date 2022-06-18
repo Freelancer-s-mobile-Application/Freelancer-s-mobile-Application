@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:freelancer_system/services/form_service.dart';
 
 import '../../services/user_service.dart';
 
@@ -26,12 +27,21 @@ class DebugPage extends StatefulWidget {
 
 class _DebugPageState extends State<DebugPage> {
   final UserService userService = UserService();
+  final FormService formService = FormService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          debugPrint(await userService.getFirstUser());
+          // debugPrint();
+          await formService
+              .findByUserId("4m4gw4I4EFg3MbxxdMFs")
+              .then((value) => value.forEach((element) {
+                    formService.add(element);
+                  }))
+              .catchError((error) {
+            debugPrint(error.toString());
+          });
         },
         child: const Icon(Icons.add),
       ),
