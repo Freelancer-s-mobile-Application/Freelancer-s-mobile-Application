@@ -15,9 +15,9 @@ class User {
   String? majorId;
 
   bool? deleted;
-  Timestamp? createdDate;
+  DateTime? createdDate;
   String? updatedBy;
-  Timestamp? lastModifiedDate;
+  DateTime? lastModifiedDate;
   User({
     this.username,
     this.email,
@@ -41,9 +41,9 @@ class User {
     String? description,
     String? majorId,
     bool? deleted,
-    Timestamp? createdDate,
+    DateTime? createdDate,
     String? updatedBy,
-    Timestamp? lastModifiedDate,
+    DateTime? lastModifiedDate,
   }) {
     return User(
       username: username ?? this.username,
@@ -70,9 +70,9 @@ class User {
       'description': description,
       'majorId': majorId,
       'deleted': deleted,
-      'createdDate': createdDate,
+      'createdDate': createdDate?.millisecondsSinceEpoch,
       'updatedBy': updatedBy,
-      'lastModifiedDate': lastModifiedDate,
+      'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
     };
   }
 
@@ -89,11 +89,12 @@ class User {
           map['description'] != null ? map['description'] as String : null,
       majorId: map['majorId'] != null ? map['majorId'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
-      createdDate:
-          map['createddate'] != null ? map['createddate'] as Timestamp : null,
+      createdDate: map['createdDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
+          : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'] as Timestamp
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
           : null,
     );
   }
