@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Notification {
+  String? id;
   String? senderId;
   String? receiverId;
   String? title;
@@ -13,8 +14,8 @@ class Notification {
   bool? deleted;
   DateTime? lastModifiedDate;
   DateTime? createdDate;
-  String? updatedBy;
   Notification({
+    this.id,
     this.senderId,
     this.receiverId,
     this.title,
@@ -23,10 +24,10 @@ class Notification {
     this.deleted,
     this.lastModifiedDate,
     this.createdDate,
-    this.updatedBy,
   });
 
   Notification copyWith({
+    String? id,
     String? senderId,
     String? receiverId,
     String? title,
@@ -35,9 +36,9 @@ class Notification {
     bool? deleted,
     DateTime? lastModifiedDate,
     DateTime? createdDate,
-    String? updatedBy,
   }) {
     return Notification(
+      id: id ?? this.id,
       senderId: senderId ?? this.senderId,
       receiverId: receiverId ?? this.receiverId,
       title: title ?? this.title,
@@ -46,12 +47,12 @@ class Notification {
       deleted: deleted ?? this.deleted,
       lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
       createdDate: createdDate ?? this.createdDate,
-      updatedBy: updatedBy ?? this.updatedBy,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'senderId': senderId,
       'receiverId': receiverId,
       'title': title,
@@ -60,12 +61,12 @@ class Notification {
       'deleted': deleted,
       'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
       'createdDate': createdDate?.millisecondsSinceEpoch,
-      'updatedBy': updatedBy,
     };
   }
 
   factory Notification.fromMap(Map<String, dynamic> map) {
     return Notification(
+      id: map['id'] != null ? map['id'] as String : null,
       senderId: map['senderId'] != null ? map['senderId'] as String : null,
       receiverId:
           map['receiverId'] != null ? map['receiverId'] as String : null,
@@ -73,12 +74,11 @@ class Notification {
       content: map['content'] != null ? map['content'] as String : null,
       isSeen: map['isSeen'] != null ? map['isSeen'] as bool : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
-      createdDate: map['createdDate'] != null
-          ? map['createdDate'].toDate() as DateTime
-          : null,
-      updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'].toDate() as DateTime
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
+          : null,
+      createdDate: map['createdDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
           : null,
     );
   }
@@ -90,7 +90,7 @@ class Notification {
 
   @override
   String toString() {
-    return 'Notification(senderId: $senderId, receiverId: $receiverId, title: $title, content: $content, isSeen: $isSeen, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
+    return 'Notification(id: $id, senderId: $senderId, receiverId: $receiverId, title: $title, content: $content, isSeen: $isSeen, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate)';
   }
 
   @override
@@ -98,6 +98,7 @@ class Notification {
     if (identical(this, other)) return true;
 
     return other is Notification &&
+        other.id == id &&
         other.senderId == senderId &&
         other.receiverId == receiverId &&
         other.title == title &&
@@ -105,20 +106,19 @@ class Notification {
         other.isSeen == isSeen &&
         other.deleted == deleted &&
         other.lastModifiedDate == lastModifiedDate &&
-        other.createdDate == createdDate &&
-        other.updatedBy == updatedBy;
+        other.createdDate == createdDate;
   }
 
   @override
   int get hashCode {
-    return senderId.hashCode ^
+    return id.hashCode ^
+        senderId.hashCode ^
         receiverId.hashCode ^
         title.hashCode ^
         content.hashCode ^
         isSeen.hashCode ^
         deleted.hashCode ^
         lastModifiedDate.hashCode ^
-        createdDate.hashCode ^
-        updatedBy.hashCode;
+        createdDate.hashCode;
   }
 }

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PostContent {
+  String? id;
   String? postId;
   String? url;
   String? type;
@@ -13,6 +14,7 @@ class PostContent {
   DateTime? createdDate;
   String? updatedBy;
   PostContent({
+    this.id,
     this.postId,
     this.url,
     this.type,
@@ -23,6 +25,7 @@ class PostContent {
   });
 
   PostContent copyWith({
+    String? id,
     String? postId,
     String? url,
     String? type,
@@ -32,6 +35,7 @@ class PostContent {
     String? updatedBy,
   }) {
     return PostContent(
+      id: id ?? this.id,
       postId: postId ?? this.postId,
       url: url ?? this.url,
       type: type ?? this.type,
@@ -44,6 +48,7 @@ class PostContent {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'postId': postId,
       'url': url,
       'type': type,
@@ -56,17 +61,18 @@ class PostContent {
 
   factory PostContent.fromMap(Map<String, dynamic> map) {
     return PostContent(
+      id: map['id'] != null ? map['id'] as String : null,
       postId: map['postId'] != null ? map['postId'] as String : null,
       url: map['url'] != null ? map['url'] as String : null,
       type: map['type'] != null ? map['type'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
+      lastModifiedDate: map['lastModifiedDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
+          : null,
       createdDate: map['createdDate'] != null
-          ? map['createdDate'].toDate() as DateTime
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
           : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
-      lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'].toDate() as DateTime
-          : null,
     );
   }
 
@@ -77,7 +83,7 @@ class PostContent {
 
   @override
   String toString() {
-    return 'PostContent(postId: $postId, url: $url, type: $type, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
+    return 'PostContent(id: $id, postId: $postId, url: $url, type: $type, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
   }
 
   @override
@@ -85,6 +91,7 @@ class PostContent {
     if (identical(this, other)) return true;
 
     return other is PostContent &&
+        other.id == id &&
         other.postId == postId &&
         other.url == url &&
         other.type == type &&
@@ -96,7 +103,8 @@ class PostContent {
 
   @override
   int get hashCode {
-    return postId.hashCode ^
+    return id.hashCode ^
+        postId.hashCode ^
         url.hashCode ^
         type.hashCode ^
         deleted.hashCode ^

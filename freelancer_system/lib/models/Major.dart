@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Major {
+  String? id;
   String? name;
 
   bool? deleted;
@@ -11,6 +12,7 @@ class Major {
   DateTime? createdDate;
   String? updatedBy;
   Major({
+    this.id,
     this.name,
     this.deleted,
     this.lastModifiedDate,
@@ -19,6 +21,7 @@ class Major {
   });
 
   Major copyWith({
+    String? id,
     String? name,
     bool? deleted,
     DateTime? lastModifiedDate,
@@ -26,6 +29,7 @@ class Major {
     String? updatedBy,
   }) {
     return Major(
+      id: id ?? this.id,
       name: name ?? this.name,
       deleted: deleted ?? this.deleted,
       lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
@@ -36,6 +40,7 @@ class Major {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'name': name,
       'deleted': deleted,
       'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
@@ -46,15 +51,16 @@ class Major {
 
   factory Major.fromMap(Map<String, dynamic> map) {
     return Major(
+      id: map['id'] != null ? map['id'] as String : null,
       name: map['name'] != null ? map['name'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
+      lastModifiedDate: map['lastModifiedDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
+          : null,
       createdDate: map['createdDate'] != null
-          ? map['createdDate'].toDate() as DateTime
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
           : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
-      lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'].toDate() as DateTime
-          : null,
     );
   }
 
@@ -65,7 +71,7 @@ class Major {
 
   @override
   String toString() {
-    return 'Major(name: $name, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
+    return 'Major(id: $id, name: $name, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
   }
 
   @override
@@ -73,6 +79,7 @@ class Major {
     if (identical(this, other)) return true;
 
     return other is Major &&
+        other.id == id &&
         other.name == name &&
         other.deleted == deleted &&
         other.lastModifiedDate == lastModifiedDate &&
@@ -82,7 +89,8 @@ class Major {
 
   @override
   int get hashCode {
-    return name.hashCode ^
+    return id.hashCode ^
+        name.hashCode ^
         deleted.hashCode ^
         lastModifiedDate.hashCode ^
         createdDate.hashCode ^

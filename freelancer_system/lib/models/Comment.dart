@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Comment {
+  String? id;
   String? commentId;
   String? content;
   String? postId;
@@ -14,6 +15,7 @@ class Comment {
   String? updatedBy;
   DateTime? lastModifiedDate;
   Comment({
+    this.id,
     this.commentId,
     this.content,
     this.postId,
@@ -25,6 +27,7 @@ class Comment {
   });
 
   Comment copyWith({
+    String? id,
     String? commentId,
     String? content,
     String? postId,
@@ -35,6 +38,7 @@ class Comment {
     DateTime? lastModifiedDate,
   }) {
     return Comment(
+      id: id ?? this.id,
       commentId: commentId ?? this.commentId,
       content: content ?? this.content,
       postId: postId ?? this.postId,
@@ -48,6 +52,7 @@ class Comment {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'commentId': commentId,
       'content': content,
       'postId': postId,
@@ -61,17 +66,18 @@ class Comment {
 
   factory Comment.fromMap(Map<String, dynamic> map) {
     return Comment(
+      id: map['id'] != null ? map['id'] as String : null,
       commentId: map['commentId'] != null ? map['commentId'] as String : null,
       content: map['content'] != null ? map['content'] as String : null,
       postId: map['postId'] != null ? map['postId'] as String : null,
       userId: map['userId'] != null ? map['userId'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
       createdDate: map['createdDate'] != null
-          ? map['createdDate'].toDate() as DateTime
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
           : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'].toDate() as DateTime
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
           : null,
     );
   }
@@ -83,7 +89,7 @@ class Comment {
 
   @override
   String toString() {
-    return 'Comment(commentId: $commentId, content: $content, postId: $postId, userId: $userId, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
+    return 'Comment(id: $id, commentId: $commentId, content: $content, postId: $postId, userId: $userId, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
   }
 
   @override
@@ -91,6 +97,7 @@ class Comment {
     if (identical(this, other)) return true;
 
     return other is Comment &&
+        other.id == id &&
         other.commentId == commentId &&
         other.content == content &&
         other.postId == postId &&
@@ -103,7 +110,8 @@ class Comment {
 
   @override
   int get hashCode {
-    return commentId.hashCode ^
+    return id.hashCode ^
+        commentId.hashCode ^
         content.hashCode ^
         postId.hashCode ^
         userId.hashCode ^

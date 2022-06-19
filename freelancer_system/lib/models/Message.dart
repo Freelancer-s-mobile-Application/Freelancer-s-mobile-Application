@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Message {
+  String? id;
   String? senderId;
   String? receiverId;
   String? content;
@@ -14,6 +15,7 @@ class Message {
   DateTime? createdDate;
   String? updatedBy;
   Message({
+    this.id,
     this.senderId,
     this.receiverId,
     this.content,
@@ -25,6 +27,7 @@ class Message {
   });
 
   Message copyWith({
+    String? id,
     String? senderId,
     String? receiverId,
     String? content,
@@ -35,6 +38,7 @@ class Message {
     String? updatedBy,
   }) {
     return Message(
+      id: id ?? this.id,
       senderId: senderId ?? this.senderId,
       receiverId: receiverId ?? this.receiverId,
       content: content ?? this.content,
@@ -48,6 +52,7 @@ class Message {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'senderId': senderId,
       'receiverId': receiverId,
       'content': content,
@@ -61,19 +66,20 @@ class Message {
 
   factory Message.fromMap(Map<String, dynamic> map) {
     return Message(
+      id: map['id'] != null ? map['id'] as String : null,
       senderId: map['senderId'] != null ? map['senderId'] as String : null,
       receiverId:
           map['receiverId'] != null ? map['receiverId'] as String : null,
       content: map['content'] != null ? map['content'] as String : null,
       isSeen: map['isSeen'] != null ? map['isSeen'] as bool : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
+      lastModifiedDate: map['lastModifiedDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
+          : null,
       createdDate: map['createdDate'] != null
-          ? map['createdDate'].toDate() as DateTime
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
           : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
-      lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'].toDate() as DateTime
-          : null,
     );
   }
 
@@ -84,7 +90,7 @@ class Message {
 
   @override
   String toString() {
-    return 'Message(senderId: $senderId, receiverId: $receiverId, content: $content, isSeen: $isSeen, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
+    return 'Message(id: $id, senderId: $senderId, receiverId: $receiverId, content: $content, isSeen: $isSeen, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
   }
 
   @override
@@ -92,6 +98,7 @@ class Message {
     if (identical(this, other)) return true;
 
     return other is Message &&
+        other.id == id &&
         other.senderId == senderId &&
         other.receiverId == receiverId &&
         other.content == content &&
@@ -104,7 +111,8 @@ class Message {
 
   @override
   int get hashCode {
-    return senderId.hashCode ^
+    return id.hashCode ^
+        senderId.hashCode ^
         receiverId.hashCode ^
         content.hashCode ^
         isSeen.hashCode ^

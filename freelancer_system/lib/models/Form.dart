@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 class ApplicationForm {
+  String? id;
   String? userId;
   String? postId;
   String? status;
@@ -15,6 +16,7 @@ class ApplicationForm {
   String? updatedBy;
   DateTime? lastModifiedDate;
   ApplicationForm({
+    this.id,
     this.userId,
     this.postId,
     this.status,
@@ -26,6 +28,7 @@ class ApplicationForm {
   });
 
   ApplicationForm copyWith({
+    String? id,
     String? userId,
     String? postId,
     String? status,
@@ -36,6 +39,7 @@ class ApplicationForm {
     DateTime? lastModifiedDate,
   }) {
     return ApplicationForm(
+      id: id ?? this.id,
       userId: userId ?? this.userId,
       postId: postId ?? this.postId,
       status: status ?? this.status,
@@ -49,6 +53,7 @@ class ApplicationForm {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'userId': userId,
       'postId': postId,
       'status': status,
@@ -62,6 +67,7 @@ class ApplicationForm {
 
   factory ApplicationForm.fromMap(Map<String, dynamic> map) {
     return ApplicationForm(
+      id: map['id'] != null ? map['id'] as String : null,
       userId: map['userId'] != null ? map['userId'] as String : null,
       postId: map['postId'] != null ? map['postId'] as String : null,
       status: map['status'] != null ? map['status'] as String : null,
@@ -70,11 +76,11 @@ class ApplicationForm {
           : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
       createdDate: map['createdDate'] != null
-          ? map['createdDate'].toDate() as DateTime
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
           : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'].toDate() as DateTime
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
           : null,
     );
   }
@@ -86,7 +92,7 @@ class ApplicationForm {
 
   @override
   String toString() {
-    return 'ApplicationForm(userId: $userId, postId: $postId, status: $status, files: $files, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
+    return 'ApplicationForm(id: $id, userId: $userId, postId: $postId, status: $status, files: $files, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
   }
 
   @override
@@ -94,6 +100,7 @@ class ApplicationForm {
     if (identical(this, other)) return true;
 
     return other is ApplicationForm &&
+        other.id == id &&
         other.userId == userId &&
         other.postId == postId &&
         other.status == status &&
@@ -106,7 +113,8 @@ class ApplicationForm {
 
   @override
   int get hashCode {
-    return userId.hashCode ^
+    return id.hashCode ^
+        userId.hashCode ^
         postId.hashCode ^
         status.hashCode ^
         files.hashCode ^

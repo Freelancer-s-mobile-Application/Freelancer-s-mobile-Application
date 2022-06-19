@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Post {
+  String? id;
   String? userId;
   String? title;
   String? content;
@@ -16,6 +17,7 @@ class Post {
   DateTime? createdDate;
   String? updatedBy;
   Post({
+    this.id,
     this.userId,
     this.title,
     this.content,
@@ -29,6 +31,7 @@ class Post {
   });
 
   Post copyWith({
+    String? id,
     String? userId,
     String? title,
     String? content,
@@ -41,6 +44,7 @@ class Post {
     String? updatedBy,
   }) {
     return Post(
+      id: id ?? this.id,
       userId: userId ?? this.userId,
       title: title ?? this.title,
       content: content ?? this.content,
@@ -56,6 +60,7 @@ class Post {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'userId': userId,
       'title': title,
       'content': content,
@@ -71,6 +76,7 @@ class Post {
 
   factory Post.fromMap(Map<String, dynamic> map) {
     return Post(
+      id: map['id'] != null ? map['id'] as String : null,
       userId: map['userId'] != null ? map['userId'] as String : null,
       title: map['title'] != null ? map['title'] as String : null,
       content: map['content'] != null ? map['content'] as String : null,
@@ -78,13 +84,13 @@ class Post {
       maxNumber: map['maxNumber'] != null ? map['maxNumber'] as num : null,
       status: map['status'] != null ? map['status'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
+      lastModifiedDate: map['lastModifiedDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
+          : null,
       createdDate: map['createdDate'] != null
-          ? map['createdDate'].toDate() as DateTime
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
           : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
-      lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'].toDate() as DateTime
-          : null,
     );
   }
 
@@ -95,7 +101,7 @@ class Post {
 
   @override
   String toString() {
-    return 'Post(userId: $userId, title: $title, content: $content, minNumber: $minNumber, maxNumber: $maxNumber, status: $status, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
+    return 'Post(id: $id, userId: $userId, title: $title, content: $content, minNumber: $minNumber, maxNumber: $maxNumber, status: $status, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
   }
 
   @override
@@ -103,6 +109,7 @@ class Post {
     if (identical(this, other)) return true;
 
     return other is Post &&
+        other.id == id &&
         other.userId == userId &&
         other.title == title &&
         other.content == content &&
@@ -117,7 +124,8 @@ class Post {
 
   @override
   int get hashCode {
-    return userId.hashCode ^
+    return id.hashCode ^
+        userId.hashCode ^
         title.hashCode ^
         content.hashCode ^
         minNumber.hashCode ^

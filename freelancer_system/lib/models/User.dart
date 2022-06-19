@@ -20,6 +20,7 @@ class User {
   String? updatedBy;
   DateTime? lastModifiedDate;
   User({
+    this.id,
     this.username,
     this.email,
     this.address,
@@ -34,6 +35,7 @@ class User {
   });
 
   User copyWith({
+    String? id,
     String? username,
     String? email,
     String? address,
@@ -47,6 +49,7 @@ class User {
     DateTime? lastModifiedDate,
   }) {
     return User(
+      id: id ?? this.id,
       username: username ?? this.username,
       email: email ?? this.email,
       address: address ?? this.address,
@@ -63,6 +66,7 @@ class User {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'username': username,
       'email': email,
       'address': address,
@@ -79,6 +83,7 @@ class User {
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
+      id: map['id'] != null ? map['id'] as String : null,
       username: map['username'] != null ? map['username'] as String : null,
       email: map['email'] != null ? map['email'] as String : null,
       address: map['address'] != null ? map['address'] as String : null,
@@ -91,11 +96,11 @@ class User {
       majorId: map['majorId'] != null ? map['majorId'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
       createdDate: map['createdDate'] != null
-          ? map['createdDate'].toDate() as DateTime
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
           : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'].toDate() as DateTime
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
           : null,
     );
   }
@@ -107,7 +112,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(username: $username, email: $email, address: $address, displayname: $displayname, phonenumber: $phonenumber, description: $description, majorId: $majorId, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
+    return 'User(id: $id, username: $username, email: $email, address: $address, displayname: $displayname, phonenumber: $phonenumber, description: $description, majorId: $majorId, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
   }
 
   @override
@@ -115,6 +120,7 @@ class User {
     if (identical(this, other)) return true;
 
     return other is User &&
+        other.id == id &&
         other.username == username &&
         other.email == email &&
         other.address == address &&
@@ -130,7 +136,8 @@ class User {
 
   @override
   int get hashCode {
-    return username.hashCode ^
+    return id.hashCode ^
+        username.hashCode ^
         email.hashCode ^
         address.hashCode ^
         displayname.hashCode ^

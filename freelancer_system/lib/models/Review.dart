@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Review {
+  String? id;
   String? comment;
   String? receiverId;
   String? senderId;
@@ -14,6 +15,7 @@ class Review {
   DateTime? createdDate;
   String? updatedBy;
   Review({
+    this.id,
     this.comment,
     this.receiverId,
     this.senderId,
@@ -25,6 +27,7 @@ class Review {
   });
 
   Review copyWith({
+    String? id,
     String? comment,
     String? receiverId,
     String? senderId,
@@ -35,6 +38,7 @@ class Review {
     String? updatedBy,
   }) {
     return Review(
+      id: id ?? this.id,
       comment: comment ?? this.comment,
       receiverId: receiverId ?? this.receiverId,
       senderId: senderId ?? this.senderId,
@@ -48,6 +52,7 @@ class Review {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'comment': comment,
       'receiverId': receiverId,
       'senderId': senderId,
@@ -61,6 +66,7 @@ class Review {
 
   factory Review.fromMap(Map<String, dynamic> map) {
     return Review(
+      id: map['id'] != null ? map['id'] as String : null,
       comment: map['comment'] != null ? map['comment'] as String : null,
       receiverId:
           map['receiverId'] != null ? map['receiverId'] as String : null,
@@ -68,13 +74,13 @@ class Review {
       ratingPoint:
           map['ratingPoint'] != null ? map['ratingPoint'] as num : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
+      lastModifiedDate: map['lastModifiedDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
+          : null,
       createdDate: map['createdDate'] != null
-          ? map['createdDate'].toDate() as DateTime
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
           : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
-      lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'].toDate() as DateTime
-          : null,
     );
   }
 
@@ -85,7 +91,7 @@ class Review {
 
   @override
   String toString() {
-    return 'Review(comment: $comment, receiverId: $receiverId, senderId: $senderId, ratingPoint: $ratingPoint, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
+    return 'Review(id: $id, comment: $comment, receiverId: $receiverId, senderId: $senderId, ratingPoint: $ratingPoint, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
   }
 
   @override
@@ -93,6 +99,7 @@ class Review {
     if (identical(this, other)) return true;
 
     return other is Review &&
+        other.id == id &&
         other.comment == comment &&
         other.receiverId == receiverId &&
         other.senderId == senderId &&
@@ -105,7 +112,8 @@ class Review {
 
   @override
   int get hashCode {
-    return comment.hashCode ^
+    return id.hashCode ^
+        comment.hashCode ^
         receiverId.hashCode ^
         senderId.hashCode ^
         ratingPoint.hashCode ^

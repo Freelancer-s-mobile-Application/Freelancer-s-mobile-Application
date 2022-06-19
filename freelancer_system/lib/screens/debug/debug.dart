@@ -63,11 +63,9 @@ class _DebugPageState extends State<DebugPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           // debugPrint();
-          await formService
-              .findByUserId("4m4gw4I4EFg3MbxxdMFs")
-              .then((value) => value.forEach((element) {
-                    formService.add(element);
-                  }))
+          await userService
+              .find("kqT7RBJk2AiPto5OuWZn")
+              .then((value) => userService.add(value))
               .catchError((error) {
             debugPrint(error.toString());
           });

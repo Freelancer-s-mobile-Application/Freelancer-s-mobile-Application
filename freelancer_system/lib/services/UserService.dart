@@ -27,25 +27,49 @@ class UserService {
   }
 
   Future<void> add(User user) async {
-    return await _users
-        .add(user.toMap())
-        .then((value) => print("User Added"))
-        .catchError((error) => print("Failed to add user: $error"));
+    try {
+      DocumentReference ref = _users.doc();
+      user.createdDate = DateTime.now();
+      user.lastModifiedDate = DateTime.now();
+      user.id = ref.id;
+
+      return await ref
+          .set(user.toMap())
+          .then((value) => print("User Added"))
+          .catchError((error) => print("Failed to add user: $error"));
+    } on Exception catch (_) {
+      throw Exception("Add exception");
+    }
   }
 
   Future<void> delete(String id) async {
-    await _users
-        .doc(id)
-        .delete()
-        .then((value) => print("User deleted"))
-        .catchError((error) => print("Failed to delete user: $error"));
+    try {
+      await _users
+          .doc(id)
+          .update({
+            "deleted": true,
+            "lastModifiedDate": DateTime.now(),
+            // "updatedBy": "System"
+          })
+          .then((value) => print("User deleted"))
+          .catchError((error) => print("Failed to delete user: $error"));
+    } on Exception catch (_) {
+      throw Exception("Delete exception");
+    }
   }
 
   Future<void> update(String id, User user) async {
-    await _users
-        .doc(id)
-        .update(user.toMap())
-        .then((value) => print("User updated"))
-        .catchError((error) => print("Failed to update user: $error"));
+    try {
+      user.lastModifiedDate = DateTime.now();
+      // user.updatedBy = "";
+
+      await _users
+          .doc(id)
+          .update(user.toMap())
+          .then((value) => print("User updated"))
+          .catchError((error) => print("Failed to update user: $error"));
+    } on Exception catch (_) {
+      throw Exception("Update exception");
+    }
   }
 }

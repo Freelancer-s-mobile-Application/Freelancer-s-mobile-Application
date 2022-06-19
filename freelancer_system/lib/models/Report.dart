@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Report {
+  String? id;
   String? comment;
   String? receiverId;
   String? reporterId;
@@ -13,6 +14,7 @@ class Report {
   DateTime? createdDate;
   String? updatedBy;
   Report({
+    this.id,
     this.comment,
     this.receiverId,
     this.reporterId,
@@ -23,6 +25,7 @@ class Report {
   });
 
   Report copyWith({
+    String? id,
     String? comment,
     String? receiverId,
     String? reporterId,
@@ -32,6 +35,7 @@ class Report {
     String? updatedBy,
   }) {
     return Report(
+      id: id ?? this.id,
       comment: comment ?? this.comment,
       receiverId: receiverId ?? this.receiverId,
       reporterId: reporterId ?? this.reporterId,
@@ -44,6 +48,7 @@ class Report {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'comment': comment,
       'receiverId': receiverId,
       'reporterId': reporterId,
@@ -56,19 +61,20 @@ class Report {
 
   factory Report.fromMap(Map<String, dynamic> map) {
     return Report(
+      id: map['id'] != null ? map['id'] as String : null,
       comment: map['comment'] != null ? map['comment'] as String : null,
       receiverId:
           map['receiverId'] != null ? map['receiverId'] as String : null,
       reporterId:
           map['reporterId'] != null ? map['reporterId'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
+      lastModifiedDate: map['lastModifiedDate'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
+          : null,
       createdDate: map['createdDate'] != null
-          ? map['createdDate'].toDate() as DateTime
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
           : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
-      lastModifiedDate: map['lastModifiedDate'] != null
-          ? map['lastModifiedDate'].toDate() as DateTime
-          : null,
     );
   }
 
@@ -79,7 +85,7 @@ class Report {
 
   @override
   String toString() {
-    return 'Report(comment: $comment, receiverId: $receiverId, reporterId: $reporterId, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
+    return 'Report(id: $id, comment: $comment, receiverId: $receiverId, reporterId: $reporterId, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
   }
 
   @override
@@ -87,6 +93,7 @@ class Report {
     if (identical(this, other)) return true;
 
     return other is Report &&
+        other.id == id &&
         other.comment == comment &&
         other.receiverId == receiverId &&
         other.reporterId == reporterId &&
@@ -98,7 +105,8 @@ class Report {
 
   @override
   int get hashCode {
-    return comment.hashCode ^
+    return id.hashCode ^
+        comment.hashCode ^
         receiverId.hashCode ^
         reporterId.hashCode ^
         deleted.hashCode ^
