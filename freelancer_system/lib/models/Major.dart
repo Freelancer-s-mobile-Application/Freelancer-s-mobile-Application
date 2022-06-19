@@ -48,13 +48,13 @@ class Major {
     return Major(
       name: map['name'] != null ? map['name'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
-      lastModifiedDate: map['lastModifiedDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
-          : null,
       createdDate: map['createdDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
+          ? map['createdDate'].toDate() as DateTime
           : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
+      lastModifiedDate: map['lastModifiedDate'] != null
+          ? map['lastModifiedDate'].toDate() as DateTime
+          : null,
     );
   }
 

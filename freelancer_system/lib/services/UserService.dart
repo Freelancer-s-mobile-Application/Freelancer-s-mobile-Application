@@ -1,20 +1,22 @@
 // ignore_for_file: file_names, avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../models/User.dart';
 
 class UserService {
   final CollectionReference _users =
       FirebaseFirestore.instance.collection('Users');
 
-  Future<String> getFirstUser() async {
-    User user = User();
+  Future<List<User>> getAll() async {
+    List<User> users = <User>[];
     await _users.get().then((value) => {
-          if (value.docs[0].exists)
-            user = User.fromMap(value.docs[0].data() as Map<String, dynamic>)
+          if (!value.docs.isEmpty)
+            {
+              for (var doc in value.docs)
+                {users.add(User.fromMap(doc.data() as Map<String, dynamic>))}
+            }
         });
-    return user.toString();
+    return users;
   }
 
   Future<User> find(String id) async {

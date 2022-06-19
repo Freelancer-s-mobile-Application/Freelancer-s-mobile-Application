@@ -84,4 +84,9 @@ class FormService {
 
     return list;
   }
+
+  Future<List<DocumentSnapshot>> findByUserIdSnapshot(String userId) async {
+    QuerySnapshot qn = await _forms.where(userId, isEqualTo: userId).get();
+    return qn.docs;
+  }
 }

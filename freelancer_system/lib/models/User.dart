@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class User {
+  String? id;
   String? username;
   String? email;
   String? address;
@@ -90,11 +91,11 @@ class User {
       majorId: map['majorId'] != null ? map['majorId'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
       createdDate: map['createdDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
+          ? map['createdDate'].toDate() as DateTime
           : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
+          ? map['lastModifiedDate'].toDate() as DateTime
           : null,
     );
   }

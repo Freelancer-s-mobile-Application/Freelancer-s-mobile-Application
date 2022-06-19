@@ -78,13 +78,13 @@ class Post {
       maxNumber: map['maxNumber'] != null ? map['maxNumber'] as num : null,
       status: map['status'] != null ? map['status'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
-      lastModifiedDate: map['lastModifiedDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
-          : null,
       createdDate: map['createdDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
+          ? map['createdDate'].toDate() as DateTime
           : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
+      lastModifiedDate: map['lastModifiedDate'] != null
+          ? map['lastModifiedDate'].toDate() as DateTime
+          : null,
     );
   }
 
