@@ -63,9 +63,9 @@ class PostTile extends StatelessWidget {
               ),
               Column(
                 children: [
-                  const ElevatedButton(
-                    onPressed: null,
-                    child: Text('Apply'),
+                  ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('Apply'),
                   ),
                   Text(DateFormat('yyyy-MM-dd – kk:mm')
                       .format(post.createdDate!)),

@@ -10,7 +10,7 @@ class PostService {
   Future<List<Post>> getAll() async {
     List<Post> posts = <Post>[];
     await _posts.get().then((value) => {
-          if (!value.docs.isEmpty)
+          if (value.docs.isNotEmpty)
             {
               for (var doc in value.docs)
                 {posts.add(Post.fromMap(doc.data() as Map<String, dynamic>))}

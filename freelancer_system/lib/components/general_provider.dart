@@ -4,3 +4,5 @@ import 'package:google_sign_in/google_sign_in.dart';
 final googleSignInProvider = StateProvider((_) => GoogleSignIn());
 
 final userProvider = StateProvider((_) => false);
+
+final pageIndexProvider = StateProvider((_) => 0);
