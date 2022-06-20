@@ -9,7 +9,7 @@ class SearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Padding(
-      padding: const EdgeInsets.only(top: 15, left: 15, right: 15, bottom: 5),
+      padding: const EdgeInsets.only(top: 15, left: 10, right: 10, bottom: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [

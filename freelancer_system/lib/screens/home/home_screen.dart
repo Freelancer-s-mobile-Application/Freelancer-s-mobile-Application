@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:freelancer_system/screens/debug/debug.dart';
+import 'package:freelancer_system/screens/settings/settings.dart';
+import 'package:freelancer_system/services/UserService.dart';
 
 import '../../components/general_provider.dart';
 import '../profile/profile.dart';
@@ -24,8 +27,8 @@ class HomeScreen extends StatelessWidget {
 
 List<Widget> screenList = [
   const FreelanceScreen(),
-  const ProfileScreen(),
-  //const SettingScreen(),
+  const DebugScreen(),
+  const SettingScreen()
 ];
 
 class HomeAppBar extends ConsumerWidget with PreferredSizeWidget {
@@ -33,6 +36,8 @@ class HomeAppBar extends ConsumerWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // final UserService userService = UserService();
+
     final user = ref.watch(userProvider);
     return AppBar(
       leading: IconButton(
@@ -43,7 +48,7 @@ class HomeAppBar extends ConsumerWidget with PreferredSizeWidget {
         },
         icon: const Icon(Icons.logout),
       ),
-      title: const Text('Home Screen'),
+      title: Text("Home screen"),
       centerTitle: true,
       actions: [
         if (user)
@@ -59,7 +64,10 @@ class HomeAppBar extends ConsumerWidget with PreferredSizeWidget {
           text: 'Freelancers',
         ),
         Tab(
-          text: 'Projects',
+          text: 'Debug',
+        ),
+        Tab(
+          text: 'Setting',
         ),
       ]),
     );
