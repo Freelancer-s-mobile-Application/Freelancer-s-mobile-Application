@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:freelancer_system/models/Post.dart';
+import 'package:freelancer_system/services/PostService.dart';
 
 import 'components/post_tile.dart';
 import 'components/search_bar.dart';
@@ -10,7 +12,6 @@ class FreelanceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    List list = [1, 2, 3, 4, 5];
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -25,7 +26,8 @@ class FreelanceScreen extends StatelessWidget {
             ),
           ),
           const Divider(thickness: 1, indent: 20, endIndent: 20),
-          ListViewBuild(list),
+          const ListViewBuild(),
+          // const Expanded(child: ListViewBuild()),
         ],
       ),
     );
@@ -33,27 +35,35 @@ class FreelanceScreen extends StatelessWidget {
 }
 
 class ListViewBuild extends StatefulWidget {
-  const ListViewBuild(this.list);
-
-  final List list;
-
+  const ListViewBuild();
   @override
   State<ListViewBuild> createState() => _ListViewBuildState();
 }
 
 class _ListViewBuildState extends State<ListViewBuild> {
+  final PostService postService = PostService();
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: widget.list.length,
-      itemBuilder: (BuildContext context, int index) {
-        return AnimationConfiguration.staggeredList(
-          position: widget.list[index],
-          child: const PostTile(),
-        );
-      },
-    );
+    return FutureBuilder(
+        future: postService.getAll(),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          return ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: snapshot.data?.length,
+            itemBuilder: (BuildContext context, int index) {
+              return AnimationConfiguration.staggeredList(
+                position: index,
+                child: PostTile(post: snapshot.data[index]),
+              );
+            },
+          );
+        });
   }
 }

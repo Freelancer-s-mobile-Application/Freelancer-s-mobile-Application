@@ -8,8 +8,8 @@ class Post {
   String? userId;
   String? title;
   String? content;
-  num? minNumber;
-  num? maxNumber;
+  num? min;
+  num? max;
   String? status;
 
   bool? deleted;
@@ -21,8 +21,8 @@ class Post {
     this.userId,
     this.title,
     this.content,
-    this.minNumber,
-    this.maxNumber,
+    this.min,
+    this.max,
     this.status,
     this.deleted,
     this.lastModifiedDate,
@@ -35,8 +35,8 @@ class Post {
     String? userId,
     String? title,
     String? content,
-    num? minNumber,
-    num? maxNumber,
+    num? min,
+    num? max,
     String? status,
     bool? deleted,
     DateTime? lastModifiedDate,
@@ -48,8 +48,8 @@ class Post {
       userId: userId ?? this.userId,
       title: title ?? this.title,
       content: content ?? this.content,
-      minNumber: minNumber ?? this.minNumber,
-      maxNumber: maxNumber ?? this.maxNumber,
+      min: min ?? this.min,
+      max: max ?? this.max,
       status: status ?? this.status,
       deleted: deleted ?? this.deleted,
       lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
@@ -64,8 +64,8 @@ class Post {
       'userId': userId,
       'title': title,
       'content': content,
-      'minNumber': minNumber,
-      'maxNumber': maxNumber,
+      'min': min,
+      'max': max,
       'status': status,
       'deleted': deleted,
       'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
@@ -80,8 +80,8 @@ class Post {
       userId: map['userId'] != null ? map['userId'] as String : null,
       title: map['title'] != null ? map['title'] as String : null,
       content: map['content'] != null ? map['content'] as String : null,
-      minNumber: map['minNumber'] != null ? map['minNumber'] as num : null,
-      maxNumber: map['maxNumber'] != null ? map['maxNumber'] as num : null,
+      min: map['min'] != null ? map['min'] as num : null,
+      max: map['max'] != null ? map['max'] as num : null,
       status: map['status'] != null ? map['status'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
       lastModifiedDate: map['lastModifiedDate'] != null
@@ -101,7 +101,7 @@ class Post {
 
   @override
   String toString() {
-    return 'Post(id: $id, userId: $userId, title: $title, content: $content, minNumber: $minNumber, maxNumber: $maxNumber, status: $status, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
+    return 'Post(id: $id, userId: $userId, title: $title, content: $content, min: $min, max: $max, status: $status, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
   }
 
   @override
@@ -113,8 +113,8 @@ class Post {
         other.userId == userId &&
         other.title == title &&
         other.content == content &&
-        other.minNumber == minNumber &&
-        other.maxNumber == maxNumber &&
+        other.min == min &&
+        other.max == max &&
         other.status == status &&
         other.deleted == deleted &&
         other.lastModifiedDate == lastModifiedDate &&
@@ -128,8 +128,8 @@ class Post {
         userId.hashCode ^
         title.hashCode ^
         content.hashCode ^
-        minNumber.hashCode ^
-        maxNumber.hashCode ^
+        min.hashCode ^
+        max.hashCode ^
         status.hashCode ^
         deleted.hashCode ^
         lastModifiedDate.hashCode ^

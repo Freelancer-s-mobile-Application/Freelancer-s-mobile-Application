@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
+import '../../../models/Post.dart';
 
 class PostTile extends StatelessWidget {
-  const PostTile({Key? key}) : super(key: key);
-
+  const PostTile({Key? key, required this.post}) : super(key: key);
+  final Post post;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -25,14 +27,15 @@ class PostTile extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Job Title',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  Text(
+                    post.title.toString(),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 15),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Text(
-                      'Job Description',
+                      post.content.toString(),
                       maxLines: 5,
                     ),
                   ),
@@ -45,31 +48,27 @@ class PostTile extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: const Text('Job Requirement'),
+                    child: Text(post.status.toString()),
                   ),
                   Row(
-                    children: const [
-                      Icon(
+                    children: [
+                      const Icon(
                         FontAwesomeIcons.user,
                         size: 13,
                       ),
-                      Text(' 5')
+                      Text("${post.min} - ${post.max}")
                     ],
                   ),
                 ],
               ),
               Column(
-                children: const [
-                  Icon(
-                    Icons.star,
-                    color: Colors.red,
-                  ),
-                  Text('\$300-\$500'),
-                  ElevatedButton(
+                children: [
+                  const ElevatedButton(
                     onPressed: null,
                     child: Text('Apply'),
                   ),
-                  Text('3 days ago'),
+                  Text(DateFormat('yyyy-MM-dd – kk:mm')
+                      .format(post.createdDate!)),
                 ],
               )
             ],
