@@ -1,43 +1,43 @@
 // ignore_for_file: file_names, avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:freelancer_system/models/Review.dart';
+import 'package:freelancer_system/models/Report.dart';
 import 'package:freelancer_system/services/UserService.dart';
 
 class ReportService {
-  final CollectionReference _reviews =
+  final CollectionReference _reports =
       FirebaseFirestore.instance.collection('Posts');
 
-  Future<List<Review>> getAll() async {
-    List<Review> reviews = <Review>[];
+  Future<List<Report>> getAll() async {
+    List<Report> reports = <Report>[];
     try {
-      await _reviews.where("deleted", isEqualTo: false).get().then((value) => {
+      await _reports.where("deleted", isEqualTo: false).get().then((value) => {
             if (value.docs.isNotEmpty)
               {
                 for (var doc in value.docs)
                   {
-                    reviews
-                        .add(Review.fromMap(doc.data() as Map<String, dynamic>))
+                    reports
+                        .add(Report.fromMap(doc.data() as Map<String, dynamic>))
                   }
               }
           });
     } catch (e) {
       throw Exception(e);
     }
-    return reviews;
+    return reports;
   }
 
-  Future<Review> find(String id) async {
-    Review review = Review();
-    await _reviews.doc(id).get().then((value) =>
-        review = Review.fromMap(value.data() as Map<String, dynamic>));
-    return review;
+  Future<Report> find(String id) async {
+    Report report = Report();
+    await _reports.doc(id).get().then((value) =>
+        report = Report.fromMap(value.data() as Map<String, dynamic>));
+    return report;
   }
 
-  Future<List<Review>> search(String? keyword) async {
-    List<Review> reviews = <Review>[];
+  Future<List<Report>> search(String? keyword) async {
+    List<Report> reports = <Report>[];
     if (keyword != null) {
-      await _reviews
+      await _reports
           .where("title", isGreaterThanOrEqualTo: keyword)
           .get()
           .then((value) => {
@@ -45,31 +45,31 @@ class ReportService {
                   {
                     for (var doc in value.docs)
                       {
-                        reviews.add(
-                            Review.fromMap(doc.data() as Map<String, dynamic>))
+                        reports.add(
+                            Report.fromMap(doc.data() as Map<String, dynamic>))
                       }
                   }
               });
     } else {
-      reviews = await getAll();
+      reports = await getAll();
     }
 
-    return reviews;
+    return reports;
   }
 
-  Future<void> add(Review review) async {
+  Future<void> add(Report report) async {
     try {
-      DocumentReference ref = _reviews.doc();
-      review.createdDate = DateTime.now();
-      review.lastModifiedDate = DateTime.now();
-      review.deleted = false;
-      review.updatedBy = "System";
-      review.id = ref.id;
+      DocumentReference ref = _reports.doc();
+      report.createdDate = DateTime.now();
+      report.lastModifiedDate = DateTime.now();
+      report.deleted = false;
+      report.updatedBy = "System";
+      report.id = ref.id;
 
       return await ref
-          .set(review.toMap())
-          .then((value) => print("Review Added"))
-          .catchError((error) => print("Failed to add review: $error"));
+          .set(report.toMap())
+          .then((value) => print("Report Added"))
+          .catchError((error) => print("Failed to add report: $error"));
     } on Exception catch (_) {
       throw Exception("Add exception");
     }
@@ -79,32 +79,32 @@ class ReportService {
     try {
       var currentUser = await UserService().getCurrentUser();
 
-      await _reviews
+      await _reports
           .doc(id)
           .update({
             "deleted": true,
             "lastModifiedDate": DateTime.now(),
             "updatedBy": currentUser.id,
           })
-          .then((value) => print("Review deleted"))
-          .catchError((error) => print("Failed to delete review: $error"));
+          .then((value) => print("Report deleted"))
+          .catchError((error) => print("Failed to delete report: $error"));
     } on Exception catch (_) {
       throw Exception("Delete exception");
     }
   }
 
-  Future<void> update(String id, Review review) async {
+  Future<void> update(String id, Report report) async {
     try {
       var currentUser = await UserService().getCurrentUser();
 
-      review.lastModifiedDate = DateTime.now();
-      review.updatedBy = currentUser.id;
+      report.lastModifiedDate = DateTime.now();
+      report.updatedBy = currentUser.id;
 
-      await _reviews
+      await _reports
           .doc(id)
-          .update(review.toMap())
-          .then((value) => print("Review updated"))
-          .catchError((error) => print("Failed to update review: $error"));
+          .update(report.toMap())
+          .then((value) => print("Report updated"))
+          .catchError((error) => print("Failed to update report: $error"));
     } on Exception catch (_) {
       throw Exception("Update exception");
     }
