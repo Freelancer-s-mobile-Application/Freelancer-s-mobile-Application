@@ -6,7 +6,7 @@ import 'package:freelancer_system/services/UserService.dart';
 
 class ReviewService {
   final CollectionReference _reviews =
-      FirebaseFirestore.instance.collection('Posts');
+      FirebaseFirestore.instance.collection('Reviews');
 
   Future<List<Review>> getAll() async {
     List<Review> reviews = <Review>[];
