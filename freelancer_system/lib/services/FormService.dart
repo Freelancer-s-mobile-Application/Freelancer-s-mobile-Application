@@ -16,8 +16,13 @@ class FormService {
 
   Future<ApplicationForm> find(String id) async {
     ApplicationForm form = ApplicationForm();
-    await _forms.doc(id).get().then((value) =>
-        form = ApplicationForm.fromMap(value.data() as Map<String, dynamic>));
+
+    try {
+      await _forms.doc(id).get().then((value) =>
+          form = ApplicationForm.fromMap(value.data() as Map<String, dynamic>));
+    } on Exception catch (_) {
+      throw Exception("Add exception");
+    }
     return form;
   }
 
@@ -86,7 +91,12 @@ class FormService {
   }
 
   Future<List<DocumentSnapshot>> findByUserIdSnapshot(String userId) async {
-    QuerySnapshot qn = await _forms.where(userId, isEqualTo: userId).get();
+    QuerySnapshot qn;
+    try {
+      qn = await _forms.where(userId, isEqualTo: userId).get();
+    } catch (e) {
+      throw Exception(e);
+    }
     return qn.docs;
   }
 }
