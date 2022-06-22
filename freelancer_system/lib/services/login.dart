@@ -2,19 +2,17 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../components/general_provider.dart';
-import '../main.dart';
+import '../controllers/getX_controller.dart';
 
-class LoginScreen extends ConsumerWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final ggLogin = ref.watch(googleSignInProvider);
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -36,7 +34,7 @@ class LoginScreen extends ConsumerWidget {
               width: MediaQuery.of(context).size.width * 0.7,
               child: ElevatedButton.icon(
                 onPressed: () {
-                  signInWithGoogle(context, ggLogin, ref);
+                  signInWithGoogle(context);
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white,
@@ -56,10 +54,10 @@ class LoginScreen extends ConsumerWidget {
     );
   }
 
-  Future signInWithGoogle(
-      BuildContext context, GoogleSignIn gg, WidgetRef ref) async {
+  Future signInWithGoogle(BuildContext context) async {
     try {
-      final ggSignIn = gg;
+      final AppController getXController = Get.put(AppController());
+      final ggSignIn = getXController.ggSignIn.value;
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -75,17 +73,10 @@ class LoginScreen extends ConsumerWidget {
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
-
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
       await FirebaseAuth.instance.signInWithCredential(credential);
-      ref.read(userProvider.notifier).state = true;
-      navKey.currentState!.popUntil((route) => route.isFirst);
+      getXController.isUserLoggedIn.value = true;
+      Get.back();
+      Get.back();
     } on FirebaseAuthException catch (e) {
       log(e.toString());
     }

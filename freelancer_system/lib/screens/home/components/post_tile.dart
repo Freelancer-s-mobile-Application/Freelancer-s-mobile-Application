@@ -34,9 +34,13 @@ class PostTile extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text(
-                      post.content.toString(),
-                      maxLines: 5,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.65,
+                      child: Text(
+                        post.content.toString(),
+                        maxLines: 5,
+                        overflow: TextOverflow.fade,
+                      ),
                     ),
                   ),
                   TextButton(
@@ -67,8 +71,8 @@ class PostTile extends StatelessWidget {
                     onPressed: () {},
                     child: const Text('Apply'),
                   ),
-                  Text(DateFormat('yyyy-MM-dd – kk:mm')
-                      .format(post.createdDate!)),
+                  const Text('Create date'),
+                  Text(DateFormat('yyyy-MM-dd').format(post.createdDate!)),
                 ],
               )
             ],

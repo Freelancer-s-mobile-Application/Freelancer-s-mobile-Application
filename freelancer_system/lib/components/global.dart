@@ -5,14 +5,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/User.dart';
 
 Future getUser() async {
-  List<User> users = [];
+  List<FreeLanceUser> users = [];
   final docRef = FirebaseFirestore.instance.collection('Users');
   docRef.get().then(
     (value) {
       for (var e in value.docs) {
         // e.id; get id
         final data = e.data();
-        User user = User.fromMap(data);
+        FreeLanceUser user = FreeLanceUser.fromMap(data);
         users.add(user);
       }
     },

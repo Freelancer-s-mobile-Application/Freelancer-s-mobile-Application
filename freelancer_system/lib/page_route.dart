@@ -1,21 +1,15 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:freelancer_system/components/general_provider.dart';
-
+import 'package:get/get.dart';
+import 'controllers/getX_controller.dart';
 import 'main.dart';
 import 'screens/chat/list_chat/list_chat_screen.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/settings/settings.dart';
 
-class AppPageRoute extends ConsumerStatefulWidget {
-  const AppPageRoute();
+class AppPageRoute extends StatelessWidget {
+  AppPageRoute();
 
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _AppPageRouteState();
-}
-
-class _AppPageRouteState extends ConsumerState<ConsumerStatefulWidget> {
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   Widget getScreen(int i) {
@@ -31,9 +25,10 @@ class _AppPageRouteState extends ConsumerState<ConsumerStatefulWidget> {
     }
   }
 
+  final AppController getXController = Get.put(AppController());
+
   @override
   Widget build(BuildContext context) {
-    int page = ref.watch(pageIndexProvider);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Material App',
@@ -48,9 +43,7 @@ class _AppPageRouteState extends ConsumerState<ConsumerStatefulWidget> {
           backgroundColor: Colors.transparent,
           animationCurve: Curves.easeInOut,
           animationDuration: const Duration(milliseconds: 600),
-          onTap: (index) {
-            ref.read(pageIndexProvider.notifier).state = index;
-          },
+          onTap: (index) => getXController.page.value = index,
           letIndexChange: (index) => true,
           items: const <Widget>[
             Icon(Icons.home, size: 30),
@@ -58,7 +51,7 @@ class _AppPageRouteState extends ConsumerState<ConsumerStatefulWidget> {
             Icon(Icons.settings, size: 30),
           ],
         ),
-        body: getScreen(page),
+        body: Obx(() => getScreen(getXController.page.value)),
       ),
     );
   }
