@@ -6,7 +6,7 @@ import 'package:freelancer_system/services/UserService.dart';
 
 class ReportService {
   final CollectionReference _reports =
-      FirebaseFirestore.instance.collection('Posts');
+      FirebaseFirestore.instance.collection('Reports');
 
   Future<List<Report>> getAll() async {
     List<Report> reports = <Report>[];
