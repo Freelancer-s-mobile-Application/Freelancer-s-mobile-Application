@@ -202,16 +202,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
-<<<<<<< Updated upstream
-  flutter_riverpod:
-    dependency: transitive
-    description:
-      name: flutter_riverpod
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.0-dev.9"
-=======
->>>>>>> Stashed changes
   flutter_staggered_animations:
     dependency: "direct main"
     description:
