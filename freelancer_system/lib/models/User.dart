@@ -3,9 +3,7 @@
 
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-class User {
+class FreeLanceUser {
   String? id;
   String? username;
   String? email;
@@ -14,12 +12,11 @@ class User {
   String? phonenumber;
   String? description;
   String? majorId;
-
   bool? deleted;
   DateTime? createdDate;
   String? updatedBy;
   DateTime? lastModifiedDate;
-  User({
+  FreeLanceUser({
     this.id,
     this.username,
     this.email,
@@ -34,7 +31,7 @@ class User {
     this.lastModifiedDate,
   });
 
-  User copyWith({
+  FreeLanceUser copyWith({
     String? id,
     String? username,
     String? email,
@@ -48,7 +45,7 @@ class User {
     String? updatedBy,
     DateTime? lastModifiedDate,
   }) {
-    return User(
+    return FreeLanceUser(
       id: id ?? this.id,
       username: username ?? this.username,
       email: email ?? this.email,
@@ -81,8 +78,8 @@ class User {
     };
   }
 
-  factory User.fromMap(Map<String, dynamic> map) {
-    return User(
+  factory FreeLanceUser.fromMap(Map<String, dynamic> map) {
+    return FreeLanceUser(
       id: map['id'] != null ? map['id'] as String : null,
       username: map['username'] != null ? map['username'] as String : null,
       email: map['email'] != null ? map['email'] as String : null,
@@ -107,19 +104,19 @@ class User {
 
   String toJson() => json.encode(toMap());
 
-  factory User.fromJson(String source) =>
-      User.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory FreeLanceUser.fromJson(String source) =>
+      FreeLanceUser.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'User(id: $id, username: $username, email: $email, address: $address, displayname: $displayname, phonenumber: $phonenumber, description: $description, majorId: $majorId, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
+    return 'FreeLanceUser(id: $id, username: $username, email: $email, address: $address, displayname: $displayname, phonenumber: $phonenumber, description: $description, majorId: $majorId, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is User &&
+    return other is FreeLanceUser &&
         other.id == id &&
         other.username == username &&
         other.email == email &&

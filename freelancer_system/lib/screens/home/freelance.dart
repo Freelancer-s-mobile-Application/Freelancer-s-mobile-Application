@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:freelancer_system/models/Post.dart';
 import 'package:freelancer_system/services/PostService.dart';
 
 import 'components/post_tile.dart';
@@ -53,16 +52,23 @@ class _ListViewBuildState extends State<ListViewBuild> {
               child: CircularProgressIndicator(),
             );
           }
-          return ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: snapshot.data?.length,
-            itemBuilder: (BuildContext context, int index) {
-              return AnimationConfiguration.staggeredList(
-                position: index,
-                child: PostTile(post: snapshot.data[index]),
-              );
+          return RefreshIndicator(
+            onRefresh: () {
+              return Future(() async {
+                await Future.delayed(const Duration(milliseconds: 700), () {});
+                setState(() {});
+              });
             },
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: snapshot.data?.length,
+              itemBuilder: (BuildContext context, int index) {
+                return AnimationConfiguration.staggeredList(
+                  position: index,
+                  child: PostTile(post: snapshot.data[index]),
+                );
+              },
+            ),
           );
         });
   }
