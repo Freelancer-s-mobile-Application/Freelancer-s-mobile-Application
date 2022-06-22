@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freelancer_system/models/Review.dart';
 import 'package:freelancer_system/services/UserService.dart';
 
-class PostService {
+class ReviewService {
   final CollectionReference _reviews =
       FirebaseFirestore.instance.collection('Posts');
 
