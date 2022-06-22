@@ -1,16 +1,34 @@
 // ignore_for_file: file_names, avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart' as Auth;
 import '../models/User.dart';
 
 class UserService {
   final CollectionReference _users =
       FirebaseFirestore.instance.collection('Users');
 
+  Future<User> getCurrentUser() async {
+    User user = User();
+
+    try {
+      var email = Auth.FirebaseAuth.instance.currentUser?.email;
+
+      await _users.where("email", isEqualTo: email).get().then((value) {
+        user = User.fromMap(value.docs[0].data() as Map<String, dynamic>);
+      });
+
+      if (user == null) throw Exception("User not found");
+    } catch (e) {
+      print(e);
+    }
+    return user;
+  }
+
   Future<List<User>> getAll() async {
     List<User> users = <User>[];
-    await _users.get().then((value) => {
-          if (!value.docs.isEmpty)
+    await _users.where("deleted", isEqualTo: false).get().then((value) => {
+          if (value.docs.isNotEmpty)
             {
               for (var doc in value.docs)
                 {users.add(User.fromMap(doc.data() as Map<String, dynamic>))}
@@ -49,7 +67,7 @@ class UserService {
           .update({
             "deleted": true,
             "lastModifiedDate": DateTime.now(),
-            // "updatedBy": "System"
+            "updatedBy": "System"
           })
           .then((value) => print("User deleted"))
           .catchError((error) => print("Failed to delete user: $error"));
@@ -61,7 +79,7 @@ class UserService {
   Future<void> update(String id, User user) async {
     try {
       user.lastModifiedDate = DateTime.now();
-      // user.updatedBy = "";
+      user.updatedBy = "System";
 
       await _users
           .doc(id)

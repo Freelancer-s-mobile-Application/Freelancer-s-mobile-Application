@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:freelancer_system/models/Post.dart';
 import 'package:freelancer_system/models/User.dart';
 import 'package:freelancer_system/services/FormService.dart';
+import 'package:freelancer_system/services/PostService.dart';
 
 import '../../services/UserService.dart';
 
@@ -30,6 +33,7 @@ class DebugPage extends StatefulWidget {
 class _DebugPageState extends State<DebugPage> {
   final UserService userService = UserService();
   final FormService formService = FormService();
+  final PostService postService = PostService();
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +67,14 @@ class _DebugPageState extends State<DebugPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           // debugPrint();
-          await userService
-              .find("kqT7RBJk2AiPto5OuWZn")
-              .then((value) => userService.add(value))
+          await postService
+              .add(Post(
+                  userId: "1",
+                  title: 'Test2',
+                  content: 'Test2',
+                  min: 1,
+                  max: 3,
+                  status: "open"))
               .catchError((error) {
             debugPrint(error.toString());
           });
