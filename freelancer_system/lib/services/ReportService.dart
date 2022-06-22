@@ -1,4 +1,3 @@
-// ignore_for_file: file_names, avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freelancer_system/models/Report.dart';
