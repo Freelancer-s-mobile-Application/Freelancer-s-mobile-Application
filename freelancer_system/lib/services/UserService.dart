@@ -1,7 +1,8 @@
-// ignore_for_file: file_names, avoid_print
+// ignore_for_file: file_names, avoid_print, empty_catches
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart' as Auth;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:freelancer_system/constants/firebase.dart';
 import '../models/User.dart';
 
 class UserService {
@@ -12,7 +13,7 @@ class UserService {
     FreeLanceUser user = FreeLanceUser();
 
     try {
-      var email = Auth.FirebaseAuth.instance.currentUser?.email;
+      var email = auth.currentUser?.email;
 
       await _users.where("email", isEqualTo: email).get().then((value) {
         user =
@@ -24,6 +25,24 @@ class UserService {
       print(e);
     }
     return user;
+  }
+
+  FreeLanceUser firebaseToFreelanceUser(User user) {
+    FreeLanceUser freelanceUser = FreeLanceUser();
+    freelanceUser.email = user.email;
+    freelanceUser.username = user.displayName;
+    freelanceUser.avatar = user.photoURL;
+    freelanceUser.id = user.uid;
+    freelanceUser.address = 'address';
+    freelanceUser.createdDate = DateTime.now();
+    freelanceUser.deleted = false;
+    freelanceUser.description = 'desc';
+    freelanceUser.displayname = user.displayName;
+    freelanceUser.majorId = '';
+    freelanceUser.phonenumber = '';
+    freelanceUser.updatedBy = '';
+    freelanceUser.lastModifiedDate = DateTime.now();
+    return freelanceUser;
   }
 
   Future<List<FreeLanceUser>> getAll() async {
@@ -41,10 +60,22 @@ class UserService {
     return users;
   }
 
-  Future<FreeLanceUser> find(String id) async {
+  Future<FreeLanceUser> findById(String id) async {
     FreeLanceUser user = FreeLanceUser();
-    await _users.doc(id).get().then((value) =>
-        user = FreeLanceUser.fromMap(value.data() as Map<String, dynamic>));
+    try {
+      await _users.doc(id).get().then((value) =>
+          FreeLanceUser.fromMap(value.data() as Map<String, dynamic>));
+    } on Exception {}
+    return user;
+  }
+
+  Future<FreeLanceUser> findByMail(String mail) async {
+    FreeLanceUser user = FreeLanceUser();
+    try {
+      await _users.where('email', isEqualTo: mail).get().then((value) => user =
+          FreeLanceUser.fromMap(
+              value.docs.first.data() as Map<String, dynamic>));
+    } catch (e) {}
     return user;
   }
 

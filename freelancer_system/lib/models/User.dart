@@ -3,8 +3,11 @@
 
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class FreeLanceUser {
   String? id;
+  String? avatar;
   String? username;
   String? email;
   String? address;
@@ -18,6 +21,7 @@ class FreeLanceUser {
   DateTime? lastModifiedDate;
   FreeLanceUser({
     this.id,
+    this.avatar,
     this.username,
     this.email,
     this.address,
@@ -33,6 +37,7 @@ class FreeLanceUser {
 
   FreeLanceUser copyWith({
     String? id,
+    String? avatar,
     String? username,
     String? email,
     String? address,
@@ -47,6 +52,7 @@ class FreeLanceUser {
   }) {
     return FreeLanceUser(
       id: id ?? this.id,
+      avatar: avatar ?? this.avatar,
       username: username ?? this.username,
       email: email ?? this.email,
       address: address ?? this.address,
@@ -64,6 +70,7 @@ class FreeLanceUser {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
+      'avatar': avatar,
       'username': username,
       'email': email,
       'address': address,
@@ -72,15 +79,16 @@ class FreeLanceUser {
       'description': description,
       'majorId': majorId,
       'deleted': deleted,
-      'createdDate': createdDate?.millisecondsSinceEpoch,
+      'createdDate': createdDate,
       'updatedBy': updatedBy,
-      'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
+      'lastModifiedDate': lastModifiedDate,
     };
   }
 
   factory FreeLanceUser.fromMap(Map<String, dynamic> map) {
     return FreeLanceUser(
       id: map['id'] != null ? map['id'] as String : null,
+      avatar: map['avatar'] != null ? map['avatar'] as String : null,
       username: map['username'] != null ? map['username'] as String : null,
       email: map['email'] != null ? map['email'] as String : null,
       address: map['address'] != null ? map['address'] as String : null,
@@ -92,13 +100,9 @@ class FreeLanceUser {
           map['description'] != null ? map['description'] as String : null,
       majorId: map['majorId'] != null ? map['majorId'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
-      createdDate: map['createdDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
-          : null,
+      createdDate: (map['createdDate'] as Timestamp).toDate(),
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
-      lastModifiedDate: map['lastModifiedDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
-          : null,
+      lastModifiedDate: (map['lastModifiedDate'] as Timestamp).toDate(),
     );
   }
 
@@ -109,7 +113,7 @@ class FreeLanceUser {
 
   @override
   String toString() {
-    return 'FreeLanceUser(id: $id, username: $username, email: $email, address: $address, displayname: $displayname, phonenumber: $phonenumber, description: $description, majorId: $majorId, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
+    return 'FreeLanceUser(id: $id, avatar: $avatar, username: $username, email: $email, address: $address, displayname: $displayname, phonenumber: $phonenumber, description: $description, majorId: $majorId, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
   }
 
   @override
@@ -118,6 +122,7 @@ class FreeLanceUser {
 
     return other is FreeLanceUser &&
         other.id == id &&
+        other.avatar == avatar &&
         other.username == username &&
         other.email == email &&
         other.address == address &&
@@ -134,6 +139,7 @@ class FreeLanceUser {
   @override
   int get hashCode {
     return id.hashCode ^
+        avatar.hashCode ^
         username.hashCode ^
         email.hashCode ^
         address.hashCode ^

@@ -12,8 +12,12 @@ void main() async {
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
-    );
-  } catch (e) {}
+    ).then((value) {
+      print('init');
+    });
+  } catch (e) {
+    rethrow;
+  }
   runApp(MyApp());
 }
 

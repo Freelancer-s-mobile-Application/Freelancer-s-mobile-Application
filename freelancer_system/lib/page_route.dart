@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:freelancer_system/controllers/auth_controller.dart';
 import 'package:get/get.dart';
 import 'controllers/getX_controller.dart';
 import 'main.dart';
@@ -25,7 +26,8 @@ class AppPageRoute extends StatelessWidget {
     }
   }
 
-  final AppController getXController = Get.put(AppController());
+  final AppController appController = Get.put(AppController());
+  final AuthController authController = Get.put(AuthController());
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class AppPageRoute extends StatelessWidget {
           backgroundColor: Colors.transparent,
           animationCurve: Curves.easeInOut,
           animationDuration: const Duration(milliseconds: 600),
-          onTap: (index) => getXController.page.value = index,
+          onTap: (index) => appController.page.value = index,
           letIndexChange: (index) => true,
           items: const <Widget>[
             Icon(Icons.home, size: 30),
@@ -51,7 +53,7 @@ class AppPageRoute extends StatelessWidget {
             Icon(Icons.settings, size: 30),
           ],
         ),
-        body: Obx(() => getScreen(getXController.page.value)),
+        body: Obx(() => getScreen(appController.page.value)),
       ),
     );
   }
