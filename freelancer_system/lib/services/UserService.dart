@@ -6,27 +6,28 @@ import '../models/User.dart';
 
 class UserService {
   final CollectionReference _users =
-      FirebaseFirestore.instance.collection('Users');
+      FirebaseFirestore.instance.collection('FreeLanceUsers');
 
-  Future<User> getCurrentUser() async {
-    User user = User();
+  Future<FreeLanceUser> getCurrentUser() async {
+    FreeLanceUser user = FreeLanceUser();
 
     try {
       var email = Auth.FirebaseAuth.instance.currentUser?.email;
 
       await _users.where("email", isEqualTo: email).get().then((value) {
-        user = User.fromMap(value.docs[0].data() as Map<String, dynamic>);
+        user =
+            FreeLanceUser.fromMap(value.docs[0].data() as Map<String, dynamic>);
       });
 
-      if (user == null) throw Exception("User not found");
+      if (user == null) throw Exception("FreeLanceUser not found");
     } catch (e) {
       print(e);
     }
     return user;
   }
 
-  Future<List<User>> getAll() async {
-    List<User> users = <User>[];
+  Future<List<FreeLanceUser>> getAll() async {
+    List<FreeLanceUser> users = <FreeLanceUser>[];
     await _users.where("deleted", isEqualTo: false).get().then((value) => {
           if (value.docs.isNotEmpty)
             {
@@ -56,7 +57,7 @@ class UserService {
 
       return await ref
           .set(user.toMap())
-          .then((value) => print("User Added"))
+          .then((value) => print("FreeLanceUser Added"))
           .catchError((error) => print("Failed to add user: $error"));
     } on Exception catch (_) {
       throw Exception("Add exception");
@@ -72,7 +73,7 @@ class UserService {
             "lastModifiedDate": DateTime.now(),
             "updatedBy": "System"
           })
-          .then((value) => print("User deleted"))
+          .then((value) => print("FreeLanceUser deleted"))
           .catchError((error) => print("Failed to delete user: $error"));
     } on Exception catch (_) {
       throw Exception("Delete exception");
@@ -87,7 +88,7 @@ class UserService {
       await _users
           .doc(id)
           .update(user.toMap())
-          .then((value) => print("User updated"))
+          .then((value) => print("FreeLanceUser updated"))
           .catchError((error) => print("Failed to update user: $error"));
     } on Exception catch (_) {
       throw Exception("Update exception");
