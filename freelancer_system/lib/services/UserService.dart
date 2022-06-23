@@ -79,6 +79,15 @@ class UserService {
     return user;
   }
 
+  //stream of freelanceUser from firebase
+  Stream<List<FreeLanceUser>> getStreamOfFreeLanceUsers() {
+    return _users.where("deleted", isEqualTo: false).snapshots().map(
+        (snapshot) => snapshot.docs
+            .map((doc) =>
+                FreeLanceUser.fromMap(doc.data() as Map<String, dynamic>))
+            .toList());
+  }
+
   Future<void> add(FreeLanceUser user) async {
     try {
       DocumentReference ref = _users.doc();

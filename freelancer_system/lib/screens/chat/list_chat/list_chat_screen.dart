@@ -29,7 +29,6 @@ class ChatScreen extends StatelessWidget {
         : Scaffold(
             floatingActionButton: FloatingActionButton(
               onPressed: () async {
-                //ChatService().addRoom(randomString());
                 showDialog(
                   context: context,
                   builder: (context) => const SearchPanel(),
@@ -44,6 +43,11 @@ class ChatScreen extends StatelessWidget {
             body: GetX<ChatController>(
               init: ChatController(),
               builder: (roomList) {
+                if (roomList.rooms.isEmpty) {
+                  return const Center(
+                    child: Text('No chat room'),
+                  );
+                }
                 return ListView.builder(
                   itemCount: roomList.rooms.length,
                   itemBuilder: (context, index) {

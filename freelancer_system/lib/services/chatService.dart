@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
 
 import '../models/Message.dart';
 import '../models/chat_room.dart';
@@ -19,9 +18,36 @@ class ChatService {
     return n.toString();
   }
 
-  Future addRoom(String rName, String userAdd) async {
+  //check duplicate Room
+  Future<bool> checkDuplicateRoom(List<String> mem) async {
+    var snapshot =
+        await _chat.where('members', arrayContainsAny: mem).get().then((value) {
+      bool result = false;
+      if (value.docs.isNotEmpty) {
+        value.docs.map((e) {
+          var r = e.data()! as dynamic;
+          if (r['members'].length <= mem.length) {
+            return result = false;
+          } else {
+            return result = true;
+          }
+        });
+      } else {
+        return result = false;
+      }
+      return result;
+    });
+    return snapshot;
+  }
+
+  Future addRoom(String rName, List<String> userAdd) async {
     String roomId = 'id', roomName = rName;
-    String anotherUser = GetUtils.isEmail(userAdd) ? userAdd : '';
+    if (roomName.isEmpty) {
+      roomName = '';
+      for (var a in userAdd) {
+        roomName += '$a ';
+      }
+    }
     //create room with default roomId THEN update roomId
     await FirebaseFirestore.instance
         .collection('Rooms')
@@ -32,7 +58,7 @@ class ChatService {
               createDate: DateTime.now(),
               isDeleted: false,
               lastestMsg: DateTime.now(),
-              members: [user.email.toString(), anotherUser]).toMap(),
+              members: [user.email.toString(), ...userAdd]).toMap(),
         )
         .then(
       (e) {

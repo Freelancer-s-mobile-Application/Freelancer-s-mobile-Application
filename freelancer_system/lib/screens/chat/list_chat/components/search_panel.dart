@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:freelancer_system/services/chatService.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:freelancer_system/constants/controller.dart';
+import 'package:freelancer_system/models/User.dart';
 import 'package:get/get.dart';
+
+import '../../../../services/chatService.dart';
 
 class SearchPanel extends StatelessWidget {
   const SearchPanel({
@@ -9,11 +13,12 @@ class SearchPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var addList = [].obs;
     var userAddCtl = TextEditingController();
     var titleAddCtl = TextEditingController();
     return Dialog(
       child: Container(
-        height: 300,
+        height: 500,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
           border: Border.all(width: 2, color: Colors.white30),
@@ -21,18 +26,9 @@ class SearchPanel extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(10),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                decoration: BoxDecoration(border: Border.all()),
-                child: TextField(
-                  decoration: const InputDecoration(
-                    hintText: 'User',
-                  ),
-                  controller: userAddCtl,
-                ),
-              ),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(border: Border.all()),
@@ -43,13 +39,102 @@ class SearchPanel extends StatelessWidget {
                   controller: titleAddCtl,
                 ),
               ),
-              IconButton(
-                  color: Colors.red,
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    ChatService().addRoom(titleAddCtl.text, userAddCtl.text);
-                    Get.back();
-                  }),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                child: TypeAheadField(
+                  textFieldConfiguration: TextFieldConfiguration(
+                    autofocus: true,
+                    style: DefaultTextStyle.of(context).style,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Search User',
+                    ),
+                  ),
+                  suggestionsCallback: (pattern) async {
+                    var list =
+                        userListController.getByNameAndEmail(pattern, pattern);
+                    print(authController.freelanceUser.value);
+                    list.remove(authController.freelanceUser.value);
+                    return list;
+                  },
+                  itemBuilder: (context, FreeLanceUser suggestion) {
+                    return ListTile(
+                      leading: SizedBox(
+                        width: 50,
+                        child: ClipRRect(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(25)),
+                            child: Image.network(suggestion.avatar.toString())),
+                      ),
+                      title: Text(suggestion.displayname.toString()),
+                      subtitle: Text(suggestion.email.toString()),
+                    );
+                  },
+                  onSuggestionSelected: (value) {
+                    addList.add(value);
+                  },
+                ),
+              ),
+              Obx(() {
+                if (addList.isEmpty) {
+                  return const Expanded(
+                      child: Center(child: Text('No User Selected')));
+                } else {
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: addList.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          leading: SizedBox(
+                            width: 50,
+                            child: ClipRRect(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(25)),
+                                child: Image.network(
+                                    addList[index].avatar.toString())),
+                          ),
+                          title: Text(addList[index].displayname.toString()),
+                          subtitle: Text(addList[index].email.toString()),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              addList.removeAt(index);
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }
+              }),
+              ElevatedButton(
+                onPressed: () async {
+                  if (addList.isEmpty) {
+                    Get.snackbar('Error', 'No User Selected');
+                  } else {
+                    List<String> users = [];
+                    for (var element in addList) {
+                      users.add(element.email.toString());
+                    }
+                    final isExist =
+                        await ChatService().checkDuplicateRoom(users);
+                    if (isExist) {
+                      Get.snackbar(
+                          snackPosition: SnackPosition.BOTTOM,
+                          'Failed to Create Room',
+                          'Room Already Existed');
+                    } else {
+                      ChatService().addRoom(titleAddCtl.text, users);
+                      Get.back();
+                      Get.snackbar(
+                          snackPosition: SnackPosition.BOTTOM,
+                          'Success',
+                          'Room Added');
+                    }
+                  }
+                },
+                child: const Text('Create Room'),
+              ),
             ],
           ),
         ),

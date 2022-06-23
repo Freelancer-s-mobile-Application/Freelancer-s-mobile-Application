@@ -18,6 +18,8 @@ class LastMessage extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Text('Loading...');
+          } else if (!snapshot.hasData) {
+            return const Text('Loading...');
           } else {
             final messages = snapshot.data!.docs;
             final message = messages.first.data() as dynamic;

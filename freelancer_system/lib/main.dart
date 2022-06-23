@@ -15,9 +15,7 @@ void main() async {
     ).then((value) {
       print('init');
     });
-  } catch (e) {
-    rethrow;
-  }
+  } catch (e) {}
   runApp(MyApp());
 }
 

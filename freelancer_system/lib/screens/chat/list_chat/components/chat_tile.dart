@@ -33,7 +33,11 @@ class ChatTile extends StatelessWidget {
           child: ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 10),
             leading: const FlutterLogo(size: 50),
-            title: Text(room.roomName),
+            title: Text(
+              room.roomName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
             subtitle: LastMessage(room.roomId),
             trailing: Text(timeago.format((room.lastestMsg))),
           ),

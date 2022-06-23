@@ -21,10 +21,10 @@ class AuthController extends GetxController {
     super.onReady();
     firebaseuser = Rx<User?>(auth.currentUser);
     firebaseuser.bindStream(auth.userChanges());
-    ever(firebaseuser, _setInitialScreen);
+    ever(firebaseuser, _setIsLogged);
   }
 
-  _setInitialScreen(User? user) {
+  _setIsLogged(User? user) {
     if (user == null) {
       isLoggedIn.value = false;
     } else {
