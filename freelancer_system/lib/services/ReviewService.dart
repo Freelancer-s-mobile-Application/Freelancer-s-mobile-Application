@@ -29,8 +29,12 @@ class ReviewService {
 
   Future<Review> find(String id) async {
     Review review = Review();
-    await _reviews.doc(id).get().then((value) =>
-        review = Review.fromMap(value.data() as Map<String, dynamic>));
+    try {
+      await _reviews.doc(id).get().then((value) =>
+          review = Review.fromMap(value.data() as Map<String, dynamic>));
+    } catch (e) {
+      throw Exception(e);
+    }
     return review;
   }
 
@@ -59,11 +63,13 @@ class ReviewService {
 
   Future<void> add(Review review) async {
     try {
+      var currentUser = await UserService().getCurrentUser();
+
       DocumentReference ref = _reviews.doc();
       review.createdDate = DateTime.now();
       review.lastModifiedDate = DateTime.now();
       review.deleted = false;
-      review.updatedBy = "System";
+      review.updatedBy = currentUser.id ?? "System";
       review.id = ref.id;
 
       return await ref
@@ -84,7 +90,7 @@ class ReviewService {
           .update({
             "deleted": true,
             "lastModifiedDate": DateTime.now(),
-            "updatedBy": currentUser.id,
+            "updatedBy": currentUser.id ?? "System",
           })
           .then((value) => print("Review deleted"))
           .catchError((error) => print("Failed to delete review: $error"));
@@ -98,7 +104,7 @@ class ReviewService {
       var currentUser = await UserService().getCurrentUser();
 
       review.lastModifiedDate = DateTime.now();
-      review.updatedBy = currentUser.id;
+      review.updatedBy = currentUser.id ?? "System";
 
       await _reviews
           .doc(id)

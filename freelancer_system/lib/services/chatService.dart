@@ -20,67 +20,79 @@ class ChatService {
 
   Future addRoom(String rName) async {
     String roomId = 'id', roomName = rName;
-    //create room with default roomId THEN update roomId
-    await FirebaseFirestore.instance
-        .collection('Rooms')
-        .add(
-          ChatRoom(
-              roomId: roomId,
-              roomName: roomName,
-              createDate: DateTime.now(),
-              isDeleted: false,
-              lastestMsg: DateTime.now(),
-              members: [user.email.toString()]).toMap(),
-        )
-        .then(
-      (e) {
-        roomId = e.id;
-        print('Room: $roomId');
-        e.update(
-          {'roomId': e.id},
-        );
-      },
-    );
-    //Add first message to room
-    FirebaseAuth.instance.currentUser!.displayName;
-    await FirebaseFirestore.instance
-        .collection('Rooms')
-        .doc(roomId)
-        .collection('message')
-        .add(
-          FreeLanceMessage(
-              content:
-                  '${FirebaseAuth.instance.currentUser!.displayName} created room $roomName',
-              senderId: user.email.toString(),
-              createdDate: DateTime.now(),
-              isDeleted: false,
-              seenBy: []).toMap(),
-        );
+    try {
+      //create room with default roomId THEN update roomId
+      await FirebaseFirestore.instance
+          .collection('Rooms')
+          .add(
+            ChatRoom(
+                roomId: roomId,
+                roomName: roomName,
+                createDate: DateTime.now(),
+                isDeleted: false,
+                lastestMsg: DateTime.now(),
+                members: [user.email.toString()]).toMap(),
+          )
+          .then(
+        (e) {
+          roomId = e.id;
+          print('Room: $roomId');
+          e.update(
+            {'roomId': e.id},
+          );
+        },
+      );
+      //Add first message to room
+      FirebaseAuth.instance.currentUser!.displayName;
+      await FirebaseFirestore.instance
+          .collection('Rooms')
+          .doc(roomId)
+          .collection('message')
+          .add(
+            FreeLanceMessage(
+                content:
+                    '${FirebaseAuth.instance.currentUser!.displayName} created room $roomName',
+                senderId: user.email.toString(),
+                createdDate: DateTime.now(),
+                isDeleted: false,
+                seenBy: []).toMap(),
+          );
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   Future pushChat(String roomId, String content) async {
-    FirebaseFirestore.instance
-        .collection('Rooms')
-        .doc(roomId)
-        .collection('message')
-        .add(FreeLanceMessage(
-                isDeleted: false,
-                senderId: FirebaseAuth.instance.currentUser!.email.toString(),
-                seenBy: [FirebaseAuth.instance.currentUser!.email.toString()],
-                content: content.isEmpty ? randomString() : content,
-                createdDate: DateTime.now())
-            .toMap());
-    FirebaseFirestore.instance
-        .collection('Rooms')
-        .doc(roomId)
-        .update({'lastestMsg': DateTime.now()});
+    try {
+      FirebaseFirestore.instance
+          .collection('Rooms')
+          .doc(roomId)
+          .collection('message')
+          .add(FreeLanceMessage(
+                  isDeleted: false,
+                  senderId: FirebaseAuth.instance.currentUser!.email.toString(),
+                  seenBy: [FirebaseAuth.instance.currentUser!.email.toString()],
+                  content: content.isEmpty ? randomString() : content,
+                  createdDate: DateTime.now())
+              .toMap());
+      FirebaseFirestore.instance
+          .collection('Rooms')
+          .doc(roomId)
+          .update({'lastestMsg': DateTime.now()});
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   Future removeRoom(String roomId) async {
-    await FirebaseFirestore.instance
-        .collection('Rooms')
-        .doc(roomId)
-        .update({'isDeleted': true});
+    try {
+      await FirebaseFirestore.instance
+          .collection('Rooms')
+          .doc(roomId)
+          .update({'isDeleted': true});
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   Stream<List<ChatRoom>> roomStream(String userId) {
