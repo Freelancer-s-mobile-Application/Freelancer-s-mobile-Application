@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
 
 import '../models/Message.dart';
 import '../models/chat_room.dart';
@@ -18,8 +19,9 @@ class ChatService {
     return n.toString();
   }
 
-  Future addRoom(String rName) async {
+  Future addRoom(String rName, String userAdd) async {
     String roomId = 'id', roomName = rName;
+    String anotherUser = GetUtils.isEmail(userAdd) ? userAdd : '';
     //create room with default roomId THEN update roomId
     await FirebaseFirestore.instance
         .collection('Rooms')
@@ -30,7 +32,7 @@ class ChatService {
               createDate: DateTime.now(),
               isDeleted: false,
               lastestMsg: DateTime.now(),
-              members: [user.email.toString()]).toMap(),
+              members: [user.email.toString(), anotherUser]).toMap(),
         )
         .then(
       (e) {

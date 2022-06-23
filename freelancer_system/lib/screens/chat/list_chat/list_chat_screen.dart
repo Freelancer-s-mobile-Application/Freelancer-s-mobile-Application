@@ -29,7 +29,7 @@ class ChatScreen extends StatelessWidget {
         : Scaffold(
             floatingActionButton: FloatingActionButton(
               onPressed: () async {
-                // ChatService().addRoom(randomString());
+                //ChatService().addRoom(randomString());
                 showDialog(
                   context: context,
                   builder: (context) => const SearchPanel(),
