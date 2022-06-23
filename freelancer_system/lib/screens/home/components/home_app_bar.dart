@@ -14,7 +14,6 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
     return AppBar(
       leading: IconButton(
         onPressed: () {
-          print(user);
           FirebaseAuth.instance.signOut();
           getXController.isUserLoggedIn.value = false;
           getXController.ggSignIn.value.signOut();
@@ -25,7 +24,9 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
       centerTitle: true,
       actions: [
         Obx(() {
-          if (getXController.isUserLoggedIn.value) {
+          var islog = getXController.isUserLoggedIn.value;
+          if (FirebaseAuth.instance.currentUser != null) {
+            islog = true;
             return ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(50)),
               child: CircleAvatar(
@@ -35,6 +36,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
               ),
             );
           } else {
+            islog = false;
             return const UserLoggedInIcon();
           }
         }),
