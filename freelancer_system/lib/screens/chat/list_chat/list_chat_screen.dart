@@ -1,96 +1,58 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:freelancer_system/services/chatService.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:freelancer_system/screens/chat/list_chat/components/chat_tile.dart';
 import 'package:get/get.dart';
 
 import '../../../controllers/chat_controller.dart';
-import 'components/chat_tile.dart';
+import 'components/search_panel.dart';
 
 class ChatScreen extends StatelessWidget {
   const ChatScreen({Key? key}) : super(key: key);
 
+  String randomString() {
+    final random = Random();
+    final str =
+        String.fromCharCodes(List.generate(10, (index) => random.nextInt(256)));
+    return str;
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Chat'),
-        ),
-        body: const Center(
-          child: Text(
-            'Please login to see your chats',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-          ),
-        ),
-      );
-    }
-    final stream = FirebaseFirestore.instance
-        .collection('Rooms')
-        .where('members', arrayContains: user.email)
-        .snapshots();
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          ChatService chatService = ChatService();
-          //TODO: Add new chat
-          //this just a dummy way to add new chat
-          chatService.addChat();
-          final ChatController cc = Get.find<ChatController>();
-          cc.printLength();
-        },
-        child: const Icon(Icons.search_outlined),
-      ),
-      appBar: AppBar(
-        title: const Text('Chat Rooms'),
-        centerTitle: true,
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: stream,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.active) {
-            return const Center(
-              child: CircularProgressIndicator.adaptive(),
-            );
-          } else if (!snapshot.hasData) {
-            return const Center(
-              child: Text(
-                'No Text Messages',
-                style: TextStyle(color: Colors.grey),
-              ),
-            );
-          } else {
-            return ListView(
-              children: snapshot.data!.docs.map((e) {
-                if ((e.data() as dynamic)['isDeleted'] == false) {
-                  return ChatTile(e.id);
-                } else {
-                  return Container();
-                }
-              }).toList(),
-            );
-          }
-        },
-      ),
-      // body: SafeArea(
-      //   child: GetX<ChatController>(
-      //       init: Get.put(ChatController()),
-      //       builder: (roomController) {
-      //         if (roomController.rooms.isNotEmpty) {
-      //           return ListView.builder(
-      //             itemCount: roomController.rooms.length,
-      //             itemBuilder: (_, i) {
-      //               return ChatTile(roomController.rooms[i]);
-      //             },
-      //           );
-      //         } else {
-      //           return const Center(
-      //             child: Text('Loading...'),
-      //           );
-      //         }
-      //       }),
-      // ),
-    );
+    return user == null
+        ? const Center(
+            child: Text('Please login to use Chat'),
+          )
+        : Scaffold(
+            floatingActionButton: FloatingActionButton(
+              onPressed: () async {
+                // ChatService().addRoom(randomString());
+                showDialog(
+                  context: context,
+                  builder: (context) => const SearchPanel(),
+                );
+              },
+              child: const Icon(FontAwesomeIcons.solidMessage),
+            ),
+            appBar: AppBar(
+              title: const Text('Chats'),
+              centerTitle: true,
+            ),
+            body: GetX<ChatController>(
+              init: ChatController(),
+              builder: (roomList) {
+                return ListView.builder(
+                  itemCount: roomList.rooms.length,
+                  itemBuilder: (context, index) {
+                    final room = roomList.rooms[index];
+                    return ChatTile(room);
+                  },
+                );
+              },
+            ),
+          );
   }
 }
