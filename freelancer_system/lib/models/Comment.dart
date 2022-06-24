@@ -58,9 +58,9 @@ class Comment {
       'postId': postId,
       'userId': userId,
       'deleted': deleted,
-      'createdDate': createdDate?.millisecondsSinceEpoch,
+      'createdDate': createdDate,
       'updatedBy': updatedBy,
-      'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
+      'lastModifiedDate': lastModifiedDate,
     };
   }
 
@@ -73,11 +73,11 @@ class Comment {
       userId: map['userId'] != null ? map['userId'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
       createdDate: map['createdDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
+          ? (map['createdDate'] as Timestamp).toDate()
           : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
+          ? (map['lastModifiedDate'] as Timestamp).toDate()
           : null,
     );
   }

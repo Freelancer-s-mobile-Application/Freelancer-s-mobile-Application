@@ -10,12 +10,17 @@ class FreeLanceMessage {
   DateTime createdDate;
   List<String> seenBy;
   bool isDeleted;
+  String updatedBy;
+  DateTime lastModifiedDate;
+
   FreeLanceMessage({
     required this.senderId,
     required this.content,
     required this.createdDate,
     required this.seenBy,
     required this.isDeleted,
+    required this.lastModifiedDate,
+    required this.updatedBy,
   });
 
   FreeLanceMessage copyWith({
@@ -24,6 +29,8 @@ class FreeLanceMessage {
     DateTime? createdDate,
     List<String>? seenBy,
     bool? isDeleted,
+    String? updatedBy,
+    DateTime? lastModifiedDate,
   }) {
     return FreeLanceMessage(
       senderId: senderId ?? this.senderId,
@@ -31,6 +38,8 @@ class FreeLanceMessage {
       createdDate: createdDate ?? this.createdDate,
       seenBy: seenBy ?? this.seenBy,
       isDeleted: isDeleted ?? this.isDeleted,
+      lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
+      updatedBy: updatedBy ?? this.updatedBy,
     );
   }
 
@@ -41,6 +50,8 @@ class FreeLanceMessage {
       'createdDate': createdDate,
       'seenBy': seenBy,
       'isDeleted': isDeleted,
+      'lastModifiedDate': lastModifiedDate,
+      'updatedBy': updatedBy
     };
   }
 
@@ -53,6 +64,8 @@ class FreeLanceMessage {
         (map['seenBy'] as List<dynamic>),
       ),
       isDeleted: map['isDeleted'] as bool,
+      lastModifiedDate: (map['lastModifiedDate'] as Timestamp).toDate(),
+      updatedBy: map['updatedBy'] as String,
     );
   }
 
@@ -76,7 +89,9 @@ class FreeLanceMessage {
         other.content == content &&
         other.createdDate == createdDate &&
         listEquals(other.seenBy, seenBy) &&
-        other.isDeleted == isDeleted;
+        other.isDeleted == isDeleted &&
+        other.lastModifiedDate == lastModifiedDate &&
+        other.updatedBy == updatedBy;
   }
 
   @override
@@ -85,6 +100,8 @@ class FreeLanceMessage {
         content.hashCode ^
         createdDate.hashCode ^
         seenBy.hashCode ^
-        isDeleted.hashCode;
+        isDeleted.hashCode ^
+        lastModifiedDate.hashCode ^
+        updatedBy.hashCode;
   }
 }

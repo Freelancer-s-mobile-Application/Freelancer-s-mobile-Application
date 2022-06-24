@@ -1,7 +1,7 @@
 // ignore_for_file: file_names, avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart' as Auth;
+import 'package:firebase_auth/firebase_auth.dart';
 import '../models/User.dart';
 
 class UserService {
@@ -12,14 +12,29 @@ class UserService {
     FreeLanceUser user = FreeLanceUser();
 
     try {
-      var email = Auth.FirebaseAuth.instance.currentUser?.email;
+      var currentUser = FirebaseAuth.instance.currentUser!;
+      if (currentUser.email == null) return user;
 
-      await _users.where("email", isEqualTo: email).get().then((value) {
-        user =
-            FreeLanceUser.fromMap(value.docs[0].data() as Map<String, dynamic>);
+      await _users
+          .where("email", isEqualTo: currentUser.email)
+          .get()
+          .then((value) {
+        if (value.docs.isEmpty) {
+          user = FreeLanceUser(
+              email: currentUser.email,
+              avatar: currentUser.photoURL,
+              displayname: currentUser.displayName,
+              username: currentUser.displayName,
+              majorId: "SE",
+              description: currentUser.displayName,
+              phonenumber: currentUser.phoneNumber ?? "0123456789",
+              address: currentUser.email);
+          add(user);
+        } else {
+          user = FreeLanceUser.fromMap(
+              value.docs[0].data() as Map<String, dynamic>);
+        }
       });
-
-      if (user == null) throw Exception("FreeLanceUser not found");
     } catch (e) {
       print(e);
     }
@@ -50,14 +65,21 @@ class UserService {
 
   Future<void> add(FreeLanceUser user) async {
     try {
+      _users.where("email", isEqualTo: user.email).get().then((value) => {
+            if (value.docs.isNotEmpty)
+              throw Exception("Email already registrated")
+          });
+
       DocumentReference ref = _users.doc();
+      user.deleted = false;
       user.createdDate = DateTime.now();
       user.lastModifiedDate = DateTime.now();
+      user.updatedBy = "System";
       user.id = ref.id;
 
       return await ref
           .set(user.toMap())
-          .then((value) => print("FreeLanceUser Added"))
+          .then((value) => print(user.toString()))
           .catchError((error) => print("Failed to add user: $error"));
     } on Exception catch (_) {
       throw Exception("Add exception");

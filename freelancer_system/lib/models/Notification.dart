@@ -14,6 +14,7 @@ class Notification {
   bool? deleted;
   DateTime? lastModifiedDate;
   DateTime? createdDate;
+  String? updatedBy;
   Notification({
     this.id,
     this.senderId,
@@ -24,6 +25,7 @@ class Notification {
     this.deleted,
     this.lastModifiedDate,
     this.createdDate,
+    this.updatedBy,
   });
 
   Notification copyWith({
@@ -36,6 +38,7 @@ class Notification {
     bool? deleted,
     DateTime? lastModifiedDate,
     DateTime? createdDate,
+    String? updatedBy,
   }) {
     return Notification(
       id: id ?? this.id,
@@ -47,6 +50,7 @@ class Notification {
       deleted: deleted ?? this.deleted,
       lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
       createdDate: createdDate ?? this.createdDate,
+      updatedBy: updatedBy ?? this.updatedBy,
     );
   }
 
@@ -59,8 +63,9 @@ class Notification {
       'content': content,
       'isSeen': isSeen,
       'deleted': deleted,
-      'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
-      'createdDate': createdDate?.millisecondsSinceEpoch,
+      'createdDate': createdDate,
+      'updatedBy': updatedBy,
+      'lastModifiedDate': lastModifiedDate,
     };
   }
 
@@ -75,11 +80,12 @@ class Notification {
       isSeen: map['isSeen'] != null ? map['isSeen'] as bool : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
+          ? (map['lastModifiedDate'] as Timestamp).toDate()
           : null,
       createdDate: map['createdDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
+          ? (map['createdDate'] as Timestamp).toDate()
           : null,
+      updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
     );
   }
 
@@ -90,7 +96,7 @@ class Notification {
 
   @override
   String toString() {
-    return 'Notification(id: $id, senderId: $senderId, receiverId: $receiverId, title: $title, content: $content, isSeen: $isSeen, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate)';
+    return 'Notification(id: $id, senderId: $senderId, receiverId: $receiverId, title: $title, content: $content, isSeen: $isSeen, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
   }
 
   @override
@@ -106,7 +112,8 @@ class Notification {
         other.isSeen == isSeen &&
         other.deleted == deleted &&
         other.lastModifiedDate == lastModifiedDate &&
-        other.createdDate == createdDate;
+        other.createdDate == createdDate &&
+        other.updatedBy == updatedBy;
   }
 
   @override
@@ -119,6 +126,7 @@ class Notification {
         isSeen.hashCode ^
         deleted.hashCode ^
         lastModifiedDate.hashCode ^
-        createdDate.hashCode;
+        createdDate.hashCode ^
+        updatedBy.hashCode;
   }
 }
