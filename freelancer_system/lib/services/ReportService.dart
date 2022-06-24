@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freelancer_system/models/Report.dart';
 import 'package:freelancer_system/services/UserService.dart';
@@ -27,38 +28,29 @@ class ReportService {
 
   Future<Report> find(String id) async {
     Report report = Report();
-    try {
-      await _reports.doc(id).get().then((value) =>
-          report = Report.fromMap(value.data() as Map<String, dynamic>));
-    } catch (e) {
-      throw Exception(e);
-    }
+    await _reports.doc(id).get().then((value) =>
+        report = Report.fromMap(value.data() as Map<String, dynamic>));
     return report;
   }
 
   Future<List<Report>> search(String? keyword) async {
     List<Report> reports = <Report>[];
-
-    try {
-      if (keyword != null) {
-        await _reports
-            .where("title", isGreaterThanOrEqualTo: keyword)
-            .get()
-            .then((value) => {
-                  if (value.docs.isNotEmpty)
-                    {
-                      for (var doc in value.docs)
-                        {
-                          reports.add(Report.fromMap(
-                              doc.data() as Map<String, dynamic>))
-                        }
-                    }
-                });
-      } else {
-        reports = await getAll();
-      }
-    } catch (e) {
-      throw Exception(e);
+    if (keyword != null) {
+      await _reports
+          .where("title", isGreaterThanOrEqualTo: keyword)
+          .get()
+          .then((value) => {
+                if (value.docs.isNotEmpty)
+                  {
+                    for (var doc in value.docs)
+                      {
+                        reports.add(
+                            Report.fromMap(doc.data() as Map<String, dynamic>))
+                      }
+                  }
+              });
+    } else {
+      reports = await getAll();
     }
 
     return reports;
@@ -66,14 +58,11 @@ class ReportService {
 
   Future<void> add(Report report) async {
     try {
-      var currentUser = await UserService().getCurrentUser();
-
       DocumentReference ref = _reports.doc();
-
       report.createdDate = DateTime.now();
       report.lastModifiedDate = DateTime.now();
       report.deleted = false;
-      report.updatedBy = currentUser.id ?? "System";
+      report.updatedBy = "System";
       report.id = ref.id;
 
       return await ref
@@ -94,7 +83,7 @@ class ReportService {
           .update({
             "deleted": true,
             "lastModifiedDate": DateTime.now(),
-            "updatedBy": currentUser.id ?? "System",
+            "updatedBy": currentUser.id,
           })
           .then((value) => print("Report deleted"))
           .catchError((error) => print("Failed to delete report: $error"));
@@ -108,7 +97,7 @@ class ReportService {
       var currentUser = await UserService().getCurrentUser();
 
       report.lastModifiedDate = DateTime.now();
-      report.updatedBy = currentUser.id ?? "System";
+      report.updatedBy = currentUser.id;
 
       await _reports
           .doc(id)

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:freelancer_system/models/chat_room.dart';
 
-import '../../../services/ChatService.dart';
+import '../../../services/chatService.dart';
 import 'components/chat_panel.dart';
 
 class DetailChatScreen extends StatelessWidget {

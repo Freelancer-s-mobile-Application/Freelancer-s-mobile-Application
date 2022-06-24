@@ -58,9 +58,9 @@ class Review {
       'senderId': senderId,
       'ratingPoint': ratingPoint,
       'deleted': deleted,
-      'createdDate': createdDate,
+      'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
+      'createdDate': createdDate?.millisecondsSinceEpoch,
       'updatedBy': updatedBy,
-      'lastModifiedDate': lastModifiedDate,
     };
   }
 
@@ -75,10 +75,10 @@ class Review {
           map['ratingPoint'] != null ? map['ratingPoint'] as num : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? (map['lastModifiedDate'] as Timestamp).toDate()
+          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
           : null,
       createdDate: map['createdDate'] != null
-          ? (map['createdDate'] as Timestamp).toDate()
+          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
           : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
     );

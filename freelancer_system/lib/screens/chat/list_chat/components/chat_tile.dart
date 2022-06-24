@@ -3,7 +3,7 @@ import 'package:freelancer_system/models/chat_room.dart';
 import 'package:get/get.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../../../../services/ChatService.dart';
+import '../../../../services/chatService.dart';
 import '../../chat_screen/chat_screen.dart';
 import 'last_msg.dart';
 

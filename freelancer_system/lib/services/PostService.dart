@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freelancer_system/models/Post.dart';
+import 'package:freelancer_system/models/User.dart';
 import 'package:freelancer_system/services/UserService.dart';
 
 class PostService {
@@ -29,26 +30,22 @@ class PostService {
 
   Future<List<Post>> search(String? keyword) async {
     List<Post> posts = <Post>[];
-    try {
-      if (keyword != null) {
-        await _posts
-            .where("title", isGreaterThanOrEqualTo: keyword)
-            .get()
-            .then((value) => {
-                  if (value.docs.isNotEmpty)
-                    {
-                      for (var doc in value.docs)
-                        {
-                          posts.add(
-                              Post.fromMap(doc.data() as Map<String, dynamic>))
-                        }
-                    }
-                });
-      } else {
-        posts = await getAll();
-      }
-    } catch (e) {
-      throw Exception(e);
+    if (keyword != null) {
+      await _posts
+          .where("title", isGreaterThanOrEqualTo: keyword)
+          .get()
+          .then((value) => {
+                if (value.docs.isNotEmpty)
+                  {
+                    for (var doc in value.docs)
+                      {
+                        posts.add(
+                            Post.fromMap(doc.data() as Map<String, dynamic>))
+                      }
+                  }
+              });
+    } else {
+      posts = await getAll();
     }
 
     return posts;
@@ -56,12 +53,11 @@ class PostService {
 
   Future<void> add(Post post) async {
     try {
-      var currentUser = await UserService().getCurrentUser();
       DocumentReference ref = _posts.doc();
       post.createdDate = DateTime.now();
       post.lastModifiedDate = DateTime.now();
       post.deleted = false;
-      post.updatedBy = currentUser.id ?? "System";
+      post.updatedBy = "System";
       post.id = ref.id;
 
       return await ref
@@ -82,7 +78,7 @@ class PostService {
           .update({
             "deleted": true,
             "lastModifiedDate": DateTime.now(),
-            "updatedBy": currentUser.id ?? "System",
+            "updatedBy": currentUser.id,
           })
           .then((value) => print("Post deleted"))
           .catchError((error) => print("Failed to delete post: $error"));
@@ -96,7 +92,7 @@ class PostService {
       var currentUser = await UserService().getCurrentUser();
 
       post.lastModifiedDate = DateTime.now();
-      post.updatedBy = currentUser.id ?? "System";
+      post.updatedBy = currentUser.id;
 
       await _posts
           .doc(id)

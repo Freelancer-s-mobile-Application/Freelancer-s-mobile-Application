@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 import '../models/chat_room.dart';
-import '../services/ChatService.dart';
+import '../services/chatService.dart';
 
 class ChatController extends GetxController {
   Rx<List<ChatRoom>> roomList = Rx<List<ChatRoom>>([]);
