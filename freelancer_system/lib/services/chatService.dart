@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
+import 'package:freelancer_system/constants/controller.dart';
 
 import '../models/Message.dart';
 import '../models/chat_room.dart';
@@ -19,74 +19,100 @@ class ChatService {
     return n.toString();
   }
 
-  Future addRoom(String rName, String userAdd) async {
-    String roomId = 'id', roomName = rName;
-    String anotherUser = GetUtils.isEmail(userAdd) ? userAdd : '';
-    //create room with default roomId THEN update roomId
-    try{
-    await FirebaseFirestore.instance
-        .collection('Rooms')
-        .add(
-          ChatRoom(
-              roomId: roomId,
-              roomName: roomName,
-              createDate: DateTime.now(),
-              isDeleted: false,
-              lastestMsg: DateTime.now(),
-              members: [user.email.toString(), anotherUser]).toMap(),
-        )
-        .then(
-      (e) {
-        roomId = e.id;
-        print('Room: $roomId');
-        e.update(
-          {'roomId': e.id},
-        );
-      },
-    );
-    //Add first message to room
-    FirebaseAuth.instance.currentUser!.displayName;
-    await FirebaseFirestore.instance
-        .collection('Rooms')
-        .doc(roomId)
-        .collection('message')
-        .add(
-          FreeLanceMessage(
-              content:
-                  '${FirebaseAuth.instance.currentUser!.displayName} created room $roomName',
-              senderId: user.email.toString(),
-              createdDate: DateTime.now(),
-              isDeleted: false,
-              seenBy: []).toMap(),
-        );
-    }catch (e){
-    print(e);
+  //check duplicate Room
+  Future<bool> checkDuplicateRoom(List<String> mem) async {
+    var snapshot =
+        await _chat.where('members', arrayContainsAny: mem).get().then((value) {
+      bool result = false;
+      if (value.docs.isNotEmpty) {
+        value.docs.map((e) {
+          var r = e.data()! as dynamic;
+          if (r['members'].length <= mem.length) {
+            return result = false;
+          } else {
+            return result = true;
+          }
+        });
+      } else {
+        return result = false;
+      }
+      return result;
+    });
+    return snapshot;
+  }
+
+  Future addRoom(String rName, List<String> userAdd) async {
+    try {
+      String roomId = 'id', roomName = rName;
+      if (roomName.isEmpty) {
+        roomName = '';
+        for (var a in userAdd) {
+          roomName += '$a ';
+        }
+      }
+      //create room with default roomId THEN update roomId
+      await FirebaseFirestore.instance
+          .collection('Rooms')
+          .add(
+            ChatRoom(
+                roomId: roomId,
+                roomName: roomName,
+                createDate: DateTime.now(),
+                isDeleted: false,
+                lastestMsg: DateTime.now(),
+                members: [user.email.toString(), ...userAdd]).toMap(),
+          )
+          .then(
+        (e) {
+          roomId = e.id;
+          e.update(
+            {'roomId': e.id},
+          );
+        },
+      );
+      //Add first message to room
+      FirebaseAuth.instance.currentUser!.displayName;
+      await FirebaseFirestore.instance
+          .collection('Rooms')
+          .doc(roomId)
+          .collection('message')
+          .add(
+            FreeLanceMessage(
+                    content:
+                        '${FirebaseAuth.instance.currentUser!.displayName} created room $roomName',
+                    senderId: user.email.toString(),
+                    createdDate: DateTime.now(),
+                    isDeleted: false,
+                    seenBy: [
+                      FirebaseAuth.instance.currentUser!.email.toString()
+                    ],
+                    lastModifiedDate: DateTime.now(),
+                    updatedBy: authController.freelanceUser.value.displayname!)
+                .toMap(),
+          );
+    } on Exception catch (e) {
+      print(e);
     }
   }
 
   Future pushChat(String roomId, String content) async {
-    try {
-      FirebaseFirestore.instance
-          .collection('Rooms')
-          .doc(roomId)
-          .collection('message')
-          .add(FreeLanceMessage(
-                  isDeleted: false,
-                  senderId: FirebaseAuth.instance.currentUser!.email.toString(),
-                  seenBy: [FirebaseAuth.instance.currentUser!.email.toString()],
-                  content: content.isEmpty ? randomString() : content,
-                  createdDate: DateTime.now(),
-                  lastModifiedDate: DateTime.now(),
-                  updatedBy:
-                      FirebaseAuth.instance.currentUser?.email ?? "System")
-              .toMap());
-      FirebaseFirestore.instance
-          .collection('Rooms')
-          .doc(roomId)
-          .update({'lastestMsg': DateTime.now()});
-    } catch (e) {
-      throw Exception(e);
-    }
+    FirebaseFirestore.instance
+        .collection('Rooms')
+        .doc(roomId)
+        .collection('message')
+        .add(FreeLanceMessage(
+          isDeleted: false,
+          senderId: FirebaseAuth.instance.currentUser!.email.toString(),
+          seenBy: [FirebaseAuth.instance.currentUser!.email.toString()],
+          content: content.isEmpty ? randomString() : content,
+          createdDate: DateTime.now(),
+          lastModifiedDate: DateTime.now(),
+          updatedBy: authController.freelanceUser.value.displayname!,
+        ).toMap());
+    FirebaseFirestore.instance
+        .collection('Rooms')
+        .doc(roomId)
+        .update({'lastestMsg': DateTime.now()});
   }
 
   Future removeRoom(String roomId) async {

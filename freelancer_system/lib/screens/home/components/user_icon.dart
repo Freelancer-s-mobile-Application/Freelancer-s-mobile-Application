@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../../../services/login.dart';
+import 'login.dart';
 
 class UserLoggedInIcon extends StatelessWidget {
   const UserLoggedInIcon({

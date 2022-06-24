@@ -18,14 +18,26 @@ class LastMessage extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Text('Loading...');
+          } else if (!snapshot.hasData) {
+            return const Text('Loading...');
           } else {
             final messages = snapshot.data!.docs;
-            final message = messages.first.data() as dynamic;
-            return Text(
-              message['content'],
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            );
+            var message;
+            try {
+              message = messages.first.data() as dynamic;
+              return Text(
+                message['content'],
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              );
+            } catch (e) {
+              message = 'No New Message';
+              return Text(
+                message,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              );
+            }
           }
         });
   }

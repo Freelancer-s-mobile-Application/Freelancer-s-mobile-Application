@@ -19,8 +19,9 @@ class FreeLanceMessage {
     required this.createdDate,
     required this.seenBy,
     required this.isDeleted,
-    required this.lastModifiedDate,
     required this.updatedBy,
+    required this.lastModifiedDate,
+
   });
 
   FreeLanceMessage copyWith({
@@ -40,6 +41,7 @@ class FreeLanceMessage {
       isDeleted: isDeleted ?? this.isDeleted,
       lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
       updatedBy: updatedBy ?? this.updatedBy,
+
     );
   }
 
@@ -52,6 +54,7 @@ class FreeLanceMessage {
       'isDeleted': isDeleted,
       'lastModifiedDate': lastModifiedDate,
       'updatedBy': updatedBy
+
     };
   }
 
@@ -60,9 +63,7 @@ class FreeLanceMessage {
       senderId: map['senderId'] as String,
       content: map['content'] as String,
       createdDate: (map['createdDate'] as Timestamp).toDate(),
-      seenBy: List<String>.from(
-        (map['seenBy'] as List<dynamic>),
-      ),
+      seenBy: List<String>.from((map['seenBy'] as List<dynamic>)),
       isDeleted: map['isDeleted'] as bool,
       lastModifiedDate: (map['lastModifiedDate'] as Timestamp).toDate(),
       updatedBy: map['updatedBy'] as String,
@@ -76,7 +77,7 @@ class FreeLanceMessage {
 
   @override
   String toString() {
-    return 'Message(senderId: $senderId, content: $content, createdDate: $createdDate, seenBy: $seenBy, isDeleted: $isDeleted)';
+    return 'FreeLanceMessage(senderId: $senderId, content: $content, createdDate: $createdDate, seenBy: $seenBy, isDeleted: $isDeleted, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
   }
 
   @override

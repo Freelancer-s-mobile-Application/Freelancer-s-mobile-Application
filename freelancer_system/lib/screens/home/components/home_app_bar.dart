@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:freelancer_system/constants/controller.dart';
 import 'package:get/get.dart';
-import '../../../controllers/getX_controller.dart';
 import 'user_icon.dart';
 
 class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
@@ -9,14 +9,11 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppController getXController = Get.put(AppController());
-    final user = getXController.isUserLoggedIn.value;
+    //final AppController getXController = Get.put(AppController());
     return AppBar(
       leading: IconButton(
         onPressed: () {
-          FirebaseAuth.instance.signOut();
-          getXController.isUserLoggedIn.value = false;
-          getXController.ggSignIn.value.signOut();
+          authController.signOut();
         },
         icon: const Icon(Icons.logout),
       ),
@@ -24,9 +21,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
       centerTitle: true,
       actions: [
         Obx(() {
-          var islog = getXController.isUserLoggedIn.value;
-          if (FirebaseAuth.instance.currentUser != null) {
-            islog = true;
+          if (authController.isLoggedIn.value) {
             return ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(50)),
               child: CircleAvatar(
@@ -36,7 +31,6 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
               ),
             );
           } else {
-            islog = false;
             return const UserLoggedInIcon();
           }
         }),
