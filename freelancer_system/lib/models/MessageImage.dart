@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class MessageImage {
   String? id;
   String? messageId;
@@ -8,7 +10,7 @@ class MessageImage {
   bool? deleted;
   DateTime? lastModifiedDate;
   DateTime? createdDate;
-
+  String? updatedBy;
   MessageImage({
     this.id,
     this.messageId,
@@ -16,6 +18,7 @@ class MessageImage {
     this.deleted,
     this.lastModifiedDate,
     this.createdDate,
+    this.updatedBy,
   });
 
   MessageImage copyWith({
@@ -25,6 +28,7 @@ class MessageImage {
     bool? deleted,
     DateTime? lastModifiedDate,
     DateTime? createdDate,
+    String? updatedBy,
   }) {
     return MessageImage(
       id: id ?? this.id,
@@ -33,6 +37,7 @@ class MessageImage {
       deleted: deleted ?? this.deleted,
       lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
       createdDate: createdDate ?? this.createdDate,
+      updatedBy: updatedBy ?? this.updatedBy,
     );
   }
 
@@ -42,8 +47,9 @@ class MessageImage {
       'messageId': messageId,
       'url': url,
       'deleted': deleted,
-      'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
-      'createdDate': createdDate?.millisecondsSinceEpoch,
+      'createdDate': createdDate,
+      'updatedBy': updatedBy,
+      'lastModifiedDate': lastModifiedDate,
     };
   }
 
@@ -54,11 +60,12 @@ class MessageImage {
       url: map['url'] != null ? map['url'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
+          ? (map['lastModifiedDate'] as Timestamp).toDate()
           : null,
       createdDate: map['createdDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
+          ? (map['createdDate'] as Timestamp).toDate()
           : null,
+      updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
     );
   }
 
@@ -69,7 +76,7 @@ class MessageImage {
 
   @override
   String toString() {
-    return 'MessageImage(id: $id, messageId: $messageId, url: $url, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate)';
+    return 'MessageImage(id: $id, messageId: $messageId, url: $url, deleted: $deleted, lastModifiedDate: $lastModifiedDate, createdDate: $createdDate, updatedBy: $updatedBy)';
   }
 
   @override
@@ -82,7 +89,8 @@ class MessageImage {
         other.url == url &&
         other.deleted == deleted &&
         other.lastModifiedDate == lastModifiedDate &&
-        other.createdDate == createdDate;
+        other.createdDate == createdDate &&
+        other.updatedBy == updatedBy;
   }
 
   @override
@@ -92,6 +100,7 @@ class MessageImage {
         url.hashCode ^
         deleted.hashCode ^
         lastModifiedDate.hashCode ^
-        createdDate.hashCode;
+        createdDate.hashCode ^
+        updatedBy.hashCode;
   }
 }

@@ -39,7 +39,7 @@ class _DebugPageState extends State<DebugPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-        future: userService.getAll(),
+        future: userService.getCurrentUser(),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (!snapshot.hasData) {
             return const Center(
@@ -47,16 +47,16 @@ class _DebugPageState extends State<DebugPage> {
             );
           }
           return ListView.builder(
-            itemCount: snapshot.data?.length,
+            itemCount: 1,
             itemBuilder: (context, int index) {
               return ListTile(
-                title: Text(snapshot.data[index].email.toString()),
+                title: Text(snapshot.data.avatar.toString()),
                 trailing: IconButton(
                   icon: const Icon(
                     Icons.delete_outline,
                   ),
                   onPressed: () {
-                    // Here We Will Add The Delete Feature
+                    debugPrint(snapshot.data.avatar.toString());
                   },
                 ),
               );
@@ -66,16 +66,8 @@ class _DebugPageState extends State<DebugPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // debugPrint();
-          await postService
-              .add(Post(
-                  userId: "1",
-                  title: 'Test2',
-                  content: 'Test2',
-                  min: 1,
-                  max: 3,
-                  status: "open"))
-              .catchError((error) {
+          var currentUser = await userService.getCurrentUser();
+          await userService.add(currentUser).catchError((error) {
             debugPrint(error.toString());
           });
         },

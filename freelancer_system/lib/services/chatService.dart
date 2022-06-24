@@ -50,12 +50,16 @@ class ChatService {
           .collection('message')
           .add(
             FreeLanceMessage(
-                content:
-                    '${FirebaseAuth.instance.currentUser!.displayName} created room $roomName',
-                senderId: user.email.toString(),
-                createdDate: DateTime.now(),
-                isDeleted: false,
-                seenBy: []).toMap(),
+                    content:
+                        '${FirebaseAuth.instance.currentUser!.displayName} created room $roomName',
+                    senderId: user.email.toString(),
+                    createdDate: DateTime.now(),
+                    isDeleted: false,
+                    seenBy: [],
+                    lastModifiedDate: DateTime.now(),
+                    updatedBy:
+                        FirebaseAuth.instance.currentUser?.email ?? "System")
+                .toMap(),
           );
     } catch (e) {
       throw Exception(e);
@@ -73,7 +77,10 @@ class ChatService {
                   senderId: FirebaseAuth.instance.currentUser!.email.toString(),
                   seenBy: [FirebaseAuth.instance.currentUser!.email.toString()],
                   content: content.isEmpty ? randomString() : content,
-                  createdDate: DateTime.now())
+                  createdDate: DateTime.now(),
+                  lastModifiedDate: DateTime.now(),
+                  updatedBy:
+                      FirebaseAuth.instance.currentUser?.email ?? "System")
               .toMap());
       FirebaseFirestore.instance
           .collection('Rooms')
