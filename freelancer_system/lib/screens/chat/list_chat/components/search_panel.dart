@@ -72,7 +72,13 @@ class SearchPanel extends StatelessWidget {
                     );
                   },
                   onSuggestionSelected: (value) {
-                    addList.add(value);
+                    if (addList.contains(value)) {
+                      Get.snackbar(
+                          'User already in the list', 'Please select user',
+                          snackPosition: SnackPosition.BOTTOM);
+                    } else {
+                      addList.add(value);
+                    }
                   },
                 ),
               ),
@@ -117,21 +123,27 @@ class SearchPanel extends StatelessWidget {
                     for (var element in addList) {
                       users.add(element.email.toString());
                     }
-                    final isExist =
-                        await ChatService().checkDuplicateRoom(users);
-                    if (isExist) {
-                      Get.snackbar(
-                          snackPosition: SnackPosition.BOTTOM,
-                          'Failed to Create Room',
-                          'Room Already Existed');
-                    } else {
-                      ChatService().addRoom(titleAddCtl.text, users);
-                      Get.back();
-                      Get.snackbar(
-                          snackPosition: SnackPosition.BOTTOM,
-                          'Success',
-                          'Room Added');
-                    }
+                    // final isExist =
+                    //     await ChatService().checkDuplicateRoom(users);
+                    // if (isExist) {
+                    //   Get.snackbar(
+                    //       snackPosition: SnackPosition.BOTTOM,
+                    //       'Failed to Create Room',
+                    //       'Room Already Existed');
+                    // } else {
+                    //   ChatService().addRoom(titleAddCtl.text, users);
+                    //   Get.back();
+                    //   Get.snackbar(
+                    //       snackPosition: SnackPosition.BOTTOM,
+                    //       'Success',
+                    //       'Room Added');
+                    // }
+                    ChatService().addRoom(titleAddCtl.text, users);
+                    Get.back();
+                    Get.snackbar(
+                        snackPosition: SnackPosition.BOTTOM,
+                        'Success',
+                        'Room Added');
                   }
                 },
                 child: const Text('Create Room'),
