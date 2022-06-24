@@ -15,6 +15,7 @@ class FreeLanceUser {
   String? phonenumber;
   String? description;
   String? majorId;
+  String? avatar;
   bool? deleted;
   DateTime? createdDate;
   String? updatedBy;
@@ -29,6 +30,7 @@ class FreeLanceUser {
     this.phonenumber,
     this.description,
     this.majorId,
+    this.avatar,
     this.deleted,
     this.createdDate,
     this.updatedBy,
@@ -45,6 +47,7 @@ class FreeLanceUser {
     String? phonenumber,
     String? description,
     String? majorId,
+    String? avatar,
     bool? deleted,
     DateTime? createdDate,
     String? updatedBy,
@@ -60,6 +63,7 @@ class FreeLanceUser {
       phonenumber: phonenumber ?? this.phonenumber,
       description: description ?? this.description,
       majorId: majorId ?? this.majorId,
+      avatar: avatar ?? this.avatar,
       deleted: deleted ?? this.deleted,
       createdDate: createdDate ?? this.createdDate,
       updatedBy: updatedBy ?? this.updatedBy,
@@ -78,6 +82,7 @@ class FreeLanceUser {
       'phonenumber': phonenumber,
       'description': description,
       'majorId': majorId,
+      'avatar': avatar,
       'deleted': deleted,
       'createdDate': createdDate,
       'updatedBy': updatedBy,
@@ -99,6 +104,7 @@ class FreeLanceUser {
       description:
           map['description'] != null ? map['description'] as String : null,
       majorId: map['majorId'] != null ? map['majorId'] as String : null,
+      avatar: map['avatar'] != null ? map['avatar'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
       createdDate: (map['createdDate'] as Timestamp).toDate(),
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
@@ -113,7 +119,8 @@ class FreeLanceUser {
 
   @override
   String toString() {
-    return 'FreeLanceUser(id: $id, avatar: $avatar, username: $username, email: $email, address: $address, displayname: $displayname, phonenumber: $phonenumber, description: $description, majorId: $majorId, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
+    return 'FreeLanceUser(id: $id, username: $username, email: $email, address: $address, displayname: $displayname, phonenumber: $phonenumber, description: $description, majorId: $majorId, avatar: $avatar, deleted: $deleted, createdDate: $createdDate, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
+    
   }
 
   @override
@@ -130,6 +137,7 @@ class FreeLanceUser {
         other.phonenumber == phonenumber &&
         other.description == description &&
         other.majorId == majorId &&
+        other.avatar == avatar &&
         other.deleted == deleted &&
         other.createdDate == createdDate &&
         other.updatedBy == updatedBy &&
@@ -147,6 +155,7 @@ class FreeLanceUser {
         phonenumber.hashCode ^
         description.hashCode ^
         majorId.hashCode ^
+        avatar.hashCode ^
         deleted.hashCode ^
         createdDate.hashCode ^
         updatedBy.hashCode ^

@@ -68,9 +68,9 @@ class Post {
       'max': max,
       'status': status,
       'deleted': deleted,
-      'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
-      'createdDate': createdDate?.millisecondsSinceEpoch,
+      'createdDate': createdDate,
       'updatedBy': updatedBy,
+      'lastModifiedDate': createdDate,
     };
   }
 
@@ -85,10 +85,10 @@ class Post {
       status: map['status'] != null ? map['status'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
       lastModifiedDate: map['lastModifiedDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
+          ? (map['lastModifiedDate'] as Timestamp).toDate()
           : null,
       createdDate: map['createdDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
+          ? (map['createdDate'] as Timestamp).toDate()
           : null,
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
     );

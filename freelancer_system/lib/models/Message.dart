@@ -12,6 +12,7 @@ class FreeLanceMessage {
   bool isDeleted;
   String updatedBy;
   DateTime lastModifiedDate;
+
   FreeLanceMessage({
     required this.senderId,
     required this.content,
@@ -20,6 +21,7 @@ class FreeLanceMessage {
     required this.isDeleted,
     required this.updatedBy,
     required this.lastModifiedDate,
+
   });
 
   FreeLanceMessage copyWith({
@@ -37,8 +39,9 @@ class FreeLanceMessage {
       createdDate: createdDate ?? this.createdDate,
       seenBy: seenBy ?? this.seenBy,
       isDeleted: isDeleted ?? this.isDeleted,
-      updatedBy: updatedBy ?? this.updatedBy,
       lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
+      updatedBy: updatedBy ?? this.updatedBy,
+
     );
   }
 
@@ -49,8 +52,9 @@ class FreeLanceMessage {
       'createdDate': createdDate,
       'seenBy': seenBy,
       'isDeleted': isDeleted,
-      'updatedBy': updatedBy,
       'lastModifiedDate': lastModifiedDate,
+      'updatedBy': updatedBy
+
     };
   }
 
@@ -61,8 +65,8 @@ class FreeLanceMessage {
       createdDate: (map['createdDate'] as Timestamp).toDate(),
       seenBy: List<String>.from((map['seenBy'] as List<dynamic>)),
       isDeleted: map['isDeleted'] as bool,
-      updatedBy: map['updatedBy'] as String,
       lastModifiedDate: (map['lastModifiedDate'] as Timestamp).toDate(),
+      updatedBy: map['updatedBy'] as String,
     );
   }
 
@@ -87,8 +91,8 @@ class FreeLanceMessage {
         other.createdDate == createdDate &&
         listEquals(other.seenBy, seenBy) &&
         other.isDeleted == isDeleted &&
-        other.updatedBy == updatedBy &&
-        other.lastModifiedDate == lastModifiedDate;
+        other.lastModifiedDate == lastModifiedDate &&
+        other.updatedBy == updatedBy;
   }
 
   @override
@@ -98,7 +102,7 @@ class FreeLanceMessage {
         createdDate.hashCode ^
         seenBy.hashCode ^
         isDeleted.hashCode ^
-        updatedBy.hashCode ^
-        lastModifiedDate.hashCode;
+        lastModifiedDate.hashCode ^
+        updatedBy.hashCode;
   }
 }
