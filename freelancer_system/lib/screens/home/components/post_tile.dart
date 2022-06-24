@@ -35,7 +35,7 @@ class PostTile extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.65,
+                      width: MediaQuery.of(context).size.width * 0.6,
                       child: Text(
                         post.content.toString(),
                         maxLines: 5,

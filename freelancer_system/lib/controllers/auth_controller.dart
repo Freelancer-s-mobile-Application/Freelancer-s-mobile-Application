@@ -22,13 +22,13 @@ class AuthController extends GetxController {
     firebaseuser = Rx<User?>(auth.currentUser);
     firebaseuser.bindStream(auth.userChanges());
     ever(firebaseuser, _setIsLogged);
-    ever(firebaseuser, checkUserExist());
   }
 
   _setIsLogged(User? user) {
     if (user == null) {
       isLoggedIn.value = false;
     } else {
+      checkUserExist();
       isLoggedIn.value = true;
     }
   }
@@ -46,7 +46,6 @@ class AuthController extends GetxController {
         idToken: googleAuth?.idToken,
       );
       await FirebaseAuth.instance.signInWithCredential(credential);
-      checkUserExist();
       Get.back();
       Get.back();
     } on FirebaseAuthException {

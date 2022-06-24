@@ -14,7 +14,6 @@ class SearchPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var addList = [].obs;
-    var userAddCtl = TextEditingController();
     var titleAddCtl = TextEditingController();
     return Dialog(
       child: Container(
@@ -53,8 +52,10 @@ class SearchPanel extends StatelessWidget {
                   suggestionsCallback: (pattern) async {
                     var list =
                         userListController.getByNameAndEmail(pattern, pattern);
-                    print(authController.freelanceUser.value);
-                    list.remove(authController.freelanceUser.value);
+                    var item = list.firstWhere((element) =>
+                        element.email ==
+                        authController.freelanceUser.value.email);
+                    list.remove(item);
                     return list;
                   },
                   itemBuilder: (context, FreeLanceUser suggestion) {
