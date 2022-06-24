@@ -45,8 +45,7 @@ class DetailChatScreen extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.send, color: Colors.blue, size: 30),
                   onPressed: () {
-                    print(textCtl.text);
-                    ChatService().pushChat(room.roomId, textCtl.text);
+                    ChatService().pushChat(room.roomId, textCtl.text.trim());
                     textCtl.clear();
                   },
                 ),

@@ -75,7 +75,6 @@ class LoginScreen extends StatelessWidget {
       );
       await FirebaseAuth.instance.signInWithCredential(credential);
       getXController.isUserLoggedIn.value = true;
-      Get.put(FirebaseAuth.instance.currentUser as User);
       Get.back();
       Get.back();
     } on FirebaseAuthException catch (e) {
