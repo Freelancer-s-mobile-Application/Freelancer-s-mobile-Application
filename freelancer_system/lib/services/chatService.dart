@@ -116,14 +116,10 @@ class ChatService {
   }
 
   Future removeRoom(String roomId) async {
-    try {
-      await FirebaseFirestore.instance
-          .collection('Rooms')
-          .doc(roomId)
-          .update({'isDeleted': true});
-    } catch (e) {
-      throw Exception(e);
-    }
+    await FirebaseFirestore.instance
+        .collection('Rooms')
+        .doc(roomId)
+        .update({'isDeleted': true});
   }
 
   Stream<List<ChatRoom>> roomStream(String userId) {
