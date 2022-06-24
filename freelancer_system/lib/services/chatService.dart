@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:freelancer_system/constants/controller.dart';
 
 import '../models/Message.dart';
 import '../models/chat_room.dart';
@@ -41,49 +42,57 @@ class ChatService {
   }
 
   Future addRoom(String rName, List<String> userAdd) async {
-    String roomId = 'id', roomName = rName;
-    if (roomName.isEmpty) {
-      roomName = '';
-      for (var a in userAdd) {
-        roomName += '$a ';
+    try {
+      String roomId = 'id', roomName = rName;
+      if (roomName.isEmpty) {
+        roomName = '';
+        for (var a in userAdd) {
+          roomName += '$a ';
+        }
       }
+      //create room with default roomId THEN update roomId
+      await FirebaseFirestore.instance
+          .collection('Rooms')
+          .add(
+            ChatRoom(
+                roomId: roomId,
+                roomName: roomName,
+                createDate: DateTime.now(),
+                isDeleted: false,
+                lastestMsg: DateTime.now(),
+                members: [user.email.toString(), ...userAdd]).toMap(),
+          )
+          .then(
+        (e) {
+          roomId = e.id;
+          e.update(
+            {'roomId': e.id},
+          );
+        },
+      );
+      //Add first message to room
+      FirebaseAuth.instance.currentUser!.displayName;
+      await FirebaseFirestore.instance
+          .collection('Rooms')
+          .doc(roomId)
+          .collection('message')
+          .add(
+            FreeLanceMessage(
+                    content:
+                        '${FirebaseAuth.instance.currentUser!.displayName} created room $roomName',
+                    senderId: user.email.toString(),
+                    createdDate: DateTime.now(),
+                    isDeleted: false,
+                    seenBy: [
+                      FirebaseAuth.instance.currentUser!.email.toString()
+                    ],
+                    lastModifiedDate: DateTime.now(),
+                    updatedBy: authController.freelanceUser.value.displayname!)
+                .toMap(),
+          );
+    } on Exception catch (e) {
+      print(e);
     }
-    //create room with default roomId THEN update roomId
-    await FirebaseFirestore.instance
-        .collection('Rooms')
-        .add(
-          ChatRoom(
-              roomId: roomId,
-              roomName: roomName,
-              createDate: DateTime.now(),
-              isDeleted: false,
-              lastestMsg: DateTime.now(),
-              members: [user.email.toString(), ...userAdd]).toMap(),
-        )
-        .then(
-      (e) {
-        roomId = e.id;
-        print('Room: $roomId');
-        e.update(
-          {'roomId': e.id},
-        );
-      },
-    );
-    //Add first message to room
-    FirebaseAuth.instance.currentUser!.displayName;
-    await FirebaseFirestore.instance
-        .collection('Rooms')
-        .doc(roomId)
-        .collection('message')
-        .add(
-          FreeLanceMessage(
-              content:
-                  '${FirebaseAuth.instance.currentUser!.displayName} created room $roomName',
-              senderId: user.email.toString(),
-              createdDate: DateTime.now(),
-              isDeleted: false,
-              seenBy: []).toMap(),
-        );
   }
 
   Future pushChat(String roomId, String content) async {
@@ -92,12 +101,14 @@ class ChatService {
         .doc(roomId)
         .collection('message')
         .add(FreeLanceMessage(
-                isDeleted: false,
-                senderId: FirebaseAuth.instance.currentUser!.email.toString(),
-                seenBy: [FirebaseAuth.instance.currentUser!.email.toString()],
-                content: content.isEmpty ? randomString() : content,
-                createdDate: DateTime.now())
-            .toMap());
+          isDeleted: false,
+          senderId: FirebaseAuth.instance.currentUser!.email.toString(),
+          seenBy: [FirebaseAuth.instance.currentUser!.email.toString()],
+          content: content.isEmpty ? randomString() : content,
+          createdDate: DateTime.now(),
+          lastModifiedDate: DateTime.now(),
+          updatedBy: authController.freelanceUser.value.displayname!,
+        ).toMap());
     FirebaseFirestore.instance
         .collection('Rooms')
         .doc(roomId)

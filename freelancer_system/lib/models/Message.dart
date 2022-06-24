@@ -10,12 +10,16 @@ class FreeLanceMessage {
   DateTime createdDate;
   List<String> seenBy;
   bool isDeleted;
+  String updatedBy;
+  DateTime lastModifiedDate;
   FreeLanceMessage({
     required this.senderId,
     required this.content,
     required this.createdDate,
     required this.seenBy,
     required this.isDeleted,
+    required this.updatedBy,
+    required this.lastModifiedDate,
   });
 
   FreeLanceMessage copyWith({
@@ -24,6 +28,8 @@ class FreeLanceMessage {
     DateTime? createdDate,
     List<String>? seenBy,
     bool? isDeleted,
+    String? updatedBy,
+    DateTime? lastModifiedDate,
   }) {
     return FreeLanceMessage(
       senderId: senderId ?? this.senderId,
@@ -31,6 +37,8 @@ class FreeLanceMessage {
       createdDate: createdDate ?? this.createdDate,
       seenBy: seenBy ?? this.seenBy,
       isDeleted: isDeleted ?? this.isDeleted,
+      updatedBy: updatedBy ?? this.updatedBy,
+      lastModifiedDate: lastModifiedDate ?? this.lastModifiedDate,
     );
   }
 
@@ -41,6 +49,8 @@ class FreeLanceMessage {
       'createdDate': createdDate,
       'seenBy': seenBy,
       'isDeleted': isDeleted,
+      'updatedBy': updatedBy,
+      'lastModifiedDate': lastModifiedDate,
     };
   }
 
@@ -49,10 +59,10 @@ class FreeLanceMessage {
       senderId: map['senderId'] as String,
       content: map['content'] as String,
       createdDate: (map['createdDate'] as Timestamp).toDate(),
-      seenBy: List<String>.from(
-        (map['seenBy'] as List<dynamic>),
-      ),
+      seenBy: List<String>.from((map['seenBy'] as List<dynamic>)),
       isDeleted: map['isDeleted'] as bool,
+      updatedBy: map['updatedBy'] as String,
+      lastModifiedDate: (map['lastModifiedDate'] as Timestamp).toDate(),
     );
   }
 
@@ -63,7 +73,7 @@ class FreeLanceMessage {
 
   @override
   String toString() {
-    return 'Message(senderId: $senderId, content: $content, createdDate: $createdDate, seenBy: $seenBy, isDeleted: $isDeleted)';
+    return 'FreeLanceMessage(senderId: $senderId, content: $content, createdDate: $createdDate, seenBy: $seenBy, isDeleted: $isDeleted, updatedBy: $updatedBy, lastModifiedDate: $lastModifiedDate)';
   }
 
   @override
@@ -76,7 +86,9 @@ class FreeLanceMessage {
         other.content == content &&
         other.createdDate == createdDate &&
         listEquals(other.seenBy, seenBy) &&
-        other.isDeleted == isDeleted;
+        other.isDeleted == isDeleted &&
+        other.updatedBy == updatedBy &&
+        other.lastModifiedDate == lastModifiedDate;
   }
 
   @override
@@ -85,6 +97,8 @@ class FreeLanceMessage {
         content.hashCode ^
         createdDate.hashCode ^
         seenBy.hashCode ^
-        isDeleted.hashCode;
+        isDeleted.hashCode ^
+        updatedBy.hashCode ^
+        lastModifiedDate.hashCode;
   }
 }

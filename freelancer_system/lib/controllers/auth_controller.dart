@@ -22,6 +22,7 @@ class AuthController extends GetxController {
     firebaseuser = Rx<User?>(auth.currentUser);
     firebaseuser.bindStream(auth.userChanges());
     ever(firebaseuser, _setIsLogged);
+    ever(firebaseuser, checkUserExist());
   }
 
   _setIsLogged(User? user) {
@@ -59,7 +60,7 @@ class AuthController extends GetxController {
     }
   }
 
-  void checkUserExist() async {
+  checkUserExist() async {
     UserService userService = UserService();
     final FreeLanceUser user =
         await userService.findByMail(firebaseuser.value!.email.toString());
@@ -71,7 +72,9 @@ class AuthController extends GetxController {
         backgroundColor: Colors.blue,
         colorText: Colors.white,
       );
-      userService.add(userService.firebaseToFreelanceUser(firebaseuser.value!));
+      final newUser = userService.firebaseToFreelanceUser(firebaseuser.value!);
+      userService.add(newUser);
+      freelanceUser.value = newUser;
     } else {
       Get.snackbar(
         'Welcome Back',
@@ -80,8 +83,8 @@ class AuthController extends GetxController {
         backgroundColor: Colors.blue,
         colorText: Colors.white,
       );
+      freelanceUser.value = user;
     }
-    freelanceUser.value = user;
   }
 
   void signOut() {

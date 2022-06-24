@@ -34,29 +34,30 @@ class AppPageRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Material App',
-      navigatorKey: navKey,
-      home: Scaffold(
-        bottomNavigationBar: CurvedNavigationBar(
-          key: _bottomNavigationKey,
-          index: 0,
-          height: 60.0,
-          color: Colors.white,
-          buttonBackgroundColor: Colors.white,
-          backgroundColor: Colors.transparent,
-          animationCurve: Curves.easeInOut,
-          animationDuration: const Duration(milliseconds: 600),
-          onTap: (index) => appController.page.value = index,
-          letIndexChange: (index) => true,
-          items: const <Widget>[
-            Icon(Icons.home, size: 30),
-            Icon(Icons.message, size: 30),
-            Icon(Icons.settings, size: 30),
-          ],
-        ),
-        body: Obx(() => getScreen(appController.page.value)),
-      ),
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'Material App',
+        navigatorKey: navKey,
+        home: Obx(
+          () => Scaffold(
+            bottomNavigationBar: CurvedNavigationBar(
+              key: _bottomNavigationKey,
+              index: appController.page.value,
+              height: 60.0,
+              color: Colors.white,
+              buttonBackgroundColor: Colors.white38,
+              backgroundColor: Colors.transparent,
+              animationCurve: Curves.easeInOutCubic,
+              animationDuration: const Duration(milliseconds: 600),
+              onTap: (index) => appController.page.value = index,
+              letIndexChange: (index) => true,
+              items: const <Widget>[
+                Icon(Icons.home, size: 30),
+                Icon(Icons.message, size: 30),
+                Icon(Icons.settings, size: 30),
+              ],
+            ),
+            body: getScreen(appController.page.value),
+          ),
+        ));
   }
 }

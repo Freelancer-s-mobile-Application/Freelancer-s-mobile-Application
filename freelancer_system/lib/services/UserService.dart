@@ -79,7 +79,6 @@ class UserService {
     return user;
   }
 
-  //stream of freelanceUser from firebase
   Stream<List<FreeLanceUser>> getStreamOfFreeLanceUsers() {
     return _users.where("deleted", isEqualTo: false).snapshots().map(
         (snapshot) => snapshot.docs
