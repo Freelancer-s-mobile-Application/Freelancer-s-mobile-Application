@@ -2,7 +2,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freelancer_system/models/Post.dart';
-import 'package:freelancer_system/models/User.dart';
 import 'package:freelancer_system/services/UserService.dart';
 
 class PostService {
@@ -102,5 +101,15 @@ class PostService {
     } on Exception catch (_) {
       throw Exception("Update exception");
     }
+  }
+
+  Stream<List<Post>> postStream() {
+    return _posts
+        .where("deleted", isEqualTo: false)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) {
+              final f = Post.fromMap(doc.data() as dynamic);
+              return f;
+            }).toList());
   }
 }

@@ -2,7 +2,9 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:freelancer_system/controllers/auth_controller.dart';
 import 'package:get/get.dart';
+import 'controllers/chat_controller.dart';
 import 'controllers/getX_controller.dart';
+import 'controllers/post_controller.dart';
 import 'controllers/userList_controller.dart';
 import 'main.dart';
 import 'screens/chat/list_chat/list_chat_screen.dart';
@@ -30,6 +32,8 @@ class AppPageRoute extends StatelessWidget {
   final AppController appController = Get.put(AppController());
   final AuthController authController = Get.put(AuthController());
   final UserListController userListController = Get.put(UserListController());
+  final ChatController chatController = Get.put(ChatController());
+  final PostController postController = Get.put(PostController());
 
   @override
   Widget build(BuildContext context) {

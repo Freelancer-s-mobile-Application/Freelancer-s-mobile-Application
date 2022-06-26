@@ -5,6 +5,7 @@ import '../models/chat_room.dart';
 import '../services/chatService.dart';
 
 class ChatController extends GetxController {
+  static ChatController instance = Get.find();
   Rx<List<ChatRoom>> roomList = Rx<List<ChatRoom>>([]);
 
   List<ChatRoom> get rooms => roomList.value;

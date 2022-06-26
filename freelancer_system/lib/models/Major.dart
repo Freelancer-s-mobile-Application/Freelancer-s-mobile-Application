@@ -43,8 +43,8 @@ class Major {
       'id': id,
       'name': name,
       'deleted': deleted,
-      'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
-      'createdDate': createdDate?.millisecondsSinceEpoch,
+      'lastModifiedDate': lastModifiedDate,
+      'createdDate': createdDate,
       'updatedBy': updatedBy,
     };
   }
@@ -54,12 +54,8 @@ class Major {
       id: map['id'] != null ? map['id'] as String : null,
       name: map['name'] != null ? map['name'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
-      lastModifiedDate: map['lastModifiedDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
-          : null,
-      createdDate: map['createdDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
-          : null,
+      lastModifiedDate: (map['lastModifiedDate'] as Timestamp).toDate(),
+      createdDate: (map['createdDate'] as Timestamp).toDate(),
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
     );
   }

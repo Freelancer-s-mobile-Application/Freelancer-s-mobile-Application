@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class MessageImage {
   String? id;
   String? messageId;
@@ -42,8 +44,8 @@ class MessageImage {
       'messageId': messageId,
       'url': url,
       'deleted': deleted,
-      'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
-      'createdDate': createdDate?.millisecondsSinceEpoch,
+      'lastModifiedDate': lastModifiedDate,
+      'createdDate': createdDate,
     };
   }
 
@@ -53,12 +55,8 @@ class MessageImage {
       messageId: map['messageId'] != null ? map['messageId'] as String : null,
       url: map['url'] != null ? map['url'] as String : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
-      lastModifiedDate: map['lastModifiedDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
-          : null,
-      createdDate: map['createdDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
-          : null,
+      lastModifiedDate: (map['lastModifiedDate'] as Timestamp).toDate(),
+      createdDate: (map['createdDate'] as Timestamp).toDate(),
     );
   }
 
