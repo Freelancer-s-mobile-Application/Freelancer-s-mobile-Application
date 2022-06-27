@@ -11,15 +11,12 @@ class UserService {
 
   Future<FreeLanceUser> getCurrentUser() async {
     FreeLanceUser user = FreeLanceUser();
-
     try {
       var email = auth.currentUser?.email;
-
       await _users.where("email", isEqualTo: email).get().then((value) {
         user =
             FreeLanceUser.fromMap(value.docs[0].data() as Map<String, dynamic>);
       });
-
       if (user == null) throw Exception("FreeLanceUser not found");
     } catch (e) {
       print(e);
@@ -63,7 +60,7 @@ class UserService {
   Future<FreeLanceUser> findById(String id) async {
     FreeLanceUser user = FreeLanceUser();
     try {
-      await _users.doc(id).get().then((value) =>
+      user = await _users.doc(id).get().then((value) =>
           FreeLanceUser.fromMap(value.data() as Map<String, dynamic>));
     } on Exception {}
     return user;

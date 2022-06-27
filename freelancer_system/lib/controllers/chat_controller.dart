@@ -12,8 +12,10 @@ class ChatController extends GetxController {
 
   @override
   void onInit() {
-    final userMail = FirebaseAuth.instance.currentUser!.email.toString();
-    roomList.bindStream(ChatService().roomStream(userMail));
-    super.onInit();
+    try {
+      final userMail = FirebaseAuth.instance.currentUser!.email.toString();
+      roomList.bindStream(ChatService().roomStream(userMail));
+      super.onInit();
+    } catch (e) {}
   }
 }
