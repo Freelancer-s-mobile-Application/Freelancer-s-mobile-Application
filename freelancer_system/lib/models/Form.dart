@@ -59,9 +59,9 @@ class ApplicationForm {
       'status': status,
       'files': files,
       'deleted': deleted,
-      'createdDate': createdDate?.millisecondsSinceEpoch,
+      'createdDate': createdDate,
       'updatedBy': updatedBy,
-      'lastModifiedDate': lastModifiedDate?.millisecondsSinceEpoch,
+      'lastModifiedDate': lastModifiedDate,
     };
   }
 
@@ -75,13 +75,9 @@ class ApplicationForm {
           ? List<String>.from((map['files'] as List<String>))
           : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
-      createdDate: map['createdDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createdDate'] as int)
-          : null,
+      createdDate: (map['createdDate'] as Timestamp).toDate(),
       updatedBy: map['updatedBy'] != null ? map['updatedBy'] as String : null,
-      lastModifiedDate: map['lastModifiedDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['lastModifiedDate'] as int)
-          : null,
+      lastModifiedDate: (map['lastModifiedDate'] as Timestamp).toDate(),
     );
   }
 

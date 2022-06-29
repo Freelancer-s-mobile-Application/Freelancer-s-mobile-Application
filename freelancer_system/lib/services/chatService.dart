@@ -41,9 +41,10 @@ class ChatService {
     return snapshot;
   }
 
-  Future addRoom(String rName, List<String> userAdd) async {
+  Future<String> addRoom(String rName, List<String> userAdd) async {
+    String roomId = 'id';
     try {
-      String roomId = 'id', roomName = rName;
+      String roomName = rName;
       if (roomName.isEmpty) {
         roomName = '';
         for (var a in userAdd) {
@@ -93,6 +94,7 @@ class ChatService {
     } on Exception catch (e) {
       print(e);
     }
+    return roomId;
   }
 
   Future pushChat(String roomId, String content) async {
@@ -131,5 +133,12 @@ class ChatService {
               final f = ChatRoom.fromMap(doc.data() as dynamic);
               return f;
             }).toList());
+  }
+
+  Future<ChatRoom> getRoom(String roomId) {
+    return _chat
+        .doc(roomId)
+        .get()
+        .then((value) => ChatRoom.fromMap(value.data() as dynamic));
   }
 }
