@@ -33,6 +33,7 @@ dependencies:
   firebase_auth: ^3.3.19
   firebase_core: ^1.17.1
   firebase_database: ^9.0.15
+  google_fonts: ^3.0.1
   flutter:
     sdk: flutter
   flutter_floating_bottom_bar: ^1.0.0+1

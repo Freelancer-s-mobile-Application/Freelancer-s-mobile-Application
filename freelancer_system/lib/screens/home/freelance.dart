@@ -13,23 +13,21 @@ class FreelanceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Expanded(
-      child: Column(
-        children: [
-          const SearchBar(),
-          const Divider(thickness: 1, indent: 20, endIndent: 20),
-          SizedBox(
-            width: size.width * 0.9,
-            height: size.height * 0.055,
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text('Filter'),
-            ),
+    return Column(
+      children: [
+        const SearchBar(),
+        const Divider(thickness: 1, indent: 20, endIndent: 20),
+        SizedBox(
+          width: size.width * 0.9,
+          height: size.height * 0.055,
+          child: ElevatedButton(
+            onPressed: () {},
+            child: const Text('Filter'),
           ),
-          const Divider(thickness: 1, indent: 20, endIndent: 20),
-          const ListViewBuild(),
-        ],
-      ),
+        ),
+        const Divider(thickness: 1, indent: 20, endIndent: 20),
+        const ListViewBuild(),
+      ],
     );
   }
 }
