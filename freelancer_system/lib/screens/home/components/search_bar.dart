@@ -1,9 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:freelancer_system/constants/controller.dart';
 
-class SearchBar extends StatelessWidget {
+class SearchBar extends StatefulWidget {
   const SearchBar({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<SearchBar> createState() => _SearchBarState();
+}
+
+class _SearchBarState extends State<SearchBar> {
+  TextEditingController searchCtl = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    searchCtl.addListener(() {
+      if (searchCtl.text.isEmpty) {
+        postController.isSearch.trigger(false);
+        // postController.showList.value = postController.posts;
+      } else {
+        postController.isSearch.trigger(true);
+        postController.searchKey.value = searchCtl.text;
+        // postController.showList.value = postController.search(searchCtl.text);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +42,22 @@ class SearchBar extends StatelessWidget {
               border: Border.all(color: Colors.blue),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: const TextField(
-              style: TextStyle(color: Colors.white, fontSize: 20),
+            child: TextField(
+              controller: searchCtl,
+              style: const TextStyle(color: Colors.black, fontSize: 20),
               decoration: InputDecoration(
                 focusedBorder: InputBorder.none,
                 enabledBorder: InputBorder.none,
-                icon: Icon(Icons.search),
+                icon: const Icon(Icons.search),
+                hintText: 'Search',
+                suffixIcon: IconButton(
+                  iconSize: 20,
+                  onPressed: () {
+                    searchCtl.clear();
+                    postController.isSearch.trigger(false);
+                  },
+                  icon: const Icon(Icons.clear),
+                ),
               ),
             ),
           ),

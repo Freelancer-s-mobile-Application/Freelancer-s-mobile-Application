@@ -37,13 +37,10 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
       ],
       bottom: const TabBar(tabs: [
         Tab(
-          text: 'Freelancers',
+          text: 'Look For Jobs',
         ),
         Tab(
-          text: 'Debug',
-        ),
-        Tab(
-          text: 'Setting',
+          text: 'Hire Freelancers',
         ),
       ]),
     );
