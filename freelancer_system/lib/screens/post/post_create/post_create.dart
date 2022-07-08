@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../../addons/trimping.dart';
 import '../../../models/Post.dart';
+import '../../../services/PostService.dart';
 import 'widgets/quills_text_editor.dart';
 
 class PostCreate extends StatefulWidget {
@@ -135,7 +136,9 @@ class _PostCreateState extends State<PostCreate> {
                               max: max,
                               status: 'open',
                             );
-                            // PostService().add(postController.postValue);
+                            postController.postContent.value = '';
+                            Navigator.pop(context);
+                            PostService().add(postController.postValue);
                           }
                         }
                       },

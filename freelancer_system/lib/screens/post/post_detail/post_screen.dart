@@ -6,8 +6,11 @@ import 'package:freelancer_system/helpers/loading.dart';
 import 'package:freelancer_system/services/PostService.dart';
 import 'package:freelancer_system/services/UserService.dart';
 import 'package:get/get.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 import '../../../models/Post.dart';
+import '../../../services/chatService.dart';
+import '../../chat/chat_screen/chat_screen.dart';
 import 'edit_post.dart';
 import 'post_detail.dart';
 
@@ -39,7 +42,7 @@ class PostScreen extends StatelessWidget {
             popMenu(context)
         ],
       ),
-      body: PostDetail(_post),
+      body: PostDetail(_post, contact),
     );
   }
 
@@ -120,7 +123,7 @@ class PostScreen extends StatelessWidget {
 
   void contact() async {
     final currentMail = authController.freelanceUser.value.email;
-    final postOwner = await UserService().findById(_post.userId.toString());
+    final postOwner = await UserService().findByMail(_post.userId.toString());
     Get.defaultDialog(
       title: 'Contact this post owner?',
       content: const Text("Do you want to contact the owner of this post?"),
@@ -132,11 +135,16 @@ class PostScreen extends StatelessWidget {
       ),
       confirm: ElevatedButton(
         onPressed: () async {
-          // final roomId = await ChatService().addRoom(_post.title.toString(),
-          //     [currentMail.toString(), postOwner.email.toString()]);
-          // final chatRoom = await ChatService().getRoom(roomId);
+          showLoading();
+          final r = await ChatService().createRoom(
+              [types.User(id: postOwner.email!)], _post.title.toString(), '');
           Get.back();
-          // Get.to(() => DetailChatScreen(chatRoom));
+          dissmissLoading();
+          Get.to(() => DetailChatScreen(r.copyWith(
+                name: userListController.uList
+                    .firstWhere((element) => element.id == postOwner.email)
+                    .firstName,
+              )));
         },
         child: const Text('Yes'),
       ),
