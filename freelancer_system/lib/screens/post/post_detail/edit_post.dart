@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:freelancer_system/constants/controller.dart';
-import 'package:freelancer_system/services/PostService.dart';
 import 'package:get/get.dart';
 
+import '../../../constants/controller.dart';
 import '../../../models/Post.dart';
-import 'widgets/quills_text_editor.dart';
+import '../../../services/PostService.dart';
+import '../post_create/widgets/quills_text_editor.dart';
 
-class PostCreate extends StatefulWidget {
-  const PostCreate({Key? key}) : super(key: key);
+class EditPost extends StatefulWidget {
+  const EditPost(this.post);
+
+  final Post post;
 
   @override
-  State<PostCreate> createState() => _PostCreateState();
+  State<EditPost> createState() => _EditPostState();
 }
 
-class _PostCreateState extends State<PostCreate> {
+class _EditPostState extends State<EditPost> {
   final _titleController = TextEditingController();
   final _rangeFixedController = TextEditingController();
   final _rangeFromController = TextEditingController();
@@ -23,8 +25,39 @@ class _PostCreateState extends State<PostCreate> {
   bool isRange = true;
   var dropValue = 'range';
 
+  Post curPost = Post();
+
+  @override
+  void initState() {
+    super.initState();
+    curPost = widget.post;
+    if (int.parse(widget.post.min!.toString()) <
+        int.parse(widget.post.max!.toString())) {
+      isRange = true;
+    } else {
+      isRange = false;
+      dropValue = 'fixed';
+    }
+    String t = widget.post.title.toString().split('] ')[1];
+    _titleController.text = t;
+    _rangeFixedController.text = widget.post.min!.toString();
+    _rangeFromController.text = widget.post.min!.toString();
+    _rangeToController.text =
+        isRange ? widget.post.max!.toString() : 0.toString();
+    _tagController.text = getTag(widget.post.title!);
+    postController.postContent.value = widget.post.content!;
+  }
+
+  String getTag(String str) {
+    String data = str.split('[')[1];
+    data = data.split(']')[0];
+    print(getTag);
+    return data;
+  }
+
   @override
   Widget build(BuildContext context) {
+    var post = widget.post;
     return Form(
       key: _formKey,
       child: Padding(
@@ -125,19 +158,43 @@ class _PostCreateState extends State<PostCreate> {
                             );
                           } else {
                             postController.post.value = Post(
-                              id: 'id',
+                              id: post.id,
                               userId: authController.freelanceUser.value.email,
                               title: title,
                               content: postController.postContentValue,
                               min: min,
                               max: max,
+                              deleted: post.deleted,
+                              createdDate: post.createdDate,
+                              lastModifiedDate: post.lastModifiedDate,
+                              updatedBy:
+                                  authController.freelanceUser.value.email,
                               status: 'open',
                             );
-                            PostService().add(postController.postValue);
+                            if (curPost == postController.post.value) {
+                              Get.snackbar('Not thing Changed', '',
+                                  backgroundColor: Colors.blue,
+                                  colorText: Colors.white);
+                            } else {
+                              postController.post.value.copyWith(
+                                updatedBy:
+                                    authController.freelanceUser.value.email,
+                                createdDate: post.createdDate,
+                                lastModifiedDate: DateTime.now(),
+                              );
+                              PostService().update(
+                                  post.id.toString(), postController.postValue);
+                              Get.back();
+                              Get.back();
+                              Get.snackbar('Post Updated', '',
+                                  backgroundColor: Colors.blue,
+                                  colorText: Colors.white,
+                                  snackPosition: SnackPosition.BOTTOM);
+                            }
                           }
                         }
                       },
-                      child: const Text('Post'),
+                      child: const Text('Update'),
                     ),
                   ),
                 ],

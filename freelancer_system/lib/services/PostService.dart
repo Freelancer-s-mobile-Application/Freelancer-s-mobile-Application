@@ -1,6 +1,7 @@
 // ignore_for_file: file_names, avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:freelancer_system/constants/controller.dart';
 import 'package:freelancer_system/models/Post.dart';
 import 'package:freelancer_system/services/UserService.dart';
 
@@ -56,7 +57,7 @@ class PostService {
       post.createdDate = DateTime.now();
       post.lastModifiedDate = DateTime.now();
       post.deleted = false;
-      post.updatedBy = "System";
+      post.updatedBy = authController.freelanceUser.value.email;
       post.id = ref.id;
 
       return await ref
@@ -88,11 +89,6 @@ class PostService {
 
   Future<void> update(String id, Post post) async {
     try {
-      var currentUser = await UserService().getCurrentUser();
-
-      post.lastModifiedDate = DateTime.now();
-      post.updatedBy = currentUser.id;
-
       await _posts
           .doc(id)
           .update(post.toMap())
@@ -111,5 +107,19 @@ class PostService {
               final f = Post.fromMap(doc.data() as dynamic);
               return f;
             }).toList());
+  }
+
+  Stream<List<Post>> myPostsStream() {
+    Stream<List<Post>> myPosts = Stream<List<Post>>.value([]);
+    try {
+      myPosts = _posts
+          .where("userId", isEqualTo: authController.firebaseuser.value!.email)
+          .snapshots()
+          .map((snapshot) => snapshot.docs.map((doc) {
+                final f = Post.fromMap(doc.data() as dynamic);
+                return f;
+              }).toList());
+    } catch (e) {}
+    return myPosts;
   }
 }
