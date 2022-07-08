@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:freelancer_system/constants/controller.dart';
 import 'package:freelancer_system/helpers/loading.dart';
 import 'package:freelancer_system/models/User.dart';
 import 'package:freelancer_system/services/UserService.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import '../constants/firebase.dart';
 import 'getX_controller.dart';
 
@@ -14,6 +15,7 @@ class AuthController extends GetxController {
   static AuthController instance = Get.find();
   late Rx<User?> firebaseuser;
   Rx<FreeLanceUser> freelanceUser = Rx<FreeLanceUser>(FreeLanceUser());
+  Rx<types.User> chatUser = Rx<types.User>(const types.User(id: ''));
   RxBool isLoggedIn = false.obs;
 
   @override
@@ -71,8 +73,16 @@ class AuthController extends GetxController {
         backgroundColor: Colors.blue,
         colorText: Colors.white,
       );
+
       final newUser = userService.firebaseToFreelanceUser(firebaseuser.value!);
       userService.add(newUser);
+      await FirebaseChatCore.instance.createUserInFirestore(
+        chatUser.value = types.User(
+          firstName: newUser.displayname,
+          id: newUser.email.toString(),
+          imageUrl: newUser.avatar,
+        ),
+      );
       freelanceUser.value = newUser;
     } else {
       Get.snackbar(
@@ -82,6 +92,13 @@ class AuthController extends GetxController {
         backgroundColor: Colors.blue,
         colorText: Colors.white,
       );
+      await FirebaseChatCore.instance.createUserInFirestore(
+        chatUser.value = types.User(
+          firstName: user.displayname,
+          id: user.email.toString(),
+          imageUrl: user.avatar,
+        ),
+      );
       freelanceUser.value = user;
     }
   }
@@ -89,11 +106,8 @@ class AuthController extends GetxController {
   void signOut() {
     try {
       final AppController getXController = Get.find();
-      print('signing out');
       getXController.ggSignIn.value.signOut();
-      print('1');
       auth.signOut();
-      print('2');
     } catch (e) {
       print(e);
     }
