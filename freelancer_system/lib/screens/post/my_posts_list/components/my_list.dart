@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:freelancer_system/constants/controller.dart';
+import 'package:freelancer_system/models/Post.dart';
+import 'package:freelancer_system/services/PostService.dart';
 import 'package:get/get.dart';
 
 import '../../../../controllers/post_controller.dart';
@@ -11,13 +13,21 @@ class MyPost extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [
-        SearchMyList(),
-        Divider(thickness: 1, indent: 20, endIndent: 20),
-        MyListViewBuild(),
-      ],
-    );
+    return Obx(() {
+      if (authController.isLoggedIn.isTrue) {
+        return Column(
+          children: const [
+            SearchMyList(),
+            Divider(thickness: 1, indent: 20, endIndent: 20),
+            MyListViewBuild(),
+          ],
+        );
+      } else {
+        return const Center(
+          child: Text('Please login to see your posts'),
+        );
+      }
+    });
   }
 }
 
@@ -26,32 +36,65 @@ class MyListViewBuild extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetX<PostController>(
-      init: PostController(),
-      builder: (postList) {
-        var posts = postList.myPosts.value;
+    // return GetX<PostController>(
+    //   init: PostController(),
+    //   builder: (postList) {
+    //     var posts = postList.myPosts.value;
+    //     if (postList.isMySearch.isTrue) {
+    //       posts = postList.searchMyList(postList.mySearchKey.value);
+    //     }
+    //     if (posts.isEmpty) {
+    //       return const Center(
+    //         child: Text('No post'),
+    //       );
+    //     }
+    //     return Expanded(
+    //       child: ListView.builder(
+    //         //physics: const AlwaysScrollableScrollPhysics(),
+    //         shrinkWrap: true,
+    //         itemCount: posts.length,
+    //         itemBuilder: (BuildContext context, int index) {
+    //           return PostTile(post: posts[index]);
+    //         },
+    //       ),
+    //     );
+    //   },
+    // );
+    return StreamBuilder<List<Post>>(
+      stream: PostService().myPostsStream(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          var posts = snapshot.data!;
+          if (Get.find<PostController>().isMySearch.isTrue) {
+            posts = Get.find<PostController>()
+                .searchMyList(Get.find<PostController>().mySearchKey.value);
+          }
+          if (posts.isEmpty) {
+            return const Center(
+              child: Text('No post'),
+            );
+          }
 
-        if (postList.isMySearch.isTrue) {
-          posts = postList.searchMyList(postList.mySearchKey.value);
-        }
-        if (posts.isEmpty) {
+          return Expanded(
+            child: ListView.builder(
+              //physics: const AlwaysScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: posts.length,
+              itemBuilder: (BuildContext context, int index) {
+                return PostTile(post: posts[index]);
+              },
+            ),
+          );
+        } else {
           return const Center(
-            child: Text('No post'),
+            child: CircularProgressIndicator(),
           );
         }
-        return Expanded(
-          child: ListView.builder(
-            //physics: const AlwaysScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: posts.length,
-            itemBuilder: (BuildContext context, int index) {
-              return AnimationConfiguration.staggeredList(
-                position: index,
-                child: PostTile(post: posts[index]),
-              );
-            },
-          ),
-        );
       },
     );
   }

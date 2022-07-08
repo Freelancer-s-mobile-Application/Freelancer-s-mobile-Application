@@ -10,6 +10,7 @@ import 'package:freelancer_system/services/chatService.dart';
 import 'package:get/get.dart';
 
 import '../../../models/Post.dart';
+import 'edit_post.dart';
 import 'post_detail.dart';
 
 class PostScreen extends StatelessWidget {
@@ -37,7 +38,7 @@ class PostScreen extends StatelessWidget {
               icon: const Icon(Icons.message),
             ),
           if (_post.userId == authController.freelanceUser.value.email)
-            popMenu()
+            popMenu(context)
         ],
       ),
       body: PostDetail(_post),
@@ -48,13 +49,27 @@ class PostScreen extends StatelessWidget {
     await Future.delayed(const Duration(seconds: 1), () {});
   }
 
-  var c = 10.obs;
+  void _editPost(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SingleChildScrollView(
+        child: Container(
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: EditPost(_post),
+        ),
+      ),
+    );
+  }
 
-  Widget popMenu() {
+  var c = 5.obs;
+
+  Widget popMenu(BuildContext context) {
     return PopupMenuButton<String>(
       onSelected: (String value) {
         if (value == 'edit') {
-          //edit post
+          // Get.to(EditPost(_post));
+          _editPost(context);
         } else if (value == 'delete') {
           Get.defaultDialog(
             title: 'Delete Post',

@@ -87,10 +87,15 @@ class AuthController extends GetxController {
   }
 
   void signOut() {
-    final AppController getXController = Get.find();
-    showLoading();
-    getXController.ggSignIn.value.signOut();
-    auth.signOut();
-    dissmissLoading();
+    try {
+      final AppController getXController = Get.find();
+      print('signing out');
+      getXController.ggSignIn.value.signOut();
+      print('1');
+      auth.signOut();
+      print('2');
+    } catch (e) {
+      print(e);
+    }
   }
 }

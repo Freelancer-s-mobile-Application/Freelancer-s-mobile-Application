@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:freelancer_system/controllers/post_controller.dart';
-import 'package:freelancer_system/services/PostService.dart';
 import 'package:get/get.dart';
 
 import 'components/post_tile.dart';
@@ -13,9 +11,9 @@ class FreelanceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        const SearchBar(),
-        const Divider(thickness: 1, indent: 20, endIndent: 20),
+      children: const [
+        SearchBar(),
+        Divider(thickness: 1, indent: 20, endIndent: 20),
         ListViewBuild(),
       ],
     );
@@ -46,10 +44,7 @@ class ListViewBuild extends StatelessWidget {
             shrinkWrap: true,
             itemCount: posts.length,
             itemBuilder: (BuildContext context, int index) {
-              return AnimationConfiguration.staggeredList(
-                position: index,
-                child: PostTile(post: posts[index]),
-              );
+              return PostTile(post: posts[index]);
             },
           ),
         );

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../../../constants/controller.dart';
 import '../post_create/post_create.dart';
 import 'components/my_list.dart';
 
@@ -22,10 +24,16 @@ class MyPostList extends StatelessWidget {
     }
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _addPost(context),
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: Obx(() {
+        if (authController.isLoggedIn.isTrue) {
+          return FloatingActionButton(
+            onPressed: () => _addPost(context),
+            child: const Icon(Icons.add),
+          );
+        } else {
+          return Container();
+        }
+      }),
       body: const Center(
         child: MyPost(),
       ),

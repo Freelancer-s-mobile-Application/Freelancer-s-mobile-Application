@@ -57,7 +57,7 @@ class PostService {
       post.createdDate = DateTime.now();
       post.lastModifiedDate = DateTime.now();
       post.deleted = false;
-      post.updatedBy = "System";
+      post.updatedBy = authController.freelanceUser.value.email;
       post.id = ref.id;
 
       return await ref
@@ -89,11 +89,6 @@ class PostService {
 
   Future<void> update(String id, Post post) async {
     try {
-      var currentUser = await UserService().getCurrentUser();
-
-      post.lastModifiedDate = DateTime.now();
-      post.updatedBy = currentUser.id;
-
       await _posts
           .doc(id)
           .update(post.toMap())
@@ -118,7 +113,7 @@ class PostService {
     Stream<List<Post>> myPosts = Stream<List<Post>>.value([]);
     try {
       myPosts = _posts
-          .where("userId", isEqualTo: authController.freelanceUser.value.email)
+          .where("userId", isEqualTo: authController.firebaseuser.value!.email)
           .snapshots()
           .map((snapshot) => snapshot.docs.map((doc) {
                 final f = Post.fromMap(doc.data() as dynamic);
