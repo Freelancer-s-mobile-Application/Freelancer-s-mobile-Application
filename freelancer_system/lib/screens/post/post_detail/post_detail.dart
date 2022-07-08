@@ -6,9 +6,10 @@ import '../../../models/Post.dart';
 import '../post_list/components/content_view.dart';
 
 class PostDetail extends StatelessWidget {
-  const PostDetail(this._post);
+  const PostDetail(this._post, this.func);
 
   final Post _post;
+  final VoidCallback func;
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +91,9 @@ class PostDetail extends StatelessWidget {
                       primary: Colors.white,
                       shape: const StadiumBorder(),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      func();
+                    },
                     child: const Text(
                       'Contact Project Owner',
                       style: TextStyle(color: Colors.blue),

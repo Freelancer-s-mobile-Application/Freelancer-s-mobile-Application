@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:freelancer_system/constants/controller.dart';
-import 'package:freelancer_system/services/PostService.dart';
 import 'package:get/get.dart';
 
+import '../../../addons/trimping.dart';
 import '../../../models/Post.dart';
+import '../../../services/PostService.dart';
 import 'widgets/quills_text_editor.dart';
 
 class PostCreate extends StatefulWidget {
@@ -115,7 +116,9 @@ class _PostCreateState extends State<PostCreate> {
                             min = int.parse(_rangeFixedController.text);
                             max = min;
                           }
-                          if (postController.postContentValue.isEmpty) {
+                          final ctn = trimmed(postController.postContentValue);
+                          if (postController.postContentValue.isEmpty ||
+                              ctn.length < 10) {
                             Get.snackbar(
                               'Error',
                               'Please enter some content',
@@ -133,6 +136,8 @@ class _PostCreateState extends State<PostCreate> {
                               max: max,
                               status: 'open',
                             );
+                            postController.postContent.value = '';
+                            Navigator.pop(context);
                             PostService().add(postController.postValue);
                           }
                         }
@@ -158,8 +163,11 @@ class _PostCreateState extends State<PostCreate> {
             child: TextFormField(
               keyboardType: TextInputType.number,
               validator: (value) {
-                if (value == null || value.isEmpty || !GetUtils.isNum(value)) {
-                  return 'Empty Field';
+                if (value == null ||
+                    value.isEmpty ||
+                    !GetUtils.isNum(value) ||
+                    int.parse(value) <= 0) {
+                  return 'Invalid Field';
                 }
                 return null;
               },
@@ -179,7 +187,10 @@ class _PostCreateState extends State<PostCreate> {
           width: Get.width * 0.2,
           child: TextFormField(
             validator: (value) {
-              if (value == null || value.isEmpty || !GetUtils.isNum(value)) {
+              if (value == null ||
+                  value.isEmpty ||
+                  !GetUtils.isNum(value) ||
+                  int.parse(value) <= 0) {
                 Get.snackbar(
                     'Invalid Input', 'Empty Field or Field not a number',
                     backgroundColor: Colors.red,
@@ -211,7 +222,10 @@ class _PostCreateState extends State<PostCreate> {
           width: Get.width * 0.2,
           child: TextFormField(
             validator: (value) {
-              if (value == null || value.isEmpty || !GetUtils.isNum(value)) {
+              if (value == null ||
+                  value.isEmpty ||
+                  !GetUtils.isNum(value) ||
+                  int.parse(value) <= 0) {
                 Get.snackbar(
                     'Invalid Input', 'Empty Field or Field not a number',
                     backgroundColor: Colors.red,

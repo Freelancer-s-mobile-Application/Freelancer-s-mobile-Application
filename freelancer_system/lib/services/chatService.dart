@@ -9,10 +9,14 @@ class ChatService {
 
   final user = FirebaseAuth.instance.currentUser!;
 
-  Future createRoom(List<types.User> users, String title, String img) async {
+  Future<types.Room> createRoom(
+      List<types.User> users, String title, String img) async {
     if (users.length == 1) {
       final r = await FirebaseChatCore.instance.createRoom(users[0]);
-      await FirebaseFirestore.instance.collection('ChatRooms').doc(r.id).set({
+      final room = await FirebaseFirestore.instance
+          .collection('ChatRooms')
+          .doc(r.id)
+          .set({
         'name': title.isEmpty ? null : title,
         'type': 'direct',
         'imageUrl': img.isEmpty ? null : img,
@@ -22,16 +26,17 @@ class ChatService {
         'metadata': null,
         'userRoles': null,
       });
+      return r;
     } else {
       String t = title.isEmpty ? genName(users) : title;
       if (title.isEmpty) {}
       if (img.isEmpty) {
-        await FirebaseChatCore.instance.createGroupRoom(
+        return await FirebaseChatCore.instance.createGroupRoom(
           users: users,
           name: t,
         );
       } else {
-        await FirebaseChatCore.instance.createGroupRoom(
+        return await FirebaseChatCore.instance.createGroupRoom(
           users: users,
           name: t,
           imageUrl: img,
