@@ -1,12 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:freelancer_system/constants/controller.dart';
 import 'package:freelancer_system/screens/chat/list_chat/components/chat_tile.dart';
 import 'package:get/get.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
-import '../../../controllers/chat_controller.dart';
 import '../../home/components/login.dart';
 import 'components/search_panel.dart';
 
@@ -30,21 +31,50 @@ class ChatScreen extends StatelessWidget {
       ),
       body: Obx(() {
         if (authController.isLoggedIn.value) {
-          return GetX<ChatController>(
-            init: ChatController(),
-            builder: (roomList) {
-              if (roomList.rooms.isEmpty) {
+          // return GetX<ChatController>(
+          //   init: ChatController(),
+          //   builder: (roomList) {
+          //     if (roomList.rooms.isEmpty) {
+          //       return const Center(
+          //         child: Text('No chat room'),
+          //       );
+          //     }
+          //     return ListView.builder(
+          //       itemCount: roomList.rooms.length,
+          //       itemBuilder: (context, index) {
+          //         final room = roomList.rooms[index];
+          //         return ChatTile(room);
+          //       },
+          //     );
+          //   },
+          // );
+          return StreamBuilder<List<types.Room>>(
+            stream: FirebaseChatCore.instance.rooms(),
+            builder: (_, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (!snapshot.hasData) {
                 return const Center(
                   child: Text('No chat room'),
                 );
+              } else {
+                final rooms = snapshot.data!;
+                print(rooms.length);
+                if (rooms.isEmpty) {
+                  return const Center(
+                    child: Text('No chat room'),
+                  );
+                }
+                return ListView.builder(
+                  itemCount: rooms.length,
+                  itemBuilder: (context, index) {
+                    final room = rooms[index];
+                    return ChatTile(room);
+                  },
+                );
               }
-              return ListView.builder(
-                itemCount: roomList.rooms.length,
-                itemBuilder: (context, index) {
-                  final room = roomList.rooms[index];
-                  return ChatTile(room);
-                },
-              );
             },
           );
         } else {

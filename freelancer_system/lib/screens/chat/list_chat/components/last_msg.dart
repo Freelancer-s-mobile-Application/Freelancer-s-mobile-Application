@@ -1,39 +1,51 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class LastMessage extends StatelessWidget {
-  const LastMessage(this.roomId);
+  const LastMessage(this.room);
 
-  final String roomId;
+  final types.Room room;
 
   @override
   Widget build(BuildContext context) {
-    final db = FirebaseFirestore.instance.collection('Rooms').doc(roomId);
-    final stream = db
-        .collection('message')
-        .orderBy('createdDate', descending: true)
+    final stream = FirebaseFirestore.instance
+        .collection('ChatRooms/${room.id}/messages')
+        .where('type', isEqualTo: 'text')
+        .orderBy('createdAt', descending: true)
         .snapshots();
     return StreamBuilder<QuerySnapshot>(
         stream: stream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text('Loading...');
+            return const Text('...');
           } else if (!snapshot.hasData) {
-            return const Text('Loading...');
+            return const Text('...');
           } else {
             final messages = snapshot.data!.docs;
-            var message;
-            try {
-              message = messages.first.data() as dynamic;
-              return Text(
-                message['content'],
+            if (messages.isEmpty) {
+              return const Text(
+                '...',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               );
-            } catch (e) {
-              message = 'No New Message';
+            }
+            final msg = (messages.first.data() as Map<String, dynamic>);
+            if (msg['type'] == 'text') {
               return Text(
-                message,
+                (messages.first.data() as Map<String, dynamic>)['text'],
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              );
+            } else if (msg['type'] == 'image') {
+              return const Text(
+                'photo',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              );
+            } else {
+              return const Text(
+                '...',
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               );

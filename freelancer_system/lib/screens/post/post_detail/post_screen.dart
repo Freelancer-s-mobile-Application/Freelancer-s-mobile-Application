@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:freelancer_system/constants/controller.dart';
 import 'package:freelancer_system/helpers/loading.dart';
-import 'package:freelancer_system/screens/chat/chat_screen/chat_screen.dart';
 import 'package:freelancer_system/services/PostService.dart';
 import 'package:freelancer_system/services/UserService.dart';
-import 'package:freelancer_system/services/chatService.dart';
 import 'package:get/get.dart';
 
 import '../../../models/Post.dart';
@@ -134,11 +132,11 @@ class PostScreen extends StatelessWidget {
       ),
       confirm: ElevatedButton(
         onPressed: () async {
-          final roomId = await ChatService().addRoom(_post.title.toString(),
-              [currentMail.toString(), postOwner.email.toString()]);
-          final chatRoom = await ChatService().getRoom(roomId);
+          // final roomId = await ChatService().addRoom(_post.title.toString(),
+          //     [currentMail.toString(), postOwner.email.toString()]);
+          // final chatRoom = await ChatService().getRoom(roomId);
           Get.back();
-          Get.to(() => DetailChatScreen(chatRoom));
+          // Get.to(() => DetailChatScreen(chatRoom));
         },
         child: const Text('Yes'),
       ),
