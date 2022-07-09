@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:freelancer_system/constants/controller.dart';
+
+import '../../../constants/controller.dart';
 
 class SearchBar extends StatefulWidget {
   const SearchBar({
@@ -29,47 +30,36 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.only(top: 15, left: 10, right: 10, bottom: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Container(
-            width: size.width * 0.7,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: Colors.blue),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: TextField(
-              controller: searchCtl,
-              style: const TextStyle(color: Colors.black, fontSize: 20),
-              decoration: InputDecoration(
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                icon: const Icon(Icons.search),
-                hintText: 'Search',
-                suffixIcon: IconButton(
-                  iconSize: 20,
-                  onPressed: () {
-                    searchCtl.clear();
-                    postController.isSearch.trigger(false);
-                  },
-                  icon: const Icon(Icons.clear),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(color: Colors.blue),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: TextField(
+                controller: searchCtl,
+                style: const TextStyle(color: Colors.black, fontSize: 20),
+                decoration: InputDecoration(
+                  focusedBorder: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  icon: const Icon(Icons.search),
+                  hintText: 'Search',
+                  suffixIcon: IconButton(
+                    iconSize: 20,
+                    onPressed: () {
+                      searchCtl.clear();
+                      postController.isSearch.trigger(false);
+                    },
+                    icon: const Icon(Icons.clear),
+                  ),
                 ),
               ),
-            ),
-          ),
-          const SizedBox(width: 15),
-          Expanded(
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                shape: const StadiumBorder(),
-                minimumSize: const Size.fromHeight(50),
-              ),
-              onPressed: () {},
-              child: const Text('Search'),
             ),
           ),
         ],

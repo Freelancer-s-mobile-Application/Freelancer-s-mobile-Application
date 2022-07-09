@@ -14,9 +14,7 @@ void main() async {
     await GetStorage.init();
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
-    ).then((value) {
-      print('init');
-    });
+    );
   } catch (e) {}
   runApp(MyApp());
 }

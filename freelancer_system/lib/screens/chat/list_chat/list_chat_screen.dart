@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:freelancer_system/constants/controller.dart';
-import 'package:freelancer_system/screens/chat/list_chat/components/chat_tile.dart';
+import '../../../constants/controller.dart';
+import 'components/chat_tile.dart';
 import 'package:get/get.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 

@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
-import 'package:freelancer_system/constants/controller.dart';
-import 'package:freelancer_system/helpers/loading.dart';
-import 'package:freelancer_system/models/User.dart';
-import 'package:freelancer_system/services/UserService.dart';
+import '../constants/controller.dart';
+import '../helpers/loading.dart';
+import '../models/User.dart';
+import '../services/UserService.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -27,10 +27,13 @@ class AuthController extends GetxController {
     ever(firebaseuser, _setIsLogged);
   }
 
-  _setIsLogged(User? user) {
+  _setIsLogged(User? user) async {
     if (user == null) {
       isLoggedIn.value = false;
       reInitController();
+      if (localNofiController.initialized) {
+        localNofiController.dispose();
+      }
     } else {
       checkUserExist();
       isLoggedIn.value = true;
@@ -111,8 +114,6 @@ class AuthController extends GetxController {
       final AppController getXController = Get.find();
       getXController.ggSignIn.value.signOut();
       auth.signOut();
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 }

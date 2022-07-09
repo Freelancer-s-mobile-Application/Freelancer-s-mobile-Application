@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../post/my_posts_list/my_post_list.dart';
-import 'components/home_app_bar.dart';
 import '../post/post_list/freelance.dart';
+import 'components/home_app_bar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);

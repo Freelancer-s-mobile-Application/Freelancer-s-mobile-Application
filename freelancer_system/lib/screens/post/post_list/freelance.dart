@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:freelancer_system/controllers/post_controller.dart';
 import 'package:get/get.dart';
 
-import 'components/post_tile.dart';
+import '../../../controllers/post_controller.dart';
 import '../../home/components/search_bar.dart';
+import 'components/post_tile.dart';
 
 class FreelanceScreen extends StatelessWidget {
   const FreelanceScreen({Key? key}) : super(key: key);

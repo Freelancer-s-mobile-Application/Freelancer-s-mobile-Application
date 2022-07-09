@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:freelancer_system/constants/controller.dart';
 import 'package:get/get.dart';
+
+import '../../../constants/controller.dart';
 import 'user_icon.dart';
 
 class HomeAppBar extends StatelessWidget with PreferredSizeWidget {

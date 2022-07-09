@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:freelancer_system/constants/controller.dart';
-import 'package:freelancer_system/helpers/loading.dart';
-import 'package:freelancer_system/services/PostService.dart';
-import 'package:freelancer_system/services/UserService.dart';
+import '../../../constants/controller.dart';
+import '../../../helpers/loading.dart';
+import '../../../services/PostService.dart';
+import '../../../services/UserService.dart';
 import 'package:get/get.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 

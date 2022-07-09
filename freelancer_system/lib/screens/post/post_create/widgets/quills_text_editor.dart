@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:freelancer_system/constants/controller.dart';
-import 'package:freelancer_system/screens/post/post_create/widgets/Ftext.dart';
+import '../../../../constants/controller.dart';
+import 'Ftext.dart';
 import 'package:get/get.dart';
 
 class QuillsTextEditor extends StatefulWidget {

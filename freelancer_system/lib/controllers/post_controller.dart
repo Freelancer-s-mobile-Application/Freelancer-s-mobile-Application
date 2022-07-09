@@ -1,5 +1,5 @@
-import 'package:freelancer_system/models/Post.dart';
-import 'package:freelancer_system/services/PostService.dart';
+import '../models/Post.dart';
+import '../services/PostService.dart';
 import 'package:get/get.dart';
 
 class PostController extends GetxController {
