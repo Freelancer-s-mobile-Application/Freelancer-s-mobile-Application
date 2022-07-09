@@ -25,12 +25,6 @@ class UserListController extends GetxController {
     return freelanceUser.value;
   }
 
-  // List<FreeLanceUser> getByName(String name) {
-  //   return freelanceUser.value
-  //       .where((user) =>
-  //           user.displayname!.toLowerCase().contains(name.toLowerCase()))
-  //       .toList();
-  // }
   List<types.User> getByName(String name) {
     return uList
         .where((user) =>
@@ -38,20 +32,11 @@ class UserListController extends GetxController {
         .toList();
   }
 
-  // List<FreeLanceUser> getByEmail(String email) {
-  //   return freelanceUser.value
-  //       .where((user) => user.email!.contains(email))
-  //       .toList();
-  // }
   List<types.User> getByEmail(String email) {
     return uList.where((user) => user.id.contains(email)).toList();
   }
 
-  // List<FreeLanceUser> getByNameAndEmail(String name, String email) {
-  //   return [...getByEmail(email), ...getByName(name)].toSet().toList();
-  // }
   List<types.User> getByNameAndEmail(String name, String email) {
-    print('${uList.length}');
     return [...getByEmail(email), ...getByName(name)].toSet().toList();
   }
 }

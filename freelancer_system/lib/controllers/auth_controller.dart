@@ -8,6 +8,7 @@ import 'package:freelancer_system/services/UserService.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import '../addons/reinitController.dart';
 import '../constants/firebase.dart';
 import 'getX_controller.dart';
 
@@ -29,9 +30,11 @@ class AuthController extends GetxController {
   _setIsLogged(User? user) {
     if (user == null) {
       isLoggedIn.value = false;
+      reInitController();
     } else {
       checkUserExist();
       isLoggedIn.value = true;
+      reInitController();
     }
   }
 

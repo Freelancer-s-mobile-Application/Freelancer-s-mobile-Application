@@ -24,30 +24,13 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: AddChatBtn(context),
+      floatingActionButton: addChatBtn(context),
       appBar: AppBar(
         title: const Text('Chats'),
         centerTitle: true,
       ),
       body: Obx(() {
         if (authController.isLoggedIn.value) {
-          // return GetX<ChatController>(
-          //   init: ChatController(),
-          //   builder: (roomList) {
-          //     if (roomList.rooms.isEmpty) {
-          //       return const Center(
-          //         child: Text('No chat room'),
-          //       );
-          //     }
-          //     return ListView.builder(
-          //       itemCount: roomList.rooms.length,
-          //       itemBuilder: (context, index) {
-          //         final room = roomList.rooms[index];
-          //         return ChatTile(room);
-          //       },
-          //     );
-          //   },
-          // );
           return StreamBuilder<List<types.Room>>(
             stream: FirebaseChatCore.instance.rooms(),
             builder: (_, snapshot) {
@@ -61,7 +44,6 @@ class ChatScreen extends StatelessWidget {
                 );
               } else {
                 final rooms = snapshot.data!;
-                print(rooms.length);
                 if (rooms.isEmpty) {
                   return const Center(
                     child: Text('No chat room'),
@@ -86,7 +68,7 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
-  Widget AddChatBtn(BuildContext context) {
+  Widget addChatBtn(BuildContext context) {
     return Obx(() {
       if (authController.isLoggedIn.value) {
         return FloatingActionButton(
