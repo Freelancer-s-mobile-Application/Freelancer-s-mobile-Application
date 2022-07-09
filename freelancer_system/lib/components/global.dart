@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import '../controllers/auth_controller.dart';
 import '../controllers/chat_controller.dart';
 import '../controllers/getX_controller.dart';
-import '../controllers/nofitication_controller.dart';
 import '../controllers/post_controller.dart';
 import '../controllers/userList_controller.dart';
 import '../models/User.dart';
@@ -33,8 +32,4 @@ void initGlobal() {
   final UserListController userListController = Get.put(UserListController());
   final ChatController chatController = Get.put(ChatController());
   final PostController postController = Get.put(PostController());
-  final NofiticationController nofiticationController =
-      Get.put(NofiticationController());
-  final LocalNofiController localNofiController =
-      Get.put(LocalNofiController());
 }

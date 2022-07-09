@@ -71,7 +71,6 @@ class _QuillsTextEditorState extends State<QuillsTextEditor> {
     super.initState();
     try {
       if (widget.myContent.isEmpty) {
-        print('empty');
       } else {
         curContent = widget.myContent;
         var content = jsonDecode(widget.myContent);

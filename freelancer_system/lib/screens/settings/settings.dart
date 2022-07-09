@@ -2,8 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../../constants/controller.dart';
-
 class SettingScreen extends StatelessWidget {
   const SettingScreen({Key? key}) : super(key: key);
 
@@ -15,12 +13,7 @@ class SettingScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: Center(
-        child: ElevatedButton(
-            onPressed: () {
-              localNofiController.showNofitication(
-                  randomInt(), 'title', 'body', 'main');
-            },
-            child: const Text('Hit me')),
+        child: ElevatedButton(onPressed: () {}, child: const Text('Hit me')),
       ),
     );
   }

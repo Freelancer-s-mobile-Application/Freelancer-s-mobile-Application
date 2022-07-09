@@ -31,9 +31,6 @@ class AuthController extends GetxController {
     if (user == null) {
       isLoggedIn.value = false;
       reInitController();
-      if (localNofiController.initialized) {
-        localNofiController.dispose();
-      }
     } else {
       checkUserExist();
       isLoggedIn.value = true;
