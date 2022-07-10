@@ -10,6 +10,12 @@ class UserService {
   final CollectionReference _users =
       FirebaseFirestore.instance.collection('FreeLanceUsers');
 
+  String getMajor(String email) {
+    String part = email.substring(0, email.indexOf("@"));
+    String res = part.substring(0, part.length - 6);
+    return res.substring(res.length - 2).toUpperCase();
+  }
+
   Future<FreeLanceUser> getCurrentUser() async {
     FreeLanceUser user = FreeLanceUser();
     try {
@@ -18,7 +24,6 @@ class UserService {
         user =
             FreeLanceUser.fromMap(value.docs[0].data() as Map<String, dynamic>);
       });
-      if (user == null) throw Exception("FreeLanceUser not found");
     } catch (e) {
       print(e);
     }

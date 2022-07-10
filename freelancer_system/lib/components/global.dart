@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/auth_controller.dart';
@@ -33,3 +34,7 @@ void initGlobal() {
   final ChatController chatController = Get.put(ChatController());
   final PostController postController = Get.put(PostController());
 }
+
+TextEditingController phoneCtl = TextEditingController();
+TextEditingController addrCtl = TextEditingController();
+TextEditingController descCtl = TextEditingController();

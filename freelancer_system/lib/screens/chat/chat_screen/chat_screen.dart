@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
@@ -31,8 +32,20 @@ class _DetailChatScreenState extends State<DetailChatScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.menu),
+            onPressed: () {
+              Get.defaultDialog(
+                title: 'Delete this Chat?',
+                content: const Center(
+                    child: Text('Do you want to delete this chat?')),
+                confirm: ElevatedButton(
+                    onPressed: () => deleteRoom(), child: const Text('Delete')),
+                cancel: TextButton(
+                  onPressed: () => Get.back(),
+                  child: const Text('Cancel'),
+                ),
+              );
+            },
+            icon: const Icon(Icons.delete),
           )
         ],
       ),
@@ -67,6 +80,12 @@ class _DetailChatScreenState extends State<DetailChatScreen> {
             }),
       ),
     );
+  }
+
+  Future deleteRoom() async {
+    Navigator.pop(context);
+    Navigator.pop(context);
+    await FirebaseChatCore.instance.deleteRoom(widget.room.id);
   }
 
   void _handleAtachmentPressed() {

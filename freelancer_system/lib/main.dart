@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Material App',
+      navigatorKey: navKey,
       home: AppPageRoute(),
     );
   }

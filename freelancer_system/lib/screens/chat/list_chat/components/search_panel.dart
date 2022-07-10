@@ -157,6 +157,8 @@ class _SearchPanelState extends State<SearchPanel> {
                               .createRoom(users, titleAddCtl.text, img);
                           Get.back();
                           Get.snackbar(
+                              backgroundColor: Colors.blue,
+                              colorText: Colors.white,
                               snackPosition: SnackPosition.BOTTOM,
                               'Success',
                               'Room Added');

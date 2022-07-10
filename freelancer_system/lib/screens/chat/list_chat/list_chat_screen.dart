@@ -43,7 +43,7 @@ class ChatScreen extends StatelessWidget {
                   child: Text('No chat room'),
                 );
               } else {
-                final rooms = snapshot.data!;
+                var rooms = snapshot.data!;
                 if (rooms.isEmpty) {
                   return const Center(
                     child: Text('No chat room'),

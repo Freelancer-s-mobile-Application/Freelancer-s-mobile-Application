@@ -18,6 +18,10 @@ class AuthController extends GetxController {
   Rx<FreeLanceUser> freelanceUser = Rx<FreeLanceUser>(FreeLanceUser());
   Rx<types.User> chatUser = Rx<types.User>(const types.User(id: ''));
   RxBool isLoggedIn = false.obs;
+  RxBool isEditable = false.obs;
+
+  Rx<GlobalKey<FormState>> key =
+      Rx<GlobalKey<FormState>>(GlobalKey<FormState>());
 
   @override
   void onReady() {
@@ -77,7 +81,11 @@ class AuthController extends GetxController {
         colorText: Colors.white,
       );
 
-      final newUser = userService.firebaseToFreelanceUser(firebaseuser.value!);
+      final newUser = userService
+          .firebaseToFreelanceUser(firebaseuser.value!)
+          .copyWith(
+            majorId: userService.getMajor(firebaseuser.value!.email.toString()),
+          );
       userService.add(newUser);
       await FirebaseChatCore.instance.createUserInFirestore(
         chatUser.value = types.User(
