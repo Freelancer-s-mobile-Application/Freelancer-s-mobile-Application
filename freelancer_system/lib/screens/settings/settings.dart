@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class SettingScreen extends StatelessWidget {
@@ -10,9 +12,17 @@ class SettingScreen extends StatelessWidget {
         title: const Text('Settings'),
         centerTitle: true,
       ),
-      body: const Center(
-        child: Text('Setting'),
+      body: Center(
+        child: ElevatedButton(onPressed: () {}, child: const Text('Hit me')),
       ),
     );
+  }
+
+  int randomInt() {
+    return Random().nextInt(100);
+  }
+
+  String randomString10char() {
+    return Random().nextInt(100).toString();
   }
 }

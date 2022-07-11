@@ -51,7 +51,6 @@ class _EditPostState extends State<EditPost> {
   String getTag(String str) {
     String data = str.split('[')[1];
     data = data.split(']')[0];
-    print(getTag);
     return data;
   }
 

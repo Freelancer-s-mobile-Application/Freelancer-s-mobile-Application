@@ -1,7 +1,7 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:freelancer_system/models/Report.dart';
-import 'package:freelancer_system/services/UserService.dart';
+
+import '../models/Report.dart';
+import 'UserService.dart';
 
 class ReportService {
   final CollectionReference _reports =

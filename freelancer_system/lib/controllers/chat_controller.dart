@@ -1,7 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:get/get.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class ChatController extends GetxController {
   static ChatController instance = Get.find();
@@ -13,8 +12,6 @@ class ChatController extends GetxController {
   @override
   void onInit() {
     try {
-      final userMail = FirebaseAuth.instance.currentUser!.email.toString();
-      // roomList.bindStream(ChatService().roomStream(userMail));
       roomList.bindStream(FirebaseChatCore.instance.rooms());
       super.onInit();
     } catch (e) {}

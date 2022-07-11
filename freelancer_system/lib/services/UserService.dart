@@ -3,11 +3,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freelancer_system/constants/firebase.dart';
+
 import '../models/User.dart';
 
 class UserService {
   final CollectionReference _users =
       FirebaseFirestore.instance.collection('FreeLanceUsers');
+
+  String getMajor(String email) {
+    String part = email.substring(0, email.indexOf("@"));
+    String res = part.substring(0, part.length - 6);
+    return res.substring(res.length - 2).toUpperCase();
+  }
+
+  String getMajorName(String major) {
+    switch (major) {
+      case 'se':
+        return 'Software Engineering';
+      case 'cs':
+        return 'Computer Science';
+      default:
+        return 'Software Engineering';
+    }
+  }
 
   Future<FreeLanceUser> getCurrentUser() async {
     FreeLanceUser user = FreeLanceUser();
@@ -17,7 +35,6 @@ class UserService {
         user =
             FreeLanceUser.fromMap(value.docs[0].data() as Map<String, dynamic>);
       });
-      if (user == null) throw Exception("FreeLanceUser not found");
     } catch (e) {
       print(e);
     }

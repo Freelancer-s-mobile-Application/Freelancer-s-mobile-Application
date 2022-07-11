@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:freelancer_system/constants/controller.dart';
 import 'package:get/get.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
 import '../../../../addons/user_avatar.dart';
+import '../../../../constants/controller.dart';
 import '../../chat_screen/chat_screen.dart';
 import 'last_msg.dart';
 
@@ -18,16 +19,13 @@ class ChatTile extends StatelessWidget {
 
   Widget _buildAvatar(types.Room room) {
     var color = Colors.transparent;
-    types.User otherUser = const types.User(id: '');
     if (room.type == types.RoomType.direct) {
       try {
         final otherUser = room.users.firstWhere(
           (u) => u.id != authController.chatUser.value.id,
         );
         color = getUserAvatarNameColor(otherUser);
-      } catch (e) {
-        print(e);
-      }
+      } catch (e) {}
     }
 
     final hasImage = room.imageUrl != null;

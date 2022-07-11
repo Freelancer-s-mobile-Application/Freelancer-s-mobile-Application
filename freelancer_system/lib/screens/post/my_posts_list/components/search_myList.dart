@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:freelancer_system/constants/controller.dart';
+import '../../../../constants/controller.dart';
 
 class SearchMyList extends StatefulWidget {
   const SearchMyList({
@@ -27,7 +27,6 @@ class _SearchMyListState extends State<SearchMyList> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.only(top: 15, left: 10, right: 10, bottom: 5),
       child: Row(

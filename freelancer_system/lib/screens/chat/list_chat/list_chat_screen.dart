@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:freelancer_system/constants/controller.dart';
-import 'package:freelancer_system/screens/chat/list_chat/components/chat_tile.dart';
+import '../../../constants/controller.dart';
+import 'components/chat_tile.dart';
 import 'package:get/get.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
@@ -24,30 +24,13 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: AddChatBtn(context),
+      floatingActionButton: addChatBtn(context),
       appBar: AppBar(
         title: const Text('Chats'),
         centerTitle: true,
       ),
       body: Obx(() {
         if (authController.isLoggedIn.value) {
-          // return GetX<ChatController>(
-          //   init: ChatController(),
-          //   builder: (roomList) {
-          //     if (roomList.rooms.isEmpty) {
-          //       return const Center(
-          //         child: Text('No chat room'),
-          //       );
-          //     }
-          //     return ListView.builder(
-          //       itemCount: roomList.rooms.length,
-          //       itemBuilder: (context, index) {
-          //         final room = roomList.rooms[index];
-          //         return ChatTile(room);
-          //       },
-          //     );
-          //   },
-          // );
           return StreamBuilder<List<types.Room>>(
             stream: FirebaseChatCore.instance.rooms(),
             builder: (_, snapshot) {
@@ -60,8 +43,7 @@ class ChatScreen extends StatelessWidget {
                   child: Text('No chat room'),
                 );
               } else {
-                final rooms = snapshot.data!;
-                print(rooms.length);
+                var rooms = snapshot.data!;
                 if (rooms.isEmpty) {
                   return const Center(
                     child: Text('No chat room'),
@@ -86,7 +68,7 @@ class ChatScreen extends StatelessWidget {
     );
   }
 
-  Widget AddChatBtn(BuildContext context) {
+  Widget addChatBtn(BuildContext context) {
     return Obx(() {
       if (authController.isLoggedIn.value) {
         return FloatingActionButton(

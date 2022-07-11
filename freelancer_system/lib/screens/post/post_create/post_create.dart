@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:freelancer_system/constants/controller.dart';
+import '../../../constants/controller.dart';
 import 'package:get/get.dart';
 
 import '../../../addons/trimping.dart';

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 import 'package:open_file/open_file.dart';
@@ -25,15 +26,26 @@ class _DetailChatScreenState extends State<DetailChatScreen> {
   bool isAttachmentUploading = false;
   @override
   Widget build(BuildContext context) {
-    var textCtl = TextEditingController();
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.room.name.toString()),
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.menu),
+            onPressed: () {
+              Get.defaultDialog(
+                title: 'Delete this Chat?',
+                content: const Center(
+                    child: Text('Do you want to delete this chat?')),
+                confirm: ElevatedButton(
+                    onPressed: () => deleteRoom(), child: const Text('Delete')),
+                cancel: TextButton(
+                  onPressed: () => Get.back(),
+                  child: const Text('Cancel'),
+                ),
+              );
+            },
+            icon: const Icon(Icons.delete),
           )
         ],
       ),
@@ -41,65 +53,70 @@ class _DetailChatScreenState extends State<DetailChatScreen> {
         initialData: widget.room,
         stream: FirebaseChatCore.instance.room(widget.room.id),
         builder: (context, snapshot) => StreamBuilder<List<types.Message>>(
-          initialData: const [],
-          stream: FirebaseChatCore.instance.messages(snapshot.data!),
-          builder: (context, snapshot) => Chat(
-            isAttachmentUploading: isAttachmentUploading,
-            messages: snapshot.data ?? [],
-            onAttachmentPressed: _handleAtachmentPressed,
-            onMessageTap: _handleMessageTap,
-            onPreviewDataFetched: _handlePreviewDataFetched,
-            onSendPressed: _handleSendPressed,
-            user: types.User(
-              id: FirebaseChatCore.instance.firebaseUser?.email ?? '',
-            ),
-            showUserAvatars: true,
-            disableImageGallery: false,
-            showUserNames: true,
-          ),
-        ),
+            initialData: const [],
+            stream: FirebaseChatCore.instance.messages(snapshot.data!),
+            builder: (context, snapshot) {
+              return Chat(
+                emptyState: snapshot.connectionState == ConnectionState.waiting
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : const Center(
+                        child: Text('No message here yet'),
+                      ),
+                isAttachmentUploading: isAttachmentUploading,
+                messages: snapshot.data ?? [],
+                onAttachmentPressed: _handleAtachmentPressed,
+                onMessageTap: _handleMessageTap,
+                onPreviewDataFetched: _handlePreviewDataFetched,
+                onSendPressed: _handleSendPressed,
+                user: types.User(
+                  id: FirebaseChatCore.instance.firebaseUser?.email ?? '',
+                ),
+                showUserAvatars: true,
+                disableImageGallery: false,
+                showUserNames: true,
+              );
+            }),
       ),
     );
+  }
+
+  Future deleteRoom() async {
+    Navigator.pop(context);
+    Navigator.pop(context);
+    await FirebaseChatCore.instance.deleteRoom(widget.room.id);
   }
 
   void _handleAtachmentPressed() {
     showModalBottomSheet<void>(
       context: context,
       builder: (BuildContext context) => SafeArea(
-        child: SizedBox(
-          height: 144,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _handleImageSelection();
-                },
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Photo'),
-                ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _handleImageSelection();
+              },
+              child: const Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Photo'),
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _handleFileSelection();
-                },
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('File'),
-                ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                _handleFileSelection();
+              },
+              child: const Align(
+                alignment: Alignment.centerLeft,
+                child: Text('File'),
               ),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Cancel'),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

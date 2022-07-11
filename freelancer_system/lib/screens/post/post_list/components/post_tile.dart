@@ -51,7 +51,10 @@ class PostTile extends StatelessWidget {
                       Expanded(
                         child: ContentLimitter(
                           maxHeight: Get.height * 0.1,
-                          child: ContentView(post.content.toString()),
+                          child: ContentView(
+                            post.content.toString(),
+                            key: UniqueKey(),
+                          ),
                         ),
                       ),
                     ],

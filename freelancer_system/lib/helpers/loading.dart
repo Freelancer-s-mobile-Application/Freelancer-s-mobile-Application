@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-showLoading() {
+showLoading(String text) {
+  text.isEmpty ? 'Loading...' : text;
   Get.defaultDialog(
-    title: 'Loading...',
+    title: text,
     content: const Center(child: CircularProgressIndicator()),
     barrierDismissible: false,
   );
