@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'login.dart';
+import 'onTapLogin.dart';
 
 class UserLoggedInIcon extends StatelessWidget {
   const UserLoggedInIcon({
@@ -17,16 +17,7 @@ class UserLoggedInIcon extends StatelessWidget {
       child: IconButton(
           onPressed: () {
             Size size = MediaQuery.of(context).size;
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                content: SizedBox(
-                  height: size.height * 0.6,
-                  width: size.width * 0.9,
-                  child: const LoginScreen(),
-                ),
-              ),
-            );
+            onTapLogin(context);
           },
           icon: const Icon(
             FontAwesomeIcons.user,

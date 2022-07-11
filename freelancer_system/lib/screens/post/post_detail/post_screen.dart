@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:freelancer_system/screens/home/components/onTapLogin.dart';
 import '../../../constants/controller.dart';
 import '../../../helpers/loading.dart';
 import '../../../services/PostService.dart';
@@ -34,7 +35,20 @@ class PostScreen extends StatelessWidget {
           if (_post.userId != authController.freelanceUser.value.email)
             IconButton(
               onPressed: () {
-                contact();
+                if (!authController.isLoggedIn.value) {
+                  Get.snackbar(
+                    onTap: (s) {
+                      Get.closeAllSnackbars();
+                      onTapLogin(context);
+                    },
+                    backgroundColor: Colors.red,
+                    'Please Login',
+                    'You need to login to use this feature',
+                    colorText: Colors.white,
+                  );
+                } else {
+                  contact();
+                }
               },
               icon: const Icon(Icons.message),
             ),
@@ -76,30 +90,15 @@ class PostScreen extends StatelessWidget {
             title: 'Delete Post',
             content: const Text('Are you sure you want to delete this post?'),
             confirm: Obx(() {
-              Timer.periodic(const Duration(milliseconds: 1000), (Timer t) {
-                if (c.value == 0) {
-                  t.cancel();
-                } else {
-                  c.value--;
-                }
-              });
-              if (c.value == 0) {
-                return ElevatedButton(
-                  onPressed: () {
-                    PostService().delete(_post.id.toString()).then((value) {
-                      Get.back();
-                    });
-                  },
-                  style: ElevatedButton.styleFrom(primary: Colors.red),
-                  child: const Text('Confirm'),
-                );
-              } else {
-                return ElevatedButton(
-                  onPressed: null,
-                  style: ElevatedButton.styleFrom(primary: Colors.grey),
-                  child: Text('Confirm... (${c.value})'),
-                );
-              }
+              return ElevatedButton(
+                onPressed: () {
+                  PostService().delete(_post.id.toString()).then((value) {
+                    Get.back();
+                  });
+                },
+                style: ElevatedButton.styleFrom(primary: Colors.red),
+                child: const Text('Confirm'),
+              );
             }),
             cancel: TextButton(
               onPressed: () => Get.back(),
@@ -122,7 +121,6 @@ class PostScreen extends StatelessWidget {
   }
 
   void contact() async {
-    final currentMail = authController.freelanceUser.value.email;
     final postOwner = await UserService().findByMail(_post.userId.toString());
     Get.defaultDialog(
       title: 'Contact this post owner?',
@@ -135,7 +133,7 @@ class PostScreen extends StatelessWidget {
       ),
       confirm: ElevatedButton(
         onPressed: () async {
-          showLoading();
+          showLoading('');
           final r = await ChatService().createRoom(
               [types.User(id: postOwner.email!)], _post.title.toString(), '');
           Get.back();

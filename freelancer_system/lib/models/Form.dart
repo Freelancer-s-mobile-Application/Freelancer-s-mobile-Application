@@ -72,7 +72,7 @@ class ApplicationForm {
       postId: map['postId'] != null ? map['postId'] as String : null,
       status: map['status'] != null ? map['status'] as String : null,
       files: map['files'] != null
-          ? List<String>.from((map['files'] as List<String>))
+          ? List<String>.from((map['files'] as List<dynamic>))
           : null,
       deleted: map['deleted'] != null ? map['deleted'] as bool : null,
       createdDate: (map['createdDate'] as Timestamp).toDate(),

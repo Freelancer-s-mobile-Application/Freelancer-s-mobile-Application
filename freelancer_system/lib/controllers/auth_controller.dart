@@ -45,7 +45,7 @@ class AuthController extends GetxController {
   Future signInWithGoogle() async {
     try {
       final ggSignIn = appController.ggSignIn.value;
-      showLoading();
+      showLoading('');
       final GoogleSignInAccount? googleUser = await ggSignIn.signIn();
       final GoogleSignInAuthentication? googleAuth =
           await googleUser?.authentication;

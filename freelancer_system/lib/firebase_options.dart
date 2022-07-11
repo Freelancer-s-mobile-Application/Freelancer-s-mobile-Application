@@ -25,7 +25,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -70,19 +73,7 @@ class DefaultFirebaseOptions {
     projectId: 'freelancersystem-7d478',
     databaseURL: 'https://freelancersystem-7d478-default-rtdb.firebaseio.com',
     storageBucket: 'freelancersystem-7d478.appspot.com',
-    androidClientId: '296464714256-m6f2lggp0jo2l5eg06fu3ihj36ejcuk2.apps.googleusercontent.com',
-    iosClientId: '296464714256-g3karuet4ou9b3ue7r9js58n95neb71a.apps.googleusercontent.com',
-    iosBundleId: 'com.example.freelancerSystem',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCA0mqKo5G84UifuxraFeN_ku5osbdN2yE',
-    appId: '1:296464714256:ios:7b592dde5d85b9f4265895',
-    messagingSenderId: '296464714256',
-    projectId: 'freelancersystem-7d478',
-    databaseURL: 'https://freelancersystem-7d478-default-rtdb.firebaseio.com',
-    storageBucket: 'freelancersystem-7d478.appspot.com',
-    androidClientId: '296464714256-m6f2lggp0jo2l5eg06fu3ihj36ejcuk2.apps.googleusercontent.com',
+    androidClientId: '296464714256-6l16m4mfsdp3ni7mei61ar95lfgqratt.apps.googleusercontent.com',
     iosClientId: '296464714256-g3karuet4ou9b3ue7r9js58n95neb71a.apps.googleusercontent.com',
     iosBundleId: 'com.example.freelancerSystem',
   );

@@ -19,11 +19,9 @@ class _SearchBarState extends State<SearchBar> {
     searchCtl.addListener(() {
       if (searchCtl.text.isEmpty) {
         postController.isSearch.trigger(false);
-        // postController.showList.value = postController.posts;
       } else {
         postController.isSearch.trigger(true);
         postController.searchKey.value = searchCtl.text;
-        // postController.showList.value = postController.search(searchCtl.text);
       }
     });
   }

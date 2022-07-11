@@ -8,7 +8,6 @@ import 'components/global.dart';
 import 'constants/controller.dart';
 import 'screens/chat/list_chat/list_chat_screen.dart';
 import 'screens/home/home_screen.dart';
-import 'screens/settings/settings.dart';
 
 class AppPageRoute extends StatelessWidget {
   AppPageRoute();
@@ -23,8 +22,6 @@ class AppPageRoute extends StatelessWidget {
         return const ChatScreen();
       case 2:
         return const ProfileScreen();
-      case 3:
-        return const SettingScreen();
       default:
         return const HomeScreen();
     }
@@ -41,7 +38,7 @@ class AppPageRoute extends StatelessWidget {
           index: appController.page.value,
           height: 60.0,
           color: Colors.white,
-          buttonBackgroundColor: Colors.white38,
+          buttonBackgroundColor: Colors.blue.shade200,
           backgroundColor: Colors.transparent,
           animationCurve: Curves.easeInOutCubic,
           animationDuration: const Duration(milliseconds: 600),
@@ -64,7 +61,6 @@ class AppPageRoute extends StatelessWidget {
                 return const Icon(Icons.person, size: 30);
               }
             }),
-            const Icon(Icons.settings, size: 30),
           ],
         ),
         body: getScreen(appController.page.value),

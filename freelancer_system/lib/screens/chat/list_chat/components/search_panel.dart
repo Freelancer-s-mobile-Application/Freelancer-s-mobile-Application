@@ -1,6 +1,9 @@
+// ignore_for_file: empty_catches
+
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import '../../../../constants/controller.dart';
+import '../../../../controllers/userList_controller.dart';
 import '../../../../helpers/loading.dart';
 import 'package:get/get.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -18,6 +21,12 @@ class SearchPanel extends StatefulWidget {
 }
 
 class _SearchPanelState extends State<SearchPanel> {
+  @override
+  void initState() {
+    super.initState();
+    Get.put(UserListController());
+  }
+
   String img = '';
   RxList addList = [].obs;
   var titleAddCtl = TextEditingController();
@@ -33,6 +42,7 @@ class _SearchPanelState extends State<SearchPanel> {
         child: Container(
           padding: const EdgeInsets.all(10),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -66,11 +76,17 @@ class _SearchPanelState extends State<SearchPanel> {
                     ),
                   ),
                   suggestionsCallback: (pattern) async {
-                    List<types.User> list =
-                        userListController.getByNameAndEmail(pattern, pattern);
-                    var set1 = Set.from(list);
-                    var set2 = Set.from(addList);
-                    list = List.from(set1.difference(set2));
+                    if (!userListController.initialized) {
+                      Get.put(UserListController());
+                    }
+                    List<types.User> list = [];
+                    try {
+                      list = userListController.getByNameAndEmail(
+                          pattern, pattern);
+                      var set1 = Set.from(list);
+                      var set2 = Set.from(addList);
+                      list = List.from(set1.difference(set2));
+                    } catch (e) {}
                     return list;
                   },
                   itemBuilder: (context, types.User suggestion) {
@@ -124,50 +140,52 @@ class _SearchPanelState extends State<SearchPanel> {
                   );
                 }
               }),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                    height: Get.height * 0.06,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          shape: const StadiumBorder(),
-                          primary: Colors.deepOrangeAccent.shade400),
-                      onPressed: () async {
-                        showLoading();
-                        img = await selectRoomImage();
-                        dissmissLoading();
-                        setState(() {});
-                      },
-                      child: const Text('Select Room Image \n(Optional)'),
-                    ),
+              SizedBox(
+                width: double.infinity,
+                height: Get.height * 0.06,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      shape: const StadiumBorder(),
+                      primary: Colors.deepOrangeAccent.shade400),
+                  onPressed: () async {
+                    showLoading('Uploading Image');
+                    img = await selectRoomImage();
+                    dissmissLoading();
+                    setState(() {});
+                  },
+                  child: const Text(
+                    'Select Image for Group Chat \n(Optional)',
+                    maxLines: 2,
                   ),
-                  SizedBox(
-                    height: Get.height * 0.06,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        if (addList.isEmpty) {
-                          Get.snackbar('Error', 'No User Selected');
-                        } else {
-                          List<types.User> users = [];
-                          for (var element in addList) {
-                            users.add(element);
-                          }
-                          ChatService()
-                              .createRoom(users, titleAddCtl.text, img);
-                          Get.back();
-                          Get.snackbar(
-                              backgroundColor: Colors.blue,
-                              colorText: Colors.white,
-                              snackPosition: SnackPosition.BOTTOM,
-                              'Success',
-                              'Room Added');
-                        }
-                      },
-                      child: const Text('Create Room'),
-                    ),
-                  ),
-                ],
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                height: Get.height * 0.06,
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (addList.isEmpty) {
+                      Get.snackbar('Error', 'No User Selected');
+                    } else {
+                      List<types.User> users = [];
+                      for (var element in addList) {
+                        users.add(element);
+                      }
+                      ChatService().createRoom(users, titleAddCtl.text, img);
+                      Get.back();
+                      Get.snackbar(
+                          backgroundColor: Colors.blue,
+                          colorText: Colors.white,
+                          snackPosition: SnackPosition.BOTTOM,
+                          'Success',
+                          'Room Added');
+                    }
+                  },
+                  child: const Text('Create Room'),
+                ),
               ),
             ],
           ),

@@ -8,7 +8,7 @@ class ContentView extends StatelessWidget {
   final String content;
   @override
   Widget build(BuildContext context) {
-    FocusScope.of(context).unfocus();
+    // FocusScope.of(context).unfocus();
     QuillController controller = QuillController.basic();
     var myJSON = jsonDecode(content);
     controller = QuillController(

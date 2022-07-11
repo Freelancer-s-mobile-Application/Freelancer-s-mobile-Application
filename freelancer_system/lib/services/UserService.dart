@@ -16,6 +16,17 @@ class UserService {
     return res.substring(res.length - 2).toUpperCase();
   }
 
+  String getMajorName(String major) {
+    switch (major) {
+      case 'se':
+        return 'Software Engineering';
+      case 'cs':
+        return 'Computer Science';
+      default:
+        return 'Software Engineering';
+    }
+  }
+
   Future<FreeLanceUser> getCurrentUser() async {
     FreeLanceUser user = FreeLanceUser();
     try {

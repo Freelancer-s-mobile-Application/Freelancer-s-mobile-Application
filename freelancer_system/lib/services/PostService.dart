@@ -70,6 +70,7 @@ class PostService {
   }
 
   Future<void> delete(String id) async {
+    print("Delete post: $id");
     try {
       var currentUser = await UserService().getCurrentUser();
 

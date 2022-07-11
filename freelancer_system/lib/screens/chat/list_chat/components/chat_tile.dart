@@ -19,7 +19,6 @@ class ChatTile extends StatelessWidget {
 
   Widget _buildAvatar(types.Room room) {
     var color = Colors.transparent;
-    types.User otherUser = const types.User(id: '');
     if (room.type == types.RoomType.direct) {
       try {
         final otherUser = room.users.firstWhere(

@@ -5,14 +5,16 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:freelancer_system/constants/controller.dart';
+import 'package:freelancer_system/helpers/loading.dart';
 import 'package:freelancer_system/models/Form.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:get/get.dart';
 
 class FormService {
   final CollectionReference _forms =
       FirebaseFirestore.instance.collection('Forms');
 
-  final storageRef = FirebaseStorage.instance.ref();
+  final storageRef = FirebaseStorage.instance;
 
   Future<ApplicationForm> find(String id) async {
     ApplicationForm form = ApplicationForm();
@@ -27,19 +29,23 @@ class FormService {
   }
 
   Future<void> add(ApplicationForm form) async {
+    showLoading('Uploading...');
+    String idKey = genIdKey(form);
     try {
-      Reference? filesRef = storageRef.child("files");
-
       form.createdDate = DateTime.now();
+      List<String> urls = [];
 
       if (form.files != null) {
-        Directory appDocDir = await getApplicationDocumentsDirectory();
+        // Directory appDocDir = await getApplicationDocumentsDirectory();
         for (var filUrl in form.files!) {
-          String filePath = '${appDocDir.absolute}/${filUrl.toString()}';
+          final fileName = filUrl.split("/").last;
+          String filePath = filUrl.toString();
           File file = File(filePath);
-
           try {
-            await filesRef.putFile(file);
+            Reference? filesRef = storageRef.ref(form.userId).child(fileName);
+            await filesRef
+                .putFile(file)
+                .then((p0) async => urls.add(await p0.ref.getDownloadURL()));
           } on FirebaseException catch (e) {
             debugPrint(e.message);
           }
@@ -47,12 +53,36 @@ class FormService {
       }
 
       return await _forms
-          .add(form.toMap())
-          .then((value) => print("Form Added"))
+          .doc(idKey)
+          .set(form
+              .copyWith(
+                  files: urls, id: idKey, lastModifiedDate: DateTime.now())
+              .toMap())
           .catchError((error) => print("Failed to add form: $error"));
     } on Exception catch (_) {
       throw Exception("Add exception");
+    } finally {
+      dissmissLoading();
+      dissmissLoading();
+      Get.snackbar('Success', 'Your application has been sent',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white);
     }
+  }
+
+  Future<bool> checkExist(String idKey) async {
+    bool exist = false;
+    try {
+      await _forms.doc(idKey).get().then((value) => exist = value.exists);
+    } on Exception catch (_) {
+      throw Exception("Add exception");
+    }
+    return exist;
+  }
+
+  String genIdKey(ApplicationForm form) {
+    return '${form.userId}_${form.postId}';
   }
 
   Future<void> delete(String id) async {
@@ -61,6 +91,10 @@ class FormService {
         .update({"deleted": true})
         .then((value) => print("Form deleted"))
         .catchError((error) => print("Failed to delete form: $error"));
+  }
+
+  String getFileName(String url) {
+    return storageRef.refFromURL(url).name;
   }
 
   Future<void> update(String id, ApplicationForm form) async {
@@ -98,5 +132,15 @@ class FormService {
       throw Exception(e);
     }
     return qn.docs;
+  }
+
+  Stream<QuerySnapshot> getStream() {
+    return _forms
+        .where(
+          'userId',
+          isEqualTo: authController.firebaseuser.value!.email.toString(),
+        )
+        .where('deleted', isEqualTo: false)
+        .snapshots();
   }
 }

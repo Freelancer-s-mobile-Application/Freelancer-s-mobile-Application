@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import '../../components/global.dart';
 import '../../constants/controller.dart';
 import '../../models/User.dart';
+import '../apply/myApplication.dart';
+import 'components/option_tile.dart';
 import 'components/user_profile.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -56,34 +58,36 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ],
             ),
-            body: Column(
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  height: Get.height * 0.2,
-                  child: Obx(() {
-                    if (authController.isLoggedIn.value) {
-                      return ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(50)),
-                        child: CircleAvatar(
-                          backgroundColor: Colors.white,
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    height: Get.height * 0.15,
+                    child: FittedBox(
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        child: ClipRRect(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(50)),
                           child: Image.network(
                             FirebaseAuth.instance.currentUser!.photoURL
                                 .toString(),
                           ),
                         ),
-                      );
-                    } else {
-                      return const Icon(Icons.person, size: 30);
-                    }
+                      ),
+                    ),
+                  ),
+                  const UserProfile(),
+                  OptionTile(Icons.note_alt, 'My Applications', Colors.blue,
+                      () {
+                    Get.to(() => const MyApplicationsScreen());
                   }),
-                ),
-                const UserProfile(),
-                // const OptionTile(Icons.edit, 'Hey'),
-                // const OptionTile(Icons.edit, 'Hey'),
-                // const OptionTile(Icons.edit, 'Hey'),
-              ],
+                  OptionTile(Icons.logout, 'Logout', Colors.cyan, () {
+                    authController.signOut();
+                  }),
+                ],
+              ),
             ),
           ),
         );
