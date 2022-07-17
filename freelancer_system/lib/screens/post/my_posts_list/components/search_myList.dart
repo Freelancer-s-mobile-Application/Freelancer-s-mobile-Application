@@ -36,7 +36,6 @@ class _SearchMyListState extends State<SearchMyList> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(30),
-                border: Border.all(color: Colors.blue),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: TextField(

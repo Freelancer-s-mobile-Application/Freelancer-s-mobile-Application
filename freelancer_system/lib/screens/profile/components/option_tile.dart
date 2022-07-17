@@ -11,9 +11,14 @@ class OptionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Container(
-        decoration: BoxDecoration(border: Border.all()),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: color,
+            width: 2,
+          ),
+        ),
         child: ListTile(
           onTap: func,
           leading: Icon(

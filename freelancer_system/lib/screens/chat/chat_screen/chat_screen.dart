@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +29,12 @@ class _DetailChatScreenState extends State<DetailChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.room.name.toString()),
+        title: AutoSizeText(widget.room.name.toString()),
         centerTitle: true,
+        leading: const BackButton(color: Colors.blue),
+        titleTextStyle: const TextStyle(color: Colors.blue, fontSize: 25),
+        backgroundColor: Colors.white,
+        elevation: 0,
         actions: [
           IconButton(
             onPressed: () {
@@ -45,6 +50,7 @@ class _DetailChatScreenState extends State<DetailChatScreen> {
                 ),
               );
             },
+            color: Colors.blue,
             icon: const Icon(Icons.delete),
           )
         ],

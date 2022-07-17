@@ -27,7 +27,9 @@ class ChatScreen extends StatelessWidget {
       floatingActionButton: addChatBtn(context),
       appBar: AppBar(
         title: const Text('Chats'),
-        centerTitle: true,
+        titleTextStyle: const TextStyle(color: Colors.blue, fontSize: 30),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: Obx(() {
         if (authController.isLoggedIn.value) {

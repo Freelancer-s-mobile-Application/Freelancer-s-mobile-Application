@@ -27,6 +27,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  auto_size_text: ^3.0.0
   cloud_firestore: ^3.1.17
   cupertino_icons: ^1.0.2
   curved_navigation_bar: ^1.0.3
@@ -95,6 +96,24 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: MyFlutterApp
+      fonts:
+        - asset: assets/fonts/MyFlutterApp.ttf
+    - family: Kanit
+      fonts:
+        - asset: assets/fonts/Kanit-Regular.ttf
+          weight: 400
+          style: normal
+        - asset: assets/fonts/Kanit-Bold.ttf
+          weight: 700
+          style: normal
+        - asset: assets/fonts/Kanit-Italic.ttf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/Kanit-BoldItalic.ttf
+          weight: 700
+          style: italic
   # fonts:
   #   - family: Schyler
   #     fonts:

@@ -1,7 +1,5 @@
 // ignore_for_file: file_names, avoid_print, empty_catches
 
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:freelancer_system/constants/firebase.dart';
@@ -87,18 +85,14 @@ class UserService {
 
   Future<FreeLanceUser> findByMail(String mail) async {
     FreeLanceUser user = FreeLanceUser();
-    log(mail.toString());
     try {
       await _users.where('email', isEqualTo: mail).get().then((value) {
-        log(value.docs.length.toString());
         if (value.docs.isNotEmpty) {
           user = FreeLanceUser.fromMap(
               value.docs[0].data() as Map<String, dynamic>);
         }
       });
-    } catch (e) {
-      log(e.toString());
-    }
+    } catch (e) {}
     return user;
   }
 

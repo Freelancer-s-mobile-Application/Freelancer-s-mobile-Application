@@ -25,12 +25,15 @@ class PostScreen extends StatelessWidget {
     //return a detail page
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
         title: Text(
           _post.title.toString(),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
+        titleTextStyle: const TextStyle(color: Colors.blue, fontSize: 20),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: const BackButton(color: Colors.blue),
         actions: [
           if (_post.userId != authController.freelanceUser.value.email)
             IconButton(
@@ -50,6 +53,7 @@ class PostScreen extends StatelessWidget {
                   contact();
                 }
               },
+              color: Colors.blue,
               icon: const Icon(Icons.message),
             ),
           if (_post.userId == authController.freelanceUser.value.email)

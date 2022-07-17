@@ -110,6 +110,9 @@ class _ApplyScreenState extends State<ApplyScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Apply'),
+        titleTextStyle: const TextStyle(color: Colors.blue, fontSize: 30),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.send),
@@ -121,7 +124,8 @@ class _ApplyScreenState extends State<ApplyScreen> {
         child: Column(
           children: [
             const Text(
-              'Check your profile and information', style: TextStyle(fontSize: 20),
+              'Check your profile and information',
+              style: TextStyle(fontSize: 20),
             ),
             UserProfile(key: Key(DateTime.now().toString())),
             Row(

@@ -16,10 +16,14 @@ class MyPost extends StatelessWidget {
     return Obx(() {
       if (authController.isLoggedIn.isTrue) {
         return Column(
-          children: const [
-            SearchMyList(),
-            Divider(thickness: 1, indent: 20, endIndent: 20),
-            MyListViewBuild(),
+          children: [
+            const SearchMyList(),
+            Container(
+              width: double.infinity,
+              height: 15,
+              color: Colors.grey.withOpacity(0.1),
+            ),
+            const MyListViewBuild(),
           ],
         );
       } else {

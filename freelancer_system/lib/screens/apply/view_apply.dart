@@ -27,8 +27,9 @@ class ViewApply extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
+        titleTextStyle: const TextStyle(color: Colors.blue, fontSize: 30),
         backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
           onPressed: () => Get.back(),
           icon: const Icon(Icons.arrow_back, color: Colors.black),

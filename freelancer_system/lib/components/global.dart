@@ -4,9 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../controllers/auth_controller.dart';
 import '../controllers/chat_controller.dart';
-import '../controllers/getX_controller.dart';
 import '../controllers/post_controller.dart';
 import '../controllers/userList_controller.dart';
 import '../models/User.dart';
@@ -28,8 +26,6 @@ Future getUser() async {
 }
 
 void initGlobal() {
-  final AppController appController = Get.put(AppController());
-  final AuthController authController = Get.put(AuthController());
   final UserListController userListController = Get.put(UserListController());
   final ChatController chatController = Get.put(ChatController());
   final PostController postController = Get.put(PostController());

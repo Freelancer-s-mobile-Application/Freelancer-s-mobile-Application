@@ -13,6 +13,9 @@ class MyApplicationsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Applications'),
+        titleTextStyle: const TextStyle(color: Colors.blue, fontSize: 30),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FormService().getStream(),

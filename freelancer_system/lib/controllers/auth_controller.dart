@@ -47,16 +47,25 @@ class AuthController extends GetxController {
       final ggSignIn = appController.ggSignIn.value;
       showLoading('');
       final GoogleSignInAccount? googleUser = await ggSignIn.signIn();
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+      if (!googleUser!.email.contains('@fpt.edu.vn')) {
+        Get.back();
+        Get.snackbar(
+          "Unauthorized User",
+          'Your Mail is not Unauthorized to use this App',
+        );
+        ggSignIn.signOut();
+      } else {
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
 
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-      await FirebaseAuth.instance.signInWithCredential(credential);
-      Get.back();
-      Get.back();
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+        await FirebaseAuth.instance.signInWithCredential(credential);
+        Get.back();
+        Get.back();
+      }
     } on FirebaseAuthException {
       Get.snackbar(
         'Error',

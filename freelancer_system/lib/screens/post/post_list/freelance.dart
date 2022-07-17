@@ -11,10 +11,14 @@ class FreelanceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: const [
-        SearchBar(),
-        Divider(thickness: 1, indent: 20, endIndent: 20),
-        ListViewBuild(),
+      children: [
+        const SearchBar(),
+        Container(
+          width: double.infinity,
+          height: 15,
+          color: Colors.grey.withOpacity(0.1),
+        ),
+        const ListViewBuild(),
       ],
     );
   }
@@ -40,7 +44,6 @@ class ListViewBuild extends StatelessWidget {
         }
         return Expanded(
           child: ListView.builder(
-            //physics: const AlwaysScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: posts.length,
             itemBuilder: (BuildContext context, int index) {
