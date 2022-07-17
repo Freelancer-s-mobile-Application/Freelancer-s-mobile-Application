@@ -30,9 +30,7 @@ class ViewApply extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
+          onPressed: () => Get.back(),
           icon: const Icon(Icons.arrow_back, color: Colors.black),
         ),
       ),

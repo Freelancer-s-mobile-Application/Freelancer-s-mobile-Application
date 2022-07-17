@@ -9,7 +9,6 @@ class Comment {
   String? content;
   String? postId;
   String? userId;
-
   bool? deleted;
   DateTime? createdDate;
   String? updatedBy;

@@ -127,15 +127,18 @@ class PostScreen extends StatelessWidget {
       content: const Text("Do you want to contact the owner of this post?"),
       cancel: ElevatedButton(
         onPressed: () {
-          dissmissLoading();
+          Get.back();
         },
         child: const Text('No'),
       ),
       confirm: ElevatedButton(
         onPressed: () async {
-          showLoading('');
+          showLoading('Creating chat...');
           final r = await ChatService().createRoom(
-              [types.User(id: postOwner.email!)], _post.title.toString(), '');
+            [types.User(id: postOwner.email!)],
+            _post.title.toString(),
+            '',
+          );
           Get.back();
           dissmissLoading();
           Get.to(() => DetailChatScreen(r.copyWith(

@@ -121,7 +121,7 @@ class _ApplyScreenState extends State<ApplyScreen> {
         child: Column(
           children: [
             const Text(
-              'Check your profile and information',
+              'Check your profile and information', style: TextStyle(fontSize: 20),
             ),
             UserProfile(key: Key(DateTime.now().toString())),
             Row(
