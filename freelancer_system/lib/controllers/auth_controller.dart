@@ -48,7 +48,7 @@ class AuthController extends GetxController {
       showLoading('');
       final GoogleSignInAccount? googleUser = await ggSignIn.signIn();
       // if (!googleUser!.email.contains('@fpt.edu.vn')) {
-      if (googleUser!.email.contains('@')) {
+      if (googleUser!.email.contains('@fpt.edu.vn')) {
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
 
