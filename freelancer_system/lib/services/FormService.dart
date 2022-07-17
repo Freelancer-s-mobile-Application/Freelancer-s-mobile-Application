@@ -1,5 +1,6 @@
 // ignore_for_file: file_names, avoid_print
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +10,7 @@ import 'package:freelancer_system/constants/controller.dart';
 import 'package:freelancer_system/helpers/loading.dart';
 import 'package:freelancer_system/models/Form.dart';
 import 'package:get/get.dart';
+import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
 class FormService {
   final CollectionReference _forms =
@@ -29,12 +31,37 @@ class FormService {
   }
 
   Future<void> add(ApplicationForm form) async {
-    showLoading('Uploading...');
+    int currentFile = 0;
+    Get.defaultDialog(
+      title: 'Uploading',
+      content: Obx(() {
+        return SizedBox(
+          height: Get.width * 0.3,
+          width: Get.width * 0.3,
+          child: LiquidCircularProgressIndicator(
+            value: appController.progress, // Defaults to 0.5.
+            valueColor: const AlwaysStoppedAnimation(Colors.blue),
+            backgroundColor: Colors.white,
+            borderColor: Colors.blue,
+            borderWidth: 5.0,
+            direction: Axis.vertical,
+            center: Text(
+                '$currentFile/${form.files!.length.toString()} files \n${((appController.progress * 100).ceil().toString())}%'),
+          ),
+        );
+      }),
+      confirm: TextButton(
+        onPressed: () {
+          Get.back();
+        },
+        child: const Text('Cancel'),
+      ),
+    );
     String idKey = genIdKey(form);
     try {
       form.createdDate = DateTime.now();
       List<String> urls = [];
-
+      UploadTask? uploadTask;
       if (form.files != null) {
         // Directory appDocDir = await getApplicationDocumentsDirectory();
         for (var filUrl in form.files!) {
@@ -43,9 +70,23 @@ class FormService {
           File file = File(filePath);
           try {
             Reference? filesRef = storageRef.ref(form.userId).child(fileName);
-            await filesRef
-                .putFile(file)
-                .then((p0) async => urls.add(await p0.ref.getDownloadURL()));
+
+            uploadTask = filesRef.putFile(file);
+            uploadTask.snapshotEvents.listen((event) {
+              appController.progress = event.bytesTransferred.toDouble() /
+                  event.totalBytes.toDouble();
+              if (event.state == TaskState.success) {
+                if (currentFile != form.files!.length - 1) {
+                  currentFile++;
+                  appController.progress = 0;
+                } else {}
+              }
+            }).onDone(() {
+              Get.back();
+            });
+
+            final snapshot = await uploadTask.whenComplete(() {});
+            urls.add(await snapshot.ref.getDownloadURL());
           } on FirebaseException catch (e) {
             debugPrint(e.message);
           }
@@ -142,5 +183,31 @@ class FormService {
         )
         .where('deleted', isEqualTo: false)
         .snapshots();
+  }
+
+  Stream<QuerySnapshot> getMyApply(String postId) {
+    return _forms
+        .where('postId', isEqualTo: postId)
+        .where('deleted', isEqualTo: false)
+        .snapshots();
+  }
+
+  //update form status
+  Future<void> updateStatus(String id, String status) async {
+    await _forms
+        .doc(id)
+        .update({'status': status})
+        .then((value) => print("Form status updated"))
+        .catchError((error) => print("Failed to update form status: $error"));
+  }
+
+  Stream<dynamic> getSpecificForm(String formId) {
+    return _forms.doc(formId).snapshots().map((event) {
+      if (event.exists) {
+        return ApplicationForm.fromMap(event.data() as Map<String, dynamic>);
+      } else {
+        return null;
+      }
+    });
   }
 }

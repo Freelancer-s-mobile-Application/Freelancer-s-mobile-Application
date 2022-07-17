@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:freelancer_system/screens/home/components/onTapLogin.dart';
+import 'package:freelancer_system/screens/post/post_apply/post_apply.dart';
 import '../../../constants/controller.dart';
 import '../../../helpers/loading.dart';
 import '../../../services/PostService.dart';
@@ -85,9 +86,12 @@ class PostScreen extends StatelessWidget {
 
   Widget popMenu(BuildContext context) {
     return PopupMenuButton<String>(
+      icon: const Icon(
+        Icons.more_vert_rounded,
+        color: Colors.blue,
+      ),
       onSelected: (String value) {
         if (value == 'edit') {
-          // Get.to(EditPost(_post));
           _editPost(context);
         } else if (value == 'delete') {
           Get.defaultDialog(
@@ -109,6 +113,8 @@ class PostScreen extends StatelessWidget {
               child: const Text('Cancel'),
             ),
           );
+        } else if (value == 'goform') {
+          Get.to(() => PostApply(_post));
         }
       },
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
@@ -119,6 +125,10 @@ class PostScreen extends StatelessWidget {
         const PopupMenuItem<String>(
           value: 'delete',
           child: Text('Delete Post'),
+        ),
+        const PopupMenuItem<String>(
+          value: 'goform',
+          child: Text('View Applications'),
         ),
       ],
     );

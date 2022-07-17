@@ -47,14 +47,8 @@ class AuthController extends GetxController {
       final ggSignIn = appController.ggSignIn.value;
       showLoading('');
       final GoogleSignInAccount? googleUser = await ggSignIn.signIn();
-      if (!googleUser!.email.contains('@fpt.edu.vn')) {
-        Get.back();
-        Get.snackbar(
-          "Unauthorized User",
-          'Your Mail is not Unauthorized to use this App',
-        );
-        ggSignIn.signOut();
-      } else {
+      // if (!googleUser!.email.contains('@fpt.edu.vn')) {
+      if (googleUser!.email.contains('@')) {
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
 
@@ -65,6 +59,13 @@ class AuthController extends GetxController {
         await FirebaseAuth.instance.signInWithCredential(credential);
         Get.back();
         Get.back();
+      } else {
+        Get.back();
+        Get.snackbar(
+          "Unauthorized User",
+          'Your Mail is not Unauthorized to use this App',
+        );
+        ggSignIn.signOut();
       }
     } on FirebaseAuthException {
       Get.snackbar(
@@ -128,6 +129,7 @@ class AuthController extends GetxController {
       final AppController getXController = Get.find();
       getXController.ggSignIn.value.signOut();
       auth.signOut();
+      appController.page.value = 0;
     } catch (e) {}
   }
 }

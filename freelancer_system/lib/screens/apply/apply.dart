@@ -113,8 +113,10 @@ class _ApplyScreenState extends State<ApplyScreen> {
         titleTextStyle: const TextStyle(color: Colors.blue, fontSize: 30),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        leading: const BackButton(color: Colors.blue),
         actions: [
           IconButton(
+            color: Colors.blue,
             icon: const Icon(Icons.send),
             onPressed: _sendForm,
           ),

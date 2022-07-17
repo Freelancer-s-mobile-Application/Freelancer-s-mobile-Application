@@ -123,4 +123,18 @@ class PostService {
     } catch (e) {}
     return myPosts;
   }
+
+  Future<List<String>> getListIdPost() async {
+    List<String> listIdPost = <String>[];
+    await _posts
+        .where('userId', isEqualTo: authController.firebaseuser.value!.email)
+        .get()
+        .then((value) => {
+              if (value.docs.isNotEmpty)
+                {
+                  for (var doc in value.docs) {listIdPost.add(doc.id)}
+                }
+            });
+    return listIdPost;
+  }
 }
